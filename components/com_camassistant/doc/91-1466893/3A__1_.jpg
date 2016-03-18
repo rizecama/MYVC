@@ -1,0 +1,3 @@
+<br />
+<b>Warning</b>:  readfile(https://myvendorcenter.com/dev/components/com_camassistant/doc/GREENDALE_CAMFIRM_PROPERTY_45-6546545//3A.jpg) [<a href='function.readfile'>function.readfile</a>]: failed to open stream: HTTP request failed! HTTP/1.1 401 Authorization Required
+ in <b>/home/allen/public_html/myvendorcenter/dev/components/com_camassistant/models/popupdocs.php</b> on line <b>274</b><br />
