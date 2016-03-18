@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="cam assistant Layout">
+		<message>
+			<![CDATA[cam assistant Layout]]>
+		</message>
+	</layout>
+	<state>
+		<name>cam assistant Layout</name>
+		<description>cam assistant Layout</description>
+		<params>
+		</params>
+	</state>
+</metadata>

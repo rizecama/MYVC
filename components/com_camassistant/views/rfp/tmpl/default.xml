@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="RFP Layout">
+		<message>
+			<![CDATA[RFP Layout]]>
+		</message>
+	</layout>
+	<state>
+		<name>camassistant Layout</name>
+		<description>camassistant Layout</description>
+		<params>
+		</params>
+	</state>
+</metadata>
