@@ -1,0 +1,65 @@
+Client Feedback extension (component & module)
+ * @copyright	Copyright © 2010 Mertonium. All rights reserved.
+ * @license		GNU/GPL
+ * @author		Mertonium
+ * @author mail	john@mertonium.com
+ * @website		http://mertonium.com/2010/07/client-feedback-joomla-extension/
+ 
+ v1.2.4 - 2010.09.24
+ * Added Arabic translation
+ * Added some simple error checking/handling
+ 
+ v1.2.3 - 2010.09.13
+ * Added the module top parameter (so the CSS doesn't need to be edited)
+ * Updates to the Russian translation
+ 
+ v1.2.2 - 2010.09.02
+ * Added Russian translation
+ * Added start_state & mod_width to the mod_feedback parameters
+ * Updated the language files
+ 
+ v1.2.1 - 2010.08.29
+ * Updated the links in the install manifests
+ * Fixed the encoding in the fr-FR.mod_feedback.ini
+ * Added a windows compatable checkdnsrr (win_checkdnsrr) function so that the validEmail() method works on Windows servers with PHP < 5.3.0
+ * Updated the JS email validation regex (based on the discussion at http://www.regular-expressions.info/email.html
+ * Added the z-index parameter to the module and the language files
+ * Updated the email validation regex in default.php (again)
+ * Translated the mod_feedback options into Spanish
+ * Added French translation to the repo (thanks Haids)
+ * Added validEmail() function to frontend controller.php
+ * Added flood control to the component (and language files)
+ * Now, when the form is submitted, the submit button is disabled.
+ * Updated the regex to allow subdomains.
+ * Moved the time_split & user_ip field creation from install.mysql.utf8.sql to install.feedback.php so that there are not errors if the component is re-installed
+ * Changed the bunk regex in the email validation in mod_feedback/tmpl/default.php and com_feedback/frontend/controller.php
+ * Removed helper.php from the install manifest
+ 
+ v1.2 - 2010.08.23
+ * Updated the version numbers
+ * Added multi-language support to the com_feedback
+ * Added multi-language support to the mod_feedback
+ * Added English translation
+ * Added crappy Spanish translation
+ * Explicitly declared database table character set & collation (utf8 & utf8_unicode_ci)
+ * Added time_split & user_ip to the database, the table file & the backend administration
+ * Added form validation to the php code (so it cannot be bypassed by disabling javascript)
+ * Made sure Mootools is loaded before running any javascript
+ * Added a z-index to #feedback-div
+ * Added User IP address to the form
+ 
+ v1.1 - 2010.08.13
+ * Made the image paths absolute 
+ * Added the bot trap & timer anti-spam measures (the timer can be adjusted in the component parameters)
+ * Added the custom message field to the form 
+ * Added more comments to the code
+ * Now the form can be position on either the left or right side of the page
+ * Made the "name" field mandatory
+ * Made the "email" field mandatory
+ * Added email validation
+ * Formatted the feedback email slightly
+ * Added the timer to the feedback email
+ * Added 'IF NOT EXISTS' to the table creation code in install.mysql.utf8.sql
+ * Changed CHANGELOG.php to CHANGELOG.txt
+ 
+ v1.0 - 2010.08.05 

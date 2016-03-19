@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+	<name>JCalPro Calendars</name>
+	<author>Anything Digital</author>
+	<version>1.0</version>
+	<description>Definition for JCalPro calendars</description>
+	<reference>
+		<table name="jcalpro2_calendars">
+			<field type="referenceid" name="cal_id" translate="0">ID</field>
+			<field type="titletext" name="cal_name" translate="1">Calendar
+				Name</field>
+			<field type="text" name="description" translate="1">Description</field>
+			<field type="checked_out_by" name="checked_out" translate="0">Check
+				out by</field>
+			<field type="checked_out_date" name="checked_out_time"
+				translate="0">Check out date</field>
+		</table>
+	</reference>
+</joomfish>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<params><!-- 
+		<param name="cat_list" type="text" default="" label="Categories"
+			description="Comma-separated category id list to show. Leave empty to show all categories" />
+		<param name="cal_list" type="text" default="" label="Calendars"
+			description="Comma-separated calendar id list to show. Leave empty to show all calendars" />
+		<param name="show_private_events" type="list" default="1"
+			label="Show private events ?" description="Select how to display private events when the link is clicked">
+			<option value="1">Show public and read-only private events (owner
+        still sees private events)</option>
+			<option value="2">Do not show private events (even if owner)</option>
+			<option value="4">Show events user owns (even if not private)</option>
+			<option value="3">Show only private events (if logged in)</option>
+		</param> -->
+	</params>
+</config>

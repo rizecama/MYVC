@@ -1,0 +1,4 @@
+AuthName "MyVC"
+AuthUserFile "/home/allen/.htpasswds/public_html/myvendorcenter/live/administrator/passwd"
+AuthType Basic
+require valid-user

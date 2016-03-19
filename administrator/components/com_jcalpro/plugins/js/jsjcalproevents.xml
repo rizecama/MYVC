@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="community">
+	<name>JCal pro 2 events for Joomsocial</name>
+  <author>Anything Digital</author>
+  <creationDate>2011-05-12</creationDate>
+  <copyright>2010 Anything Digital</copyright>
+  <license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+  <authorEmail>admin@anything-digital.com </authorEmail>
+  <authorUrl>dev.anything-digital.com</authorUrl>
+  <version>2.2.17.1587</version>
+  <description><![CDATA[JCal Pro events for Joomsocial displays public and private events to a user as part of her user profile.]]></description>
+
+	<isapplication>true</isapplication>
+	<files>
+		<file plugin="jsjcalproevents">jsjcalproevents.php</file>
+	</files>
+	
+	<params>
+		<param name="coreapp" type="list" default="0" label="Core Application" description="Causes this application to not appear in the users applications list but it will allow this application to appear in the user profile automatically if selected.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="cache" type="list" default="1" label="Caching" description="Select whether to cache the content of this plugin">
+			<option value="1">Yes</option>
+			<option value="0">No</option>
+		</param>
+    <param type="spacer" default="" label="" name="spacer"/>
+        <param name="categories" type="text" default="" label="Categories"
+      description="Ids of JCal Pro categories to show (comma seperated). Leave blank for all." />
+    <param name="calendars_list" type="text" default="" label="Calendars"
+      description="Enter a comma-separated list of calendars numerical id to include in the display. Leave empty to show all calendars." />  
+    <param name="moduleclass_sfx" type="text" default=""
+      label="Module Class Suffix"
+      description="A suffix to be applied to the css class of the module (table.moduletable), this allows individual module styling" />
+    <param name="number_of_events_to_list_upcoming" type="text"
+      default="5" label="Number of Upcoming Events to List"
+      description="This just says how many upcoming events to list in the module." />
+    <param name="number_of_events_to_list_recent" type="text"
+      default="0" label="Number of Recent Events to List"
+      description="If set to zero, it will ONLY show upcoming events. Otherwise the module will show this many past events under a separate heading." />
+    <param name="title_max_length" type="text" default="256"
+      label="Maximum Displayed Length of Event Title"
+      description="Enter a number. Any event listed with a title longer than that number will be shortened and a '...' appended." />
+    <param name="show_times" type="radio" default="1"
+      label="Show Event Times?" description="If 'no' then the event time will not be displayed.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+      <option value="3">Start Times Only</option>
+    </param>
+    <param name="show_calendar" type="radio" default="1"
+      label="Show Calendar Name?" description="If 'yes' then the calendar name appears after event name.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </param>
+    <param name="show_category" type="radio" default="1"
+      label="Show Category Name?" description="If 'yes' then the category name appears in parentheses.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </param>
+    <param name="show_dates" type="radio" default="1"
+      label="Show Event Dates?" description="If 'no' then the event date will not be displayed.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </param>
+    <param name="show_description" type="radio" default="1"
+      label="Show Event Description?" description="If 'yes' then the description will appear.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </param>
+    <param name="show_contact" type="radio" default="1"
+      label="Show Contact Information?" description="If 'yes' then the contact info will appear.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </param>
+    <param name="description_max_length" type="text" default="256"
+      label="Max Displayed Length of Event Description"
+      description="Enter a number. Any event listed with a description longer than that number will be shortened and a '...' appended." />
+    <param name="strip_bbcode_from_description" type="radio"
+      default="3" label="Strip BBCode From Description?"
+      description="If 'yes' then any BBCode tags, like bold and italic, will be stripped out in the module. If 'Defer' is picked, it will use the JCal Pro component settings for 'Allow HTML in event descriptions'">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+      <option value="3">Defer to JCal Pro Settings</option>
+    </param>
+    <param name="show_recurrent_events" type="radio" default="3"
+      label="Show Recurring Events?"
+      description="If 'yes' then recurring events will each be listed separately. If 'Defer' is picked, it will use the JCal Pro component settings for 'Show recurrent events.'">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+      <option value="2">Next Instance Only</option>
+      <option value="3">Defer to JCal Pro Settings</option>
+    </param>
+    <param name="private_events_mode" type="list" default="4"
+      label="Show private events?" description="Select how to display private events">
+      <option value="1">Show public and r/o private events (owner
+        still sees private events)</option>
+      <option value="2">Do not show private events (even if owner)</option>
+      <option value="4">Show events user owns (even if not private)</option>
+      <option value="3">Show only private events (if owner is logged in)</option>
+    </param>
+    <param name="output" type="radio" default="1" label="Output Type"
+      description="The type of HTML output">
+      <option value="1">List</option>
+      <option value="2">Table</option>
+    </param>
+    <param label="HTML code to separate events"
+      description="If you have 'Number of Recent Events to List' set to anything other than zero, this is what the heading will be for Recent Events."
+      name="event_separator" default="" type="text" />
+    <param name="show_month_separators" type="radio" default="0"
+      label="Show Month Separators?" description="If 'yes' then events will be grouped by month, with a label.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </param>
+    <param name="month_separator_style" type="textarea" cols="30"
+      rows="5" label="CSS Style for Month Separator"
+      description="List any CSS style properties, separated by semicolons, that will apply to the month separator if you selected 'yes' above."
+      default="background-color: transparent; border-top-color: #777777; border-bottom-color: #777777; border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid; font-style: italic; font-weight: bold; margin: 4px; text-align: center;" />
+    <param name="no_upcoming_events_text" type="textarea" cols="30"
+      rows="3" label="Text if No Upcoming Events Found"
+      description="If you selected 'yes' above for 'Display Module if No Events Exist?', this is the text that will be displayed when no upcoming events are found. HTML is permitted."
+      default="" />
+    <param name="recent_events_text" type="text" default=""
+      label="Title for 'Recent Events'"
+      description="If you have 'Number of Recent Events to List' set to anything other than zero, this is what the heading will be for Recent Events." />
+    <param name="recent_events_style" type="textarea" cols="30"
+      rows="5" label="CSS Style for 'Recent Events' Separator"
+      description="List any CSS style properties, separated by semicolons, that will apply to the heading for 'Recent Events' above."
+      default="font-size: 130%; font-weight: bold; background-color: transparent; border-top-color: #333333; border-bottom-color: #333333; border-top-width: 2px; border-bottom-width: 2px; border-top-style: solid; border-bottom-style: solid; margin: 10px; text-align: center;" />
+    <param name="show_full_calendar_link" type="radio" default="1"
+      label="Show 'View Full Calendar' Link?"
+      description="If 'yes' then a link appears taking you to the full calendar component.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </param>
+    <param name="full_calendar_link_text" type="text" default=""
+      label="'View Full Calendar' link text"
+      description="Whatever you want the link to say instead of 'View Full Calendar'" />
+    <param name="show_add_event_link" type="radio" default="1"
+      label="Show 'Add New Event' Link?"
+      description="If 'yes' then a small link appears below the events list to add a new event.">
+      <option value="1">Yes</option>
+      <option value="0">No</option>
+    </param>
+    <param name="add_event_text" type="text" default=""
+      label="'Add New Event' link text" description="Whatever you want the link to say instead of 'Add New Event'" />
+    <param name="time_format_12_or_24" type="radio" default="1"
+      label="12 or 24-hour Time Display" description="Tells module whether to use 12-hour or 24-hour time.">
+      <option value="1">12-hour</option>
+      <option value="0">24-hour</option>
+    </param>
+    <param name="days_view" type="radio" default="0" label="Days view"
+      description="Tells module whether to use date string or x days.">
+      <option value="0">Date String</option>
+      <option value="1">Days</option>
+    </param>
+    <param name="date_format" type="text" default="%B %d, %Y" label="Date Format"
+      description="Date format string per PHP strftime function." />
+    <param name="component_itemid" type="text" default=""
+      label="Specific Itemid for displaying the module"
+      description="Fill this option in case you want minical to open within a specific menu option. Left blank otherwise ." />
+  </params>
+</install>

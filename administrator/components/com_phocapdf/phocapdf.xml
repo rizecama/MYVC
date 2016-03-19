@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install method="upgrade" type="component" version="1.5.0">
+	<name>PhocaPDF</name>
+	<creationDate>02/11/2010</creationDate>
+	<author>Jan Pavelka (www.phoca.cz)</author>
+	<authorEmail></authorEmail>
+	<authorUrl>www.phoca.cz</authorUrl>
+	<copyright>Jan Pavelka</copyright>
+	<license>GNU/GPL</license>
+	<!-- The version string is recorded in the components table -->
+	<version>1.0.9</version>
+	<!-- The description is optional and defaults to the name -->
+	<description>Phoca PDF</description>
+
+	<!-- Install Database Section -->
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">install.sql</file>
+		</sql>
+	</install>
+
+	<!-- Uninstall Database Section -->
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">uninstall.sql</file>
+		</sql>
+	</uninstall>
+
+	<!-- Custom Install Script to execute -->
+	<installfile>install.phocapdf.php</installfile>
+
+	<!-- Custom Uninstall Script to execute -->
+	<uninstallfile>uninstall.phocapdf.php</uninstallfile>
+
+	<!-- Site Main File Copy Section -->
+	<files folder="front">
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<filename>metadata.xml</filename>
+		<filename>phocapdf.php</filename>
+		<filename>views/index.html</filename>
+		<filename>views/pdf/index.html</filename>
+		<filename>views/pdf/metadata.xml</filename>
+		<filename>views/pdf/tmpl/default.php</filename>
+		<filename>views/pdf/tmpl/index.html</filename>
+		<filename>views/pdf/view.pdf.php</filename>
+	</files>
+
+	<!-- Language -->
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.com_phocapdf.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.com_phocapdf.menu.ini</language>
+	</languages>
+
+	<!-- Administration -->
+	<administration>
+		<menu img="components/com_phocapdf/assets/images/icon-16-ppdf-menu.png" link="option=com_phocapdf">Phoca PDF</menu>
+		<submenu>
+			<menu img="components/com_phocapdf/assets/images/icon-16-ppdf-cp.png" link="option=com_phocapdf">Control Panel</menu>
+			<menu img="components/com_phocapdf/assets/images/icon-16-ppdf-pdf.png" link="option=com_phocapdf&amp;view=phocaplugins">Plugins</menu>
+			<menu img="components/com_phocapdf/assets/images/icon-16-ppdf-font.png" link="option=com_phocapdf&amp;view=phocafonts">Fonts</menu>
+			<menu img="components/com_phocapdf/assets/images/icon-16-ppdf-info.png" link="option=com_phocapdf&amp;view=phocainfo">Info</menu>
+		</submenu>
+
+		<!-- Administration Main File Copy Section -->
+		<files>
+			<filename>admin.phocapdf.php</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>index.html</filename>
+			<filename>install.phocapdf.php</filename>
+			<filename>install.sql</filename>
+			<filename>phocapdf.xml</filename>
+			<filename>uninstall.phocapdf.php</filename>
+			<filename>uninstall.sql</filename>
+			<filename>assets/images/icon-16-apdf.png</filename>
+			<filename>assets/images/icon-16-email.png</filename>
+			<filename>assets/images/icon-16-false.png</filename>
+			<filename>assets/images/icon-16-footer.png</filename>
+			<filename>assets/images/icon-16-header.png</filename>
+			<filename>assets/images/icon-16-pdf.png</filename>
+			<filename>assets/images/icon-16-ppdf-cp.png</filename>
+			<filename>assets/images/icon-16-ppdf-font.png</filename>
+			<filename>assets/images/icon-16-ppdf-info.png</filename>
+			<filename>assets/images/icon-16-ppdf-menu.png</filename>
+			<filename>assets/images/icon-16-ppdf-pdf.png</filename>
+			<filename>assets/images/icon-16-site.png</filename>
+			<filename>assets/images/icon-16-trash.png</filename>
+			<filename>assets/images/icon-16-true.png</filename>
+			<filename>assets/images/icon-16-vm-false.png</filename>
+			<filename>assets/images/icon-16-vm-trash.png</filename>
+			<filename>assets/images/icon-16-vm-true.png</filename>
+			<filename>assets/images/icon-16-vm-warning.png</filename>
+			<filename>assets/images/icon-16-warning.png</filename>
+			<filename>assets/images/icon-32-params-save.png</filename>
+			<filename>assets/images/icon-32-phocapdf.png</filename>
+			<filename>assets/images/icon-48-apdf.png</filename>
+			<filename>assets/images/icon-48-font.png</filename>
+			<filename>assets/images/icon-48-info.png</filename>
+			<filename>assets/images/icon-48-pdf.png</filename>
+			<filename>assets/images/icon-48-phoca.png</filename>
+			<filename>assets/images/install.png</filename>
+			<filename>assets/images/logo-phoca.png</filename>
+			<filename>assets/images/logo-product.png</filename>
+			<filename>assets/images/logo.png</filename>
+			<filename>assets/images/params-apply.png</filename>
+			<filename>assets/images/params-footer.png</filename>
+			<filename>assets/images/params-header.png</filename>
+			<filename>assets/images/params-site.png</filename>
+			<filename>assets/images/update.png</filename>
+			<filename>assets/images/upgrade.png</filename>
+			<filename>assets/index.html</filename>
+			<filename>assets/jcp/defaultcolor.jpg</filename>
+			<filename>assets/jcp/index.html</filename>
+			<filename>assets/jcp/license.txt</filename>
+			<filename>assets/jcp/picker.css</filename>
+			<filename>assets/jcp/picker.js</filename>
+			<filename>assets/phocapdf.css</filename>
+			<filename>assets/tcpdf/2dbarcodes.php</filename>
+			<filename>assets/tcpdf/CHANGELOG.TXT</filename>
+			<filename>assets/tcpdf/LICENSE.TXT</filename>
+			<filename>assets/tcpdf/README.TXT</filename>
+			<filename>assets/tcpdf/barcodes.php</filename>
+			<filename>assets/tcpdf/cache/index.html</filename>
+			<filename>assets/tcpdf/config/index.html</filename>
+			<filename>assets/tcpdf/config/lang/eng.php</filename>
+			<filename>assets/tcpdf/config/lang/ger.php</filename>
+			<filename>assets/tcpdf/config/lang/index.html</filename>
+			<filename>assets/tcpdf/config/tcpdf_config.php</filename>
+			<filename>assets/tcpdf/html_entity_decode_php4.php</filename>
+			<filename>assets/tcpdf/htmlcolors.php</filename>
+			<filename>assets/tcpdf/images/_blank.png</filename>
+			<filename>assets/tcpdf/images/index.html</filename>
+			<filename>assets/tcpdf/index.html</filename>
+			<filename>assets/tcpdf/pdf417.php</filename>
+			<filename>assets/tcpdf/qrcode.php</filename>
+			<filename>assets/tcpdf/tcpdf.crt</filename>
+			<filename>assets/tcpdf/tcpdf.fdf</filename>
+			<filename>assets/tcpdf/tcpdf.p12</filename>
+			<filename>assets/tcpdf/tcpdf.php</filename>
+			<filename>assets/tcpdf/unicode_data.php</filename>
+			<filename>controllers/index.html</filename>
+			<filename>controllers/phocafont.php</filename>
+			<filename>controllers/phocapdfinstall.php</filename>
+			<filename>controllers/phocapdfuninstall.php</filename>
+			<filename>controllers/phocaplugin.php</filename>
+			<filename>elements/index.html</filename>
+			<filename>elements/phocacolortext.php</filename>
+			<filename>elements/phocaeditor.php</filename>
+			<filename>elements/phocafonttype.php</filename>
+			<filename>elements/phocahead.php</filename>
+			<filename>elements/phocatext.php</filename>
+			<filename>elements/phocatextunit.php</filename>
+			<filename>files/index.html</filename>
+			<filename>files/phocapdf/index.html</filename>
+			<filename>files/phocapdf/phocapdf.php</filename>
+			<filename>fonts/freemono.bak</filename>
+			<filename>fonts/freemono.ctg.z</filename>
+			<filename>fonts/freemono.php</filename>
+			<filename>fonts/freemono.z</filename>
+			<filename>fonts/freemonob.ctg.z</filename>
+			<filename>fonts/freemonob.php</filename>
+			<filename>fonts/freemonob.z</filename>
+			<filename>fonts/freemonobi.ctg.z</filename>
+			<filename>fonts/freemonobi.php</filename>
+			<filename>fonts/freemonobi.z</filename>
+			<filename>fonts/freemonoi.ctg.z</filename>
+			<filename>fonts/freemonoi.php</filename>
+			<filename>fonts/freemonoi.z</filename>
+			<filename>fonts/helvetica.bak</filename>
+			<filename>fonts/helvetica.php</filename>
+			<filename>fonts/helveticab.php</filename>
+			<filename>fonts/helveticabi.php</filename>
+			<filename>fonts/helveticai.php</filename>
+			<filename>fonts/index.html</filename>
+			<filename>help/en-GB/css/help.css</filename>
+			<filename>help/en-GB/css/index.html</filename>
+			<filename>help/en-GB/index.html</filename>
+			<filename>help/en-GB/screen.phocapdf.html</filename>
+			<filename>help/index.html</filename>
+			<filename>helpers/phocapdf.php</filename>
+			<filename>helpers/phocapdfbrowser.php</filename>
+			<filename>helpers/phocapdfcontenttcpdf.php</filename>
+			<filename>helpers/phocapdfparams.php</filename>
+			<filename>helpers/phocapdfrender.php</filename>
+			<filename>models/index.html</filename>
+			<filename>models/phocafonts.php</filename>
+			<filename>models/phocaplugin.php</filename>
+			<filename>views/pdf/index.html</filename>
+			<filename>views/pdf/metadata.xml</filename>
+			<filename>views/pdf/tmpl/default.php</filename>
+			<filename>views/pdf/tmpl/index.html</filename>
+			<filename>views/pdf/view.pdf.php</filename>
+			<filename>views/phocafonts/index.html</filename>
+			<filename>views/phocafonts/tmpl/default.php</filename>
+			<filename>views/phocafonts/tmpl/default_ftp.php</filename>
+			<filename>views/phocafonts/tmpl/index.html</filename>
+			<filename>views/phocafonts/view.html.php</filename>
+			<filename>views/phocainfo/index.html</filename>
+			<filename>views/phocainfo/tmpl/default.php</filename>
+			<filename>views/phocainfo/tmpl/index.html</filename>
+			<filename>views/phocainfo/view.html.php</filename>
+			<filename>views/phocapdfcp/index.html</filename>
+			<filename>views/phocapdfcp/tmpl/default.php</filename>
+			<filename>views/phocapdfcp/tmpl/index.html</filename>
+			<filename>views/phocapdfcp/view.html.php</filename>
+			<filename>views/phocaplugins/index.html</filename>
+			<filename>views/phocaplugins/tmpl/default.php</filename>
+			<filename>views/phocaplugins/tmpl/default_phocapdfcontent.php</filename>
+			<filename>views/phocaplugins/tmpl/default_restaurantmenu.php</filename>
+			<filename>views/phocaplugins/tmpl/default_virtuemart.php</filename>
+			<filename>views/phocaplugins/tmpl/index.html</filename>
+			<filename>views/phocaplugins/view.html.php</filename>
+		</files>
+
+		<!-- Only Development - copy ./front, ./language, ./other to admin area -->
+		<files>
+			<filename>language/en-GB/en-GB.com_phocapdf.ini</filename>
+			<filename>language/en-GB/en-GB.com_phocapdf.menu.ini</filename>
+			<filename>other/index.html</filename>
+			<filename>other/install_xml.php</filename>
+		</files>
+
+		<!-- Language -->
+		<languages>
+			<language tag="en-GB">language/en-GB/en-GB.com_phocapdf.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_phocapdf.menu.ini</language>
+		</languages>
+
+	</administration>
+</install>

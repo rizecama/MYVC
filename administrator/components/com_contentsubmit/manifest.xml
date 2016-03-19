@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="component" version="1.5.0" method="upgrade">
+    <name>ContentSubmit</name>
+    <version>1.5.1</version>
+    <creationDate>October 2009</creationDate>
+    <author>Dioscouri.com</author>
+    <authorEmail>info@dioscouri.com</authorEmail>
+    <authorUrl>http://www.dioscouri.com</authorUrl>
+    <copyright>2009 Dioscouri.com</copyright>
+    <copyrightHolder>Dioscouri.com</copyrightHolder>
+    <license>GNU General Public License v2</license>
+    <description>ContentSubmit allows Joomla Administrators to create front-end article submission forms that are specific to an existing category or section</description>
+
+	<!-- Application/site -->	
+	<files folder="site">
+		<file>metadata.xml</file>
+		<file>view.php</file>
+		<file>contentsubmit.php</file>
+		<file>controller.php</file>
+		<file>index.html</file>
+		<file>router.php</file>
+		<folder>controllers</folder>
+		<folder>helpers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+	</files>
+	
+	<languages>
+		<language tag="en-GB">languages/site/en-GB.com_contentsubmit.ini</language>
+	</languages>
+	
+	<!-- Application/administrator -->
+	<administration>
+		<menu img="../media/com_contentsubmit/images/contentsubmit_16.png">ContentSubmit</menu>
+
+		<files folder="admin">
+			<file>install.php</file>
+			<file>defines.php</file>
+			<file>index.html</file>
+			<folder>install</folder>
+		</files>
+
+		<languages>
+			<language tag="en-GB">languages/admin/en-GB.com_contentsubmit.ini</language>
+		</languages>
+	</administration>
+	
+	<!-- Installation -->
+	<install>
+		<sql>
+			<file charset="utf8" driver="mysql">install/install.sql</file>
+		</sql>
+	</install>
+	
+	<installfile>install.php</installfile>
+	<!-- <uninstallfile>install/uninstall.php</uninstallfile> -->
+
+	<!--  Media -->
+	<media destination="com_contentsubmit" folder="media">
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+	</media>
+		
+	<!-- Modules -->	
+	<modules>
+		<!-- <module module="mod_whatever" publish="false" client="site"/> -->
+	</modules> 
+
+	<!-- Plugins -->
+	<plugins>
+		<!-- <plugin plugin="contentsubmit_plugin_system" publish="true" group="system"/> -->
+		<!-- <plugin plugin="contentsubmit_plugin_user" group="user"/> -->
+	</plugins> 		
+</install>

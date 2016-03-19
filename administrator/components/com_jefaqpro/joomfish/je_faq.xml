@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>JE FAQ's</name>
+  <version>1.2.0</version>
+  <author>J-Extension</author>
+  <copyright>[2010] J-Extn</copyright>
+  <creationDate>August, 2010</creationDate>
+  <authorEmail>contact@jextn.com</authorEmail>
+  <authorUrl>http://www.jextn.com</authorUrl>
+  <description> Translate all the faq's using joomfish </description>
+  <reference type="je_faq">
+  	<table name="je_faq">
+  		<field type="referenceid" name="id" translate="0">ID</field>
+  		<field type="titletext" name="questions"   translate="1">Questions</field>
+  		<field type="htmltext" name="answers" translate="1">Answers</field>
+  	</table>
+  </reference>
+</joomfish>

@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+	<name>JCalPro Events</name>
+	<author>Anything Digital</author>
+	<version>2.0.3</version>
+	<description>Definition for JCalPro Events</description>
+	<reference>
+		<table name="jcalpro2_events">
+			<field type="referenceid" name="extid" translate="0">ID</field>
+			<field type="titletext" name="title" translate="1">Event Title</field>
+			<field type="htmltext" name="description" translate="1">Description</field>
+			<field type="text" name="contact" translate="1">Contact</field>
+			<field type="text" name="url" translate="1">Url</field>
+			<field type="text" name="registration_url" translate="1">Registration url</field>
+			<field type="text" name="email" translate="1">Email</field>
+			<field type="checked_out_by" name="checked_out" translate="0">Check	out by</field>
+			<field type="checked_out_date" name="checked_out_time" translate="0">Check out date</field>
+		</table>
+	</reference>
+</joomfish>

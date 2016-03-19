@@ -1,0 +1,31 @@
+/**
+ * jeFAQ package
+ * @version 1.1
+ * @author J-Extension <contact@jextn.com>
+ * @link http://www.jextn.com
+ * @copyright (C) 2010 - 2011 J-Extension
+ * @license GNU/GPL, see LICENSE.php for full license.
+**/
+
+div.icon-48-faq {
+	background: url("../images/large_icon_faq.png") no-repeat;
+}
+
+div#je-generalsettings {
+	float : left;
+	width : 50%;
+}
+
+div#je-emailsettings {
+	float : left;
+	width : 50%;
+}
+
+table.admintable td.jekey {
+	background-color:#F6F6F6;
+	border-bottom:1px solid #E9E9E9;
+	border-right:1px solid #E9E9E9;
+	color:#666666;
+	font-weight:bold;
+	text-align:right;
+}

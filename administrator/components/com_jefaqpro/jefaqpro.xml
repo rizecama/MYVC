@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install type="component" method="upgrade" version="1.5.0">
+	<name>JEFAQ Pro</name>
+	<license>GNU General Public License v2, see LICENSE.php</license>
+	<author>J-Extension</author>
+	<copyright>[2010] JExtn</copyright>
+	<creationDate>January 29, 2011</creationDate>
+	<authorEmail>contact@jextn.com</authorEmail>
+	<authorUrl>http://www.jextn.com</authorUrl>
+	<version>1.5.8</version>
+	<description>
+	JE FAQ Pro is an easy to use but powerful and excellent FAQ management. Our core competency from our front end and backend features will make you to suitable because we take care of your needs in the FAQ Joomla component needs. This is where we extending the suitability in Joomla.
+	</description>
+
+	<files folder="site">
+			<filename>index.html</filename>
+			<filename>jefaqpro.php</filename>
+			
+			<folder>assets</folder>
+			<folder>captcha</folder>
+			<folder>controllers</folder>
+			<folder>copyright</folder>
+			<folder>models</folder>
+			<folder>sef_ext</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<folder>plg_jefaqprosearch</folder>
+	</files>
+
+	<languages folder="site">
+		<language tag="en-GB">en-GB.com_jefaqpro.ini</language>
+	</languages>
+
+	<administration>
+		<!-- Administration Menu Section -->
+		<menu img="components/com_jefaqpro/assets/images/small_icon_faq.png" link="option=com_jefaqpro">JE FAQ Pro</menu>
+		<submenu>
+			<menu img="components/com_jefaqpro/assets/images/category_image.png"  controller="category">Categories</menu>
+			<menu img="components/com_jefaqpro/assets/images/faq.png"  controller="faq">FAQ's</menu>
+			<menu img="components/com_jefaqpro/assets/images/settings.png"  controller="globalsettings">Global Settings</menu>
+        </submenu>
+
+		<languages folder="admin">
+			<language tag="en-GB">en-GB.com_jefaqpro.ini</language>
+		</languages>
+
+		<!-- Administration Main File Copy Section -->
+		<files folder="admin">
+			<folder>assets</folder>
+			<folder>controllers</folder>
+			<folder>copyright</folder>
+			<folder>elements</folder>
+			<folder>joomfish</folder>
+			<folder>models</folder>
+			<folder>sh404sef</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+
+			<filename>admin.jefaqpro.php</filename>
+			<filename>index.html</filename>
+			<filename>install.mysql.sql</filename>
+			<filename>uninstall.mysql.sql</filename>
+		</files>
+	</administration>
+	
+	<install>
+		<sql>
+			<file charset="utf8" driver="mysql">install.mysql.sql</file>
+		</sql>
+	</install>
+	<uninstall>
+		<sql>
+			<file charset="utf8" driver="mysql">uninstall.mysql.sql</file>
+		</sql>
+	</uninstall>
+
+	<installfile>install.jefaqpro.php</installfile>
+	<uninstallfile>uninstall.jefaqpro.php</uninstallfile>
+
+</install>

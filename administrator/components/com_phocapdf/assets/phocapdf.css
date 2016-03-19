@@ -1,0 +1,156 @@
+
+div.icon-48-info {
+	background: url('images/icon-48-info.png') no-repeat left;
+}
+div.icon-48-phoca {
+	background: url('images/icon-48-phoca.png') no-repeat left;
+}
+
+div.icon-48-pdf {
+	background: url('images/icon-48-pdf.png') no-repeat left;
+}
+
+div.icon-48-apdf {
+	background: url('images/icon-48-apdf.png') no-repeat left;
+}
+
+div.icon-48-font {
+	background: url('images/icon-48-font.png') no-repeat left;
+}
+
+#phocapdf-apply {
+	margin:0;
+	margin-top:10px;
+	padding-left:50px;
+	padding-top:14px;
+	height:45px;
+	width:100px;
+	background: url('images/params-apply.png') 0 0 no-repeat;
+	position:relative;
+	float:right;
+}
+#phocapdf-apply a {
+	text-decoration:underline;
+	font-size:16px;
+	font-weight:bold;
+	color:#777;
+}
+
+#pg-update {
+	margin:0;
+	margin-top:10px;
+	padding-left:50px;
+	padding-top:14px;
+	height:45px;
+	width:270px;
+	background: url('images/update.png') 0 0 no-repeat;
+}
+#pg-update a {
+	text-decoration:underline;
+	font-size:16px;
+	font-weight:bold;
+	color:#fff;
+}
+
+#phocapdf {
+
+}
+
+#phocapdf ul.phoca-plugins-menu {
+
+	list-style-type: none;
+	padding:		0px;
+	margin: 		0px;
+z-index:			1;	
+float:left;
+position:relative;
+}
+#phocapdf ul.phoca-plugins-menu li {
+	list-style-type: 	none;
+	padding:			5px 10px 5px 10px;
+	z-index:			1;
+	
+}
+
+#phocapdf ul.phoca-plugins-menu li.current {
+	
+	list-style-type: 	none;
+	padding:			10px;
+	background:			#fbfbfb;
+	border-left:		1px solid #cdcdcd;
+	border-top:			1px solid #cdcdcd;
+	border-bottom:		1px solid #cdcdcd;
+	z-index:			1;
+	margin-right:		-1px;
+	
+	
+}
+
+#phocapdf div.phoca-plugins {
+	padding:		10px 15px 10px 15px;
+	margin:			0px;
+	background:		#fbfbfb;
+	border:			1px solid #cdcdcd;
+	z-index:		0;
+	
+}
+
+#phocapdf div.phoca-plugins div.phoca-plugins-ie {
+	height:50px;
+	
+}
+
+#phocapdf .phocapdf-hr {
+	margin-top:5px;
+	margin-bottom: 10px;
+	border-bottom:1px dotted #dfdfdf;
+}
+
+
+/* tabs */
+form {
+  margin: 0;
+  padding: 0;
+}
+
+
+dl.tabs {
+	float: left;
+	margin: 10px 0 -1px 0;
+	z-index: 50;
+	
+}
+
+dl.tabs dt {
+	float: left;
+	padding: 4px 10px;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	margin-left: 3px;
+	background: #f0f0f0;
+	color: #666;
+	
+}
+
+dl.tabs dt.open {
+	background: #ffffff;
+	border-bottom: 1px solid #ffffff;
+	z-index: 100;
+	color: #000;
+	
+}
+
+div.current {
+	clear: both;
+	border: 1px solid #ccc;
+	padding: 10px 10px;
+	background: #ffffff;
+	
+}
+
+div.current dd {
+	padding: 0;
+	margin: 0;
+}
+

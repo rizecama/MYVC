@@ -1,0 +1,22 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTART:20121221T000000Z
+DTEND:20121221T000000Z
+LOCATION:California
+TRANSP: OPAQUE
+SEQUENCE:0
+UID:
+DTSTAMP:20121214T074305Z
+SUMMARY:RFP 965473 followup
+DESCRIPTION:You have gotten the followup email for the date 2012-12-21  for RFP 965473 You can see the ITBs page from this link http://camassistant.com/live/administrator/index.php?option=com_camassistant&controller=rfp&task=rfp_bids&rfp_id=965473&industryid=&rfpstatus=rfp&rfpapproval=1&search=
+PRIORITY:1
+CLASS:PUBLIC
+BEGIN:VALARM
+TRIGGER:-PT10080M
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+End:VALARM
+End:VEVENT
+End:VCALENDAR

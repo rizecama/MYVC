@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<params addpath="/administrator/components/com_phocapdf/elements">
+		
+		<param name="@phocahead" type="phocahead" default="GENERAL SETTINGS LABEL" />
+		
+		<param name="display_editor" type="list" default="1" label="Display Editor" description="Display Editor DESC">
+			<option value="1">Yes</option>
+			<option value="0">No</option>
+		</param>
+		
+	</params>
+</config>

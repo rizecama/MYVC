@@ -1,0 +1,6 @@
+<config>
+	<params>
+		<param type="text" name="feedback_adminemail" size="100" label="SENDFEEDBACKEMAILTOLABEL" default="" description="SENDFEEDBACKEMAILTODESC" />
+		<param type="text" name="feedback_spamsplit" size="5" label="ANTISPANMINTIMELABEL" default="5" description="ANTISPANMINTIMEDESC" />
+	</params>
+</config>

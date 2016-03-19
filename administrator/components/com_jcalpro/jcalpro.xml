@@ -1,0 +1,843 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="component" version="1.5.0" method="upgrade">
+	<name>JCalPro</name>
+	<creationDate>2011-05-12</creationDate>
+	<author>Anything Digital</author>
+	<copyright>2009 Anything Digital</copyright>
+	<authorEmail>admin@anything-digital.com</authorEmail>
+	<authorUrl>dev.anything-digital.com</authorUrl>
+	<license>This component is released under the GNU/GPL License</license>
+	<version>2.2.17.1587</version>
+	<description>
+		JCal Pro is a W3C XHTML/CSS-validated events calendar component
+		with a gorgeous, CSS-based, front-end display. Features include
+		native Joomla! permissioning (ACL) for event
+		creation/management, administrative event aproval with e-mail
+		notification, backend event management, cloakmail
+		plugin support, WYSIWYG event descriptions using the Joomla! editing
+		plugin and integrated management of calendar themes. Further
+		details	and documentation can be found at	<a href="http://dev.anything-digital.com" target="_blank">dev.anything-digital.com</a>.
+	</description>
+	<files folder="site">
+		<filename>admin_events.php</filename>
+		<filename>cal_search.php</filename>
+		<filename>changelog.log</filename>
+		<filename>config.inc.php</filename>
+		<filename>index_image.gif</filename>
+		<filename>index.html</filename>
+		<filename>jcalpro.class.php</filename>
+		<filename>jcalpro.php</filename>
+		<filename>controller.php</filename>
+		<filename>router.php</filename>
+		<filename>LICENSE</filename>
+		<filename>metadata.xml</filename>
+		
+		<folder>elements</folder>
+		<folder>images</folder>
+		<folder>include</folder>
+		<folder>lib</folder>
+		<folder>meta_ext</folder>
+		<folder>sef_ext</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+		<folder>languages</folder>
+		<folder>themes</folder>
+		<folder>upload</folder>
+	</files>
+	<install>
+		<queries>
+			<query>
+				CREATE TABLE IF NOT EXISTS #__jcalpro2_categories (
+				`cat_id`
+				int(11) NOT NULL auto_increment,
+				`cat_parent` int(11) NOT NULL
+				default '0',
+				`cat_name` varchar(150) NOT NULL default '',
+				`description` text NOT NULL,
+				`color` varchar(10) default '#000000',
+				`bgcolor` varchar(10) default '#EEF0F0',
+				`options` tinyint(4) default
+				'0',
+				`level` varchar(255) default '0',
+				`published` tinyint(1) default
+				'0',
+				`checked_out` int(11) unsigned NOT NULL default '0',
+				`checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
+				PRIMARY KEY (cat_id)
+				) ENGINE=MyISAM;
+			</query>
+			<query>
+				CREATE TABLE IF NOT EXISTS #__jcalpro2_calendars (
+				`cal_id`
+				int(11) NOT NULL auto_increment,
+				`cal_parent` int(11) NOT NULL
+				default '0',
+				`cal_name` varchar(150) NOT NULL default '',
+				`owner_id`
+				int(11) NOT NULL default '0',
+				`description` text NOT NULL,
+				`options`
+				tinyint(4) default '0',
+				`level` varchar(255) default '0',
+				`published`
+				tinyint(1) default '0',
+				`checked_out` int(11) unsigned NOT NULL
+				default '0',
+				`checked_out_time` datetime NOT NULL default '0000-00-00
+				00:00:00',
+				PRIMARY KEY
+				(cal_id)
+				) ENGINE=MyISAM;
+			</query>
+			<query>
+				CREATE TABLE IF NOT EXISTS #__jcalpro2_events (	
+				`extid` int(11)	NOT NULL auto_increment,
+				`common_event_id` varchar(255) NOT NULL default '',
+				`cal_id` int(11) NOT NULL default '0',
+				`rec_id` int(11)NOT NULL default '0',
+				`detached_from_rec` tinyint(1) NOT NULL default	'0',
+				`owner_id` int(11) NOT NULL default '0',
+				`title` varchar(255) NOT NULL default '',
+				`description` text NOT NULL,
+				`contact` text NOT NULL,
+				`url` varchar(100) NOT NULL default '',
+				`registration_url` varchar(100) NOT NULL default '',
+				`email` varchar(120) NOT NULL default '',
+				`picture` varchar(100) NOT NULL default '',
+				`cat` int(11)	NOT NULL default '0',
+				`day` tinyint(2) NOT NULL default '0',
+				`month` smallint(2) NOT NULL default '0',
+				`year` smallint(4) NOT NULL default '0',
+				`approved` tinyint(1) NOT NULL default '0',
+				`private` tinyint(1) NOT NULL default '0',
+				`start_date` datetime NOT NULL default '0000-00-00 00:00:00',
+				`end_date` datetime default '0000-00-00	00:00:00',
+				`recur_type` varchar(16) default NULL,
+				`recur_val`	tinyint(4) default '0',
+				`recur_end_type` tinyint(1) unsigned NOT NULL	default '0',
+				`recur_count` tinyint unsigned NOT NULL default '0',
+				`recur_until` datetime default '0000-00-00 00:00:00',
+				`rec_type_select` tinyint(1) NOT NULL default '0',
+				`rec_daily_period` smallint NOT NULL default '0',
+				`rec_weekly_period` smallint NOT NULL default '0',
+				`rec_weekly_on_monday` tinyint(1) NOT NULL default '0',
+				`rec_weekly_on_tuesday` tinyint(1) NOT NULL default '0',
+				`rec_weekly_on_wednesday` tinyint(1) NOT NULL default '0',
+				`rec_weekly_on_thursday` tinyint(1) NOT NULL default '0',
+				`rec_weekly_on_friday` tinyint(1) NOT NULL default '0',
+				`rec_weekly_on_saturday` tinyint(1) NOT NULL default '0',
+				`rec_weekly_on_sunday` tinyint(1) NOT NULL default '0',
+				`rec_monthly_period` smallint NOT NULL default '0',
+				`rec_monthly_type` tinyint(1) NOT NULL default '0',
+				`rec_monthly_day_number` smallint NOT NULL default '0',
+				`rec_monthly_day_list` varchar(100) default '',
+				`rec_monthly_day_order` tinyint(1) NOT NULL default '0',
+				`rec_monthly_day_type` tinyint(1) NOT NULL default '0',
+				`rec_yearly_period` smallint NOT NULL default '0',
+				`rec_yearly_on_month` tinyint(1) NOT NULL default '0',
+				`rec_yearly_on_month_list` varchar(50) default '',
+				`rec_yearly_type`	tinyint(1) NOT NULL default '0',
+				`rec_yearly_day_number` smallint NOT NULL default '0',
+				`rec_yearly_day_order` tinyint(1) NOT NULL default '0',
+				`rec_yearly_day_type` tinyint(1) NOT NULL default '0',
+				`last_updated` datetime NOT NULL default '0000-00-00 00:00:00',
+				`published` tinyint(1) default '0',
+				`checked_out` int(11) unsigned NOT NULL default '0',
+				`checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
+				PRIMARY KEY (extid),
+				KEY start_date (start_date),
+				KEY cal_id (cal_id),
+				KEY rec_id (rec_id),
+				KEY owner_id (owner_id),
+				KEY private (private),
+				KEY common_event_id (common_event_id),
+				KEY last_updated (last_updated)
+				) ENGINE=MyISAM;
+			</query>
+			<!-- Version 2.2.0 update common_event_id size from 32 to 255 to accomodate non-jcal-pro ids -->
+			<query>
+			 ALTER TABLE `#__jcalpro2_events` CHANGE `common_event_id` `common_event_id` VARCHAR( 255 ) NOT NULL DEFAULT ''; 
+			</query>
+			<query>
+				CREATE TABLE IF NOT EXISTS #__jcalpro2_config (
+				`name`
+				varchar(40) NOT NULL default '',
+				`value` varchar(255) NOT NULL
+				default '',
+				`checked_out` int(11) unsigned NOT NULL default '0',
+				`checked_out_time` datetime NOT NULL default '0000-00-00 00:00:00',
+				PRIMARY KEY (name)
+				) ENGINE=MyISAM;
+			</query>
+
+			<query>
+				CREATE TABLE IF NOT EXISTS `#__jcalpro2_themes` (
+				`id` int(11)
+				NOT NULL auto_increment,
+				`name` varchar(100) NOT NULL default '',
+				`theme` varchar(100) NOT NULL default '',
+				`type` varchar(100) NOT
+				NULL default 'plugins',
+				`icon` varchar(255) NOT NULL default '',
+				`published` tinyint(3) NOT NULL default '0',
+				`editable` tinyint(3)
+				NOT NULL default '1',
+				`elements` varchar(255) NOT NULL default '',
+				`iscore` tinyint(3) NOT NULL default '0',
+				`client_id` tinyint(3) NOT
+				NULL default '0',
+				`checked_out` int(11) unsigned NOT NULL default
+				'0',
+				`checked_out_time` datetime NOT NULL default '0000-00-00
+				00:00:00',
+				`params` text NOT NULL,
+				PRIMARY KEY (`id`),
+				UNIQUE KEY
+				`plugin` (`theme`)
+				) ENGINE=MYISAM;
+			</query>
+
+			<query>
+				CREATE TABLE IF NOT EXISTS `#__jcalpro2_remotes` (
+				`id` int(11)
+				unsigned NOT NULL auto_increment,
+				`remote_url` varchar(255) NOT NULL,
+				`server_key` varchar(64) NOT NULL,
+				`server_pw` varchar(64) NOT NULL,
+				`remote_cat` int(10) unsigned NOT NULL,
+				`local_cal` int(10) unsigned
+				NOT NULL,
+				`local_cat` int(10) unsigned NOT NULL,
+				`cache_life` int(10)
+				unsigned NOT NULL,
+				PRIMARY KEY (`id`)
+				) ENGINE=MyISAM;
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_themes VALUES ('',
+				'default',
+				'default', 'theme', 'default', 1, 1, '', 1,
+				0, 0, '0000-00-00
+				00:00:00', '');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_categories VALUES (
+				1,0,'General', 'This is the default category', '#000000','#EEF0F0',
+				2, 'public frontend', 1, 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_calendars VALUES (
+				'1','0',
+				'Default', '62', 'Default calendar', '', 'public frontend', 1, 0,
+				'0000-00-00 00:00:00');
+			</query>
+
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('disable_footer',
+				'0', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('cookie_name',
+				'jcalpro1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('cookie_path',
+				'/', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('debug_mode',
+				'0', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('events_per_page', '10', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('calendar_name',
+				'JCal Pro Calendar', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('calendar_admin_email', '', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('calendar_description', 'Your online events calendar',
+				0,
+				'0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES ('lang',
+				'english', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES ('charset',
+				'language file', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('main_table_width', '100%', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('max_tabs', '12', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES ('theme',
+				'default', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('timezone', '-5', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('time_format_24hours', '0', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('auto_daylight_saving', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('default_view', '2', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('popup_event_mode', '0', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('popup_event_width', '550', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('popup_event_height', '300', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('add_event_view', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('cats_view', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('daily_view', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('weekly_view', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('monthly_view', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('flyer_view', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('search_view', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('day_start', '0', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES ('archive',
+				'0', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('flyer_show_picture', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('addevent_allow_html', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('addevent_allow_contact', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('addevent_allow_email', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('addevent_allow_url', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('new_post_notification', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('cal_view_max_chars', '10000', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('flyer_view_max_chars', '10000', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('weekly_view_max_chars', '10000', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('daily_view_max_chars', '10000', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('cats_view_max_chars', '10000', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('mini_cal_def_picture', 'def_pic.gif', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('mini_cal_diplay_options', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('release_name', 'Mambo Version of 2.0 Beta 1', 0,
+				'0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('release_version', 'Mambo Version of 2.00.25', 0,
+				'0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('release_type', 'Unique MamboServer Version', 0,
+				'0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('sort_order', 'ta', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('allow_user_registration', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('reg_email_verify', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('reg_duplicate_emails', '0', 0, '0000-00-00 00:00:00');
+			</query>
+
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('calendar_status', '1', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_recurrent_events', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('multi_day_events', 'all', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('cal_view_show_week', '1', 0, '0000-00-00 00:00:00');
+			</query>
+
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('mail_method', 'mail', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('mail_smtp_host', 'smtp.myhost.com', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('mail_smtp_auth', '0', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('mail_smtp_username', '', 0, '0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('mail_smtp_password', '', 0, '0000-00-00 00:00:00');
+			</query>
+
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('url_target_for_events', '_blank', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('capitalize_event_titles', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_top_navigation_bar', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('who_can_add_events', 'registered', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('who_can_edit_events', 'manager', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('who_can_delete_events', 'manager', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('who_can_approve_events', 'manager', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_recurrence_info_event_view', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_recurrence_info_category_view', '1', 0,
+				'0000-00-00 00:00:00');
+			</query>
+			<!-- <query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('sort_category_view_by', 'date_asc', 0, '0000-00-00
+				00:00:00');
+			</query>-->
+			<query>
+				DELETE FROM #__jcalpro2_config WHERE `name` = 'sort_category_view_by';
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_only_start_times', '0', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_event_times_in_monthly_view', '0', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_event_times_in_flat_view', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_event_times_in_weekly_view', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_event_times_in_daily_view', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_overlapping_recurrences_monthlyview', '1', 0,
+				'0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_overlapping_recurrences_flatview', '0', 0,
+				'0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_overlapping_recurrences_weeklyview', '0', 0,
+				'0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('show_overlapping_recurrences_dailyview', '0', 0,
+				'0000-00-00 00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('allow_javascript_in_event_urls', '0', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('default_calendar', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('enable_multiple_calendars', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('default_owner_id', '62', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('update_detached_with_series', '0', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('enable_ajax_features', '1', 0, '0000-00-00
+				00:00:00');
+			</query>
+      <query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('site_timezone', '', 0, '0000-00-00
+				00:00:00');
+			</query>
+			<query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('enable_feeds', '1', 0, '0000-00-00
+        00:00:00');
+      </query>
+			<query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('only_new_feeds', '0', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('enable_moovur', '1', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('enable_recaptcha', '0', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('who_can_bypass_captcha', 'manager', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('enable_ical_export', '1', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('show_print_menu_icon', '1', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('show_ical_export_menu_icon', '1', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('show_event_times_in_cat_view', '1', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <!-- metadata -->
+      <query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('metadata_global_keywords', '', 0, '0000-00-00
+				00:00:00');
+			</query>
+      <query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('metadata_global_description', '', 0, '0000-00-00
+				00:00:00');
+			</query>
+      <query>
+				INSERT IGNORE INTO #__jcalpro2_config VALUES
+				('metadata_ignore_keywords', 'and,am,is,are,was,were,be,being,been,to,as,a,it,is', 0, '0000-00-00
+				00:00:00');
+			</query>
+      <!-- I'll Be There/RSVP -->
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('show_illbethere', '0', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('color_illbethere', '', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('cat_list_illbethere_exclude', '', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('itemid_illbethere', '', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <!-- JomSocial -->
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('show_community', '0', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('color_community', '', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('cat_list_community_exclude', '', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('cat_subs_community', '', 0, '0000-00-00
+        00:00:00');
+      </query>
+      <query>
+        INSERT IGNORE INTO #__jcalpro2_config VALUES
+        ('itemid_community', '', 0, '0000-00-00
+        00:00:00');
+      </query>
+		</queries>
+	</install>
+	<uninstall>
+		<queries></queries>
+	</uninstall>
+	<installfile>install.jcalpro.php</installfile>
+	<uninstallfile>uninstall.jcalpro.php</uninstallfile>
+	<administration>
+		<menu>JCal Pro</menu>
+		<submenu>
+			<menu task="editSettings">Edit Settings</menu>
+			<menu task="showCalendars">Manage Calendars</menu>
+			<menu task="showCategories">Manage Categories</menu>
+			<menu task="dummy">Manage Events</menu>
+			<menu task="showthemes">Show Themes</menu>
+			<menu task="dummy">Install Themes</menu>
+			<menu task="manageImports">Import events</menu>
+			<menu task="about">About</menu>
+			<menu task="documentation">Documentation</menu>
+		</submenu>
+		<files folder="admin">
+			<filename>admin_settings.php</filename>
+			<filename>admin.config.inc.php</filename>
+			<filename>admin.jcalpro.html.php</filename>
+			<filename>admin.jcalpro.php</filename>
+<!-- 			<filename>install.jcalpro.php</filename>-->
+			<filename>controller.php</filename>
+			<filename>toolbar.jcalpro.html.php</filename>
+			<filename>toolbar.jcalpro.php</filename>
+<!-- 			<filename>uninstall.jcalpro.php</filename>-->
+			<filename>config.xml</filename>
+			<filename>index.html</filename>
+
+			<filename>installer/index.html</filename>
+			<filename>installer/installer.class.php</filename>
+			<filename>installer/installer.html.php</filename>
+			<filename>installer/installer.php</filename>
+
+			<filename>installer/themes/index.html</filename>
+			<filename>installer/themes/themes.class.php</filename>
+			<filename>installer/themes/themes.html.php</filename>
+			<filename>installer/themes/themes.php</filename>
+
+			<filename>controllers/events.php</filename>
+			<filename>controllers/events.html.php</filename>
+			<filename>controllers/theme.php</filename>
+			<filename>controllers/index.html</filename>
+
+			<filename>modules/mod_jcalpro_latest_J15.php</filename>
+			<filename>modules/mod_jcalpro_latest_J15.xml</filename>
+			<filename>modules/mod_jcalpro_minical_J15.php</filename>
+			<filename>modules/mod_jcalpro_minical_J15.xml</filename>
+			
+			<filename>plugins/bot_jcalpro_latest_events.php</filename>
+			<filename>plugins/bot_jcalpro_latest_events.xml</filename>
+			<filename>plugins/bot_jcalpro_search.php</filename>
+			<filename>plugins/bot_jcalpro_search.xml</filename>
+			
+			<filename>plugins/cb/cbjcalproevents.xml</filename>
+      <filename>plugins/cb/cbjcalproevents.php</filename>
+      <filename>plugins/cb/index.html</filename>
+      <filename>plugins/cb/cbjcalprominical.xml</filename>
+      <filename>plugins/cb/cbjcalprominical.php</filename>
+      
+      <filename>plugins/js/jsjcalproevents.xml</filename>
+      <filename>plugins/js/jsjcalproevents.php</filename>
+      <filename>plugins/js/jsjcalprominical.xml</filename>
+      <filename>plugins/js/jsjcalprominical.php</filename>
+      <filename>plugins/js/index.html</filename>
+      
+      <filename>plugins/system/jcllibraries.php</filename>
+			<filename>plugins/system/jcllibraries.xml</filename>
+			<filename>plugins/system/jcl.shhttpcomm/shhttpcomm.php</filename>
+			<filename>plugins/system/jcl.shhttpcomm/index.html</filename>
+			
+			<filename>plugins/jcalpro/jclrecaptcha.php</filename>
+      <filename>plugins/jcalpro/jclrecaptcha.xml</filename>
+      <filename>plugins/jcalpro/index.html</filename>
+      <filename>plugins/jcalpro/jcl.recaptcha/jclrecaptcha.php</filename>
+      <filename>plugins/jcalpro/jcl.recaptcha/index.html</filename>
+			
+			<filename>themes/index.html</filename>
+			<filename>themes/themes.class.php</filename>
+			<filename>themes/themes.html.php</filename>
+			<filename>themes/themes.php</filename>
+			<filename>views/default/view.php</filename>
+			<filename>views/default/index.html</filename>
+			<filename>views/main/view.php</filename>
+			<filename>views/main/index.html</filename>
+			<filename>views/main/tmpl/default.php</filename>
+			<filename>views/main/tmpl/index.html</filename>
+			<filename>views/theme/view.php</filename>
+			<filename>views/theme/index.html</filename>
+			<filename>views/theme/tmpl/default.php</filename>
+			<filename>views/theme/tmpl/index.html</filename>
+			<filename>views/editorinsert/view.html.php</filename>
+			<filename>views/editorinsert/editorinsert.js</filename>
+      <filename>views/editorinsert/index.html</filename>
+      <filename>views/editorinsert/tmpl/default.php</filename>
+      <filename>views/editorinsert/tmpl/index.html</filename>
+      
+			
+			<filename>contentelements/jcalpro2_calendars.xml</filename>
+			<filename>contentelements/jcalpro2_categories.xml</filename>
+			<filename>contentelements/jcalpro2_events.xml</filename>
+
+			<filename>includes/index.html</filename>
+		</files>
+	</administration>
+</install>

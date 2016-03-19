@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install type="component" version="1.5.0">
+	<name>Feedback</name>
+	<creationDate>2010-05-28</creationDate>
+	<author>Mertonium</author>
+	<authorEmail>john@mertonium.com</authorEmail>
+	<authorUrl>http://mertonium.com</authorUrl>
+	<copyright>Copyright © 2010 Mertonium.  All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<version>1.2.5</version>
+	<description><![CDATA[ <h2>Client Feedback</h2>
+							<p>An extension by <a href="http://mertonium.com" target="_blank">Mertonium</a>.</p>
+							<p>This component receives and stores updates from the mod_feedback module.  It doesn't have a "front end".  The front end controller only serves up AJAX requests.</p>
+							<p>More information on the extension can be found here: <a href="http://mertonium.com/client-feedback-extension-for-joomla/" target="_blank">http://mertonium.com/client-feedback-extension-for-joomla/</a>.</p>]]>
+	</description>
+	<files folder="frontend">
+		<filename>index.html</filename>
+		<filename>feedback.php</filename>
+		<filename>controller.php</filename>
+		<filename>models/index.html</filename>
+		<filename>models/feedback.php</filename>
+		<filename>views/index.html</filename>
+		<filename>views/feedback/index.html</filename>
+		<filename>views/feedback/view.html.php</filename>
+		<filename>views/feedback/metadata.xml</filename>
+		<filename>views/feedback/tmpl/index.html</filename>
+		<filename>views/feedback/tmpl/default.php</filename>
+		<filename>views/feedback/tmpl/default.xml</filename>		
+	</files>
+	<params>
+		<param type="text" name="feedback_adminemail" size="100" label="Send feedback email to:" default="" description="Who should we send the feedback email to? (Separate multiple addresses with commas)" />
+	</params>
+	<!-- Language frontend -->
+	<languages folder="languages-front">
+		<language tag="en-GB">en-GB/en-GB.com_feedback.ini</language>
+		<language tag="es-ES">es-ES/es-ES.com_feedback.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.com_feedback.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.com_feedback.ini</language>
+		<language tag="ar-AA">ar-AA/ar-AA.com_feedback.ini</language>
+	</languages>
+	<installfile>install.feedback.php</installfile>
+	<uninstallfile>uninstall.feedback.php</uninstallfile>
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	<administration>
+		<menu>Feedback</menu>
+		<files folder="backend">
+			<filename>index.html</filename>
+			<filename>admin.feedback.php</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>CHANGELOG.txt</filename>
+			<filename>install.mysql.utf8.sql</filename>
+			<filename>controllers/index.html</filename>
+			<filename>controllers/feedback.php</filename>
+			<filename>help/index.html</filename>
+			<filename>help/en-GB/index.html</filename>
+			<filename>help/en-GB/screen.feedback.html</filename>
+			<filename>help/en-GB/css/index.html</filename>
+			<filename>help/en-GB/css/help.css</filename>
+			<filename>models/index.html</filename>
+			<filename>models/feedback.php</filename>
+			<filename>tables/index.html</filename>
+			<filename>tables/feedback.php</filename>
+			<filename>views/index.html</filename>
+			<filename>views/feedback/index.html</filename>
+			<filename>views/feedback/view.html.php</filename>
+			<filename>views/feedback/tmpl/index.html</filename>
+			<filename>views/feedback/tmpl/default.php</filename>
+			<filename>views/feedbackentry/index.html</filename>
+			<filename>views/feedbackentry/view.html.php</filename>
+			<filename>views/feedbackentry/tmpl/default_form.php</filename>
+			<filename>views/feedbackentry/tmpl/index.html</filename>			
+		</files>
+		<!-- Language backend -->
+		<languages folder="languages-admin">
+			<language tag="en-GB">en-GB/en-GB.com_feedback.ini</language>
+			<language tag="es-ES">es-ES/es-ES.com_feedback.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.com_feedback.ini</language>
+			<language tag="ru-RU">ru-RU/ru-RU.com_feedback.ini</language>
+			<language tag="ar-AA">ar-AA/ar-AA.com_feedback.ini</language>
+		</languages>
+	</administration>	
+</install>

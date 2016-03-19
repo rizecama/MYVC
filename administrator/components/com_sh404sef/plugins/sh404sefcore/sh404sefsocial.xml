@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="sh404sefcore" method="upgrade">
+	<name>sh404SEF - Social buttons plugin</name>
+	<author>Yannick Gaultier</author>
+	<creationDate>2012-01-24</creationDate>
+	<copyright>2011 Yannick Gaultier</copyright>
+	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<authorEmail>admin@anything-digital.com	</authorEmail>
+	<authorUrl>anything-digital.com</authorUrl>
+	<version>2.4.6.1033</version>
+	<description>Allow insertion of Social buttons in articles, modules or templates, by replacing the {sh404sef_social_buttons} tag you can add in said content. You can specify a custom URL like so: {sh404sef_social_buttons url=/my-url.html}</description>
+	<files>
+		<filename plugin="sh404sefsocial">sh404sefsocial.php</filename>
+		<filename>sh404sefsocial.js</filename>
+		<filename>sh404sefsocial.css</filename>
+		<filename>index.html</filename>
+	</files>
+	<params>
+				<param name="enableSocialAnalyticsIntegration" type="radio"
+					default="1" label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_SOCIAL_ANALYTICS"
+					description="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_SOCIAL_ANALYTICS_DESC">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+
+				<param name="enableGoogleSocialEngagement" type="radio"
+					default="1"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_GOOGLE_SOCIAL_ENGAGEMENT"
+					description="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_SOCIAL_ENGAGEMENT_DESC">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+
+				<param name="onlyDisplayOnCanonicalUrl" type="radio" default="1"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ONLY_DISPLAY_ON_CANONICAL"
+					description="PLG_SH404SEFCORE_SH404SEFSOCIAL_ONLY_DISPLAY_ON_CANONICAL_DESC">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				
+				<param name="buttonsContentLocation" type="list" default="onlytags"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_BUTTONS_LOCATION"
+          description="PLG_SH404SEFCORE_SH404SEFSOCIAL_BUTTONS_LOCATION_DESC">
+          <option value="onlyTags">PLG_SH404SEFCORE_SH404SEFSOCIAL_BUTTONS_LOCATION_ONLY_TAGS</option>
+          <option value="before">PLG_SH404SEFCORE_SH404SEFSOCIAL_BUTTONS_LOCATION_BEFORE_CONTENT</option>
+          <option value="after">PLG_SH404SEFCORE_SH404SEFSOCIAL_BUTTONS_LOCATION_AFTER_CONTENT</option>
+        </param>
+        
+        <param name="useShurl" type="radio" default="1"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_USE_SHURL"
+          description="PLG_SH404SEFCORE_SH404SEFSOCIAL_USE_SHURL_DESC">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </param>
+        
+			  <param name="@spacer" type="spacer" default="" label="PLG_SH404SEFCORE_SH404SEFSOCIAL_FACEBOOK" description="" />
+			  
+				<param name="enableFbLike" type="radio" default="1"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_FB_LIKE" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_FB_LIKE_DESC">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+				</param>
+
+				<param name="enableFbSend" type="radio" default="1"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_FB_SEND" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_FB_SEND_DESC">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+				</param>
+
+				<param name="fbLayout" type="list" default="button_count"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_LAYOUT" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_LAYOUT_DESC">
+					<option value="button_count">PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_LAYOUT_BUTTON_COUNT</option>
+					<option value="box_count">PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_LAYOUT_BOX_COUNT</option>
+					<option value="none">PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_LAYOUT_NO_COUNT</option>
+				</param>
+				
+				<param name="fbAction" type="list" default="like"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_ACTION" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_ACTION_DESC">
+          <option value="like">PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_LAYOUT_LIKE</option>
+          <option value="recommend">PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_LIKE_RECOMMEND</option>
+        </param>
+
+				<param name="fbShowFaces" type="radio" default="1"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_SHOW_FACES" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_SHOW_FACES_DESC">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+				</param>
+				
+				<param name="fbColorscheme" type="radio" default=""
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_COLORSCHEME" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_COLORSCHEME_DESC">
+          <option value="">PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_COLORSCHEME_LIGHT</option>
+          <option value="dark">PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_COLORSCHEME_DARK</option>
+        </param>
+
+				<param name="fbWidth" type="text" default="" size="10"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_WIDTH" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_WIDTH_DESC" />
+
+				<param name="fbUseHtml5" type="radio" default="0"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_USE_HTML5" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_FB_USE_HTML5_DESC">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+
+			  <param name="@spacer" type="spacer" default="" label="PLG_SH404SEFCORE_SH404SEFSOCIAL_TWEETER" description="" />
+			
+				<param name="enableTweet" type="radio" default="1"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_TWEET" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_TWEET_DESC">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+				</param>
+				<param name="tweetLayout" type="list" default="none"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_TWEET_LAYOUT" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_TWEET_LAYOUT_DESC">
+					<option value="vertical">PLG_SH404SEFCORE_SH404SEFSOCIAL_TWEET_LAYOUT_VERTICAL</option>
+					<option value="horizontal">PLG_SH404SEFCORE_SH404SEFSOCIAL_TWEET_LAYOUT_HORIZONTAL</option>
+					<option value="none">PLG_SH404SEFCORE_SH404SEFSOCIAL_TWEET_LAYOUT_NONE</option>
+				</param>
+				<param name="viaAccount" type="text" default="" size="10"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_TWEET_VIA_ACCOUNT"
+					description="PLG_SH404SEFCORE_SH404SEFSOCIAL_TWEET_VIA_ACCOUNT_DESC" />
+
+  			<param name="@spacer" type="spacer" default="" label="PLG_SH404SEFCORE_SH404SEFSOCIAL_PLUS_ONE" description="" />
+			
+				<param name="enablePlusOne" type="radio" default="1"
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_PLUS_ONE" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_PLUS_ONE_DESC">
+					<option value="0">Hide</option>
+					<option value="1">Show</option>
+				</param>
+				<param name="plusOneSize" type="list" default=""
+					label="PLG_SH404SEFCORE_SH404SEFSOCIAL_PLUS_ONE_SIZE" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_PLUS_ONE_SIZE_DESC">
+					<option value="small">PLG_SH404SEFCORE_SH404SEFSOCIAL_PLUS_ONE_SIZE_SMALL</option>
+					<option value="medium">PLG_SH404SEFCORE_SH404SEFSOCIAL_PLUS_ONE_SIZE_MEDIUM</option>
+					<option value="">PLG_SH404SEFCORE_SH404SEFSOCIAL_PLUS_ONE_SIZE_STANDARD</option>
+					<option value="tall">PLG_SH404SEFCORE_SH404SEFSOCIAL_PLUS_ONE_SIZE_TALL</option>
+				</param>
+        <param name="plusOneAnnotation" type="list" default="none"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_PLUS_ONE_ANNOTATION" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_PLUS_ONE_ANNOTATION_DESC">
+          <option value="none">PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_PLUS_ONE_ANNOTATION_NONE</option>
+          <option value="bubble">PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_PLUS_ONE_ANNOTATION_BUBBLE</option>
+          <option value="inline">PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_PLUS_ONE_ANNOTATION_INLINE</option>
+        </param>
+
+			
+			<param name="@spacer" type="spacer" default="" label="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE" description="" />
+			
+        <param name="enableGooglePlusPage" type="radio" default="1"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_GOOGLE_PLUS_PAGE" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_ENABLE_GOOGLE_PLUS_PAGE_DESC">
+          <option value="0">Hide</option>
+          <option value="1">Show</option>
+        </param>
+        <param name="googlePlusPage" type="text" default="" size="30"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_PAGE"
+          description="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_PAGE_DESC" />
+        <param name="googlePlusCustomText" type="text" default="" size="30"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_CUSTOM_TEXT"
+          description="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_CUSTOM_TEXT_DESC" />
+        <param name="googlePlusCustomText2" type="text" default="" size="30"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_CUSTOM_TEXT" />
+        <param name="googlePlusPageSize" type="list" default="medium"
+          label="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_SIZE" description="PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_SIZE_DESC">
+          <option value="small">PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_SIZE_SMALL</option>
+          <option value="medium">PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_SIZE_MEDIUM</option>
+          <option value="large">PLG_SH404SEFCORE_SH404SEFSOCIAL_GOOGLE_PLUS_PAGE_SIZE_LARGE</option>
+        </param>
+        
+        <param name="plugin_element" default="sh404sefsocial" type="hidden" />
+        <param name="plugin_folder" default="sh404sefcore" type="hidden" />
+	</params>
+</install>

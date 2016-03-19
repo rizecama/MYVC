@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install>
+<install type="component" version="1.5.0" method="upgrade">
+	<name>Kunena</name>
+	<version>2.0.4</version>
+	<versionname>Pharmacopoeia</versionname>
+	<creationDate>2013-01-18</creationDate>
+	<author>Kunena Team</author>
+	<authorEmail>kunena@kunena.org</authorEmail>
+	<authorUrl>http://www.kunena.org</authorUrl>
+	<copyright>(C) 2008 - 2013 Kunena Team. All rights reserved.</copyright>
+	<license>GNU/GPLv3 or later</license>
+	<description>Kunena Forum</description>
+	<installfile>install/install.kunena.php</installfile>
+	<uninstallfile>install/uninstall.kunena.php</uninstallfile>
+	<files>
+		<filename>COPYRIGHT.php</filename>
+	</files>
+	<administration>
+		<menu view="cpanel" img="components/com_kunena/media/icons/favicons/kunena-logo-white.png">COM_KUNENA</menu>
+		<submenu>
+			<menu view="config" img="components/com_kunena/media/icons/favicons/kunena-config.png">COM_KUNENA_CONFIGURATION</menu>
+			<menu view="categories" img="components/com_kunena/media/icons/favicons/kunena-categories.png">COM_KUNENA_CATEGORY_MANAGER</menu>
+			<menu view="users" img="components/com_kunena/media/icons/favicons/kunena-users.png">COM_KUNENA_USER_MANAGER</menu>
+			<menu view="templates" img="components/com_kunena/media/icons/favicons/kunena-templates.png">COM_KUNENA_TEMPLATE_MANAGER</menu>
+			<menu view="smilies" img="components/com_kunena/media/icons/favicons/kunena-smileys.png">COM_KUNENA_EMOTICON_MANAGER</menu>
+			<menu view="ranks" img="components/com_kunena/media/icons/favicons/kunena-ranks.png">COM_KUNENA_RANK_MANAGER</menu>
+			<menu view="trash" img="components/com_kunena/media/icons/favicons/kunena-trash.png">COM_KUNENA_TRASH_MANAGER</menu>
+		</submenu>
+		<files>
+			<filename>kunena.j25.xml</filename>
+			<folder>install</folder>
+			<folder>archive</folder>
+			<folder>language</folder>
+		</files>
+	</administration>
+</install>

@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>JE FAQ Categories</name>
+  <version>1.2.0</version>
+  <author>J-Extension</author>
+  <copyright>[2010] J-Extn</copyright>
+  <creationDate>August, 2010</creationDate>
+  <authorEmail>contact@jextn.com</authorEmail>
+  <authorUrl>http://www.jextn.com</authorUrl>
+  <description> Translate all the categories in faq using joomfish </description>
+  <reference>
+  	<table name="je_faq_category">
+  		<field type="referenceid" name="id" translate="0">ID</field>
+  		<field type="titletext" name="category" translate="1">Category</field>
+  		<field type="text" name="alias" translate="1">Category Alias</field>
+  		<field type="htmltext" name="introtext" translate="1">Intro Text</field>
+  	</table>
+  </reference>
+</joomfish>
