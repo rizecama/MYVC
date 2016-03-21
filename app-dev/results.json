@@ -1,0 +1,77 @@
+[
+    {
+        "id": 973,
+        "companyName": "Green Group Studio",
+        "address": "8461 Lake Worth Road",
+        "city": "Lake Worth",
+        "state": "FL",
+        "zip": "33467",
+        "contactPerson": "Clara Mateus",
+        "companyPhone": "561-439-5345",
+        "alternatePhone": "",
+        "cellPhone": "954-649-2536",
+        "email": "cmateus@greengroupstudio.com",
+        "website": "greengroupstudio.com",
+        "verified": "Verified",
+        "compliance": "Compliant",
+        "industriesServed": [
+            {
+                "industry": "Website, Internet, Computer, Network Services"
+            },
+            {
+                "industry": "Signage, Locksmith, & Mailbox Systems"
+            }
+        ],
+        "rating": 4.5
+    },
+    {
+        "id": 973,
+        "companyName": "Green Group Studio",
+        "address": "8461 Lake Worth Road",
+        "city": "Lake Worth",
+        "state": "FL",
+        "zip": "33467",
+        "contactPerson": "Clara Mateus",
+        "companyPhone": "561-439-5345",
+        "alternatePhone": "",
+        "cellPhone": "954-649-2536",
+        "email": "cmateus@greengroupstudio.com",
+        "website": "greengroupstudio.com",
+        "verified": "Unverified",
+        "compliance": "Noncompliant",
+        "industriesServed": [
+            {
+                "industry": "Website, Internet, Computer, Network Services"
+            },
+            {
+                "industry": "Signage, Locksmith, & Mailbox Systems"
+            }
+        ],
+        "rating": 4.5
+    },
+    {
+        "id": 973,
+        "companyName": "Green Group Studio",
+        "address": "8461 Lake Worth Road",
+        "city": "Lake Worth",
+        "state": "FL",
+        "zip": "33467",
+        "contactPerson": "Clara Mateus",
+        "companyPhone": "561-439-5345",
+        "alternatePhone": "",
+        "cellPhone": "954-649-2536",
+        "email": "cmateus@greengroupstudio.com",
+        "website": "greengroupstudio.com",
+        "verified": "Unverified",
+        "compliance": "Not Available",
+        "industriesServed": [
+            {
+                "industry": "Website, Internet, Computer, Network Services"
+            },
+            {
+                "industry": "Signage, Locksmith, & Mailbox Systems"
+            }
+        ],
+        "rating": 4.5
+    }
+]
