@@ -1,0 +1,123 @@
+#  AddHandler application/x-httpd-php53 .php
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Credentials "true"
+#Header set Access-Control-Allow-Origin "http://localhost"
+Header set Access-Control-Allow-Methods "GET,PUT,POST,DELETE"
+
+RewriteOptions inherit
+RewriteEngine on
+Redirect /vendor/ http://myvendorcenter.com/index.php?option=com_camassistant&controller=vendors&task=vendorpubliclayout&pid=
+Redirect /devvendor/ http://myvendorcenter.com/dev/index.php?option=com_camassistant&controller=vendors&task=vendorpubliclayout&pid=
+
+Redirect /mail/ https://www.youtube.com/watch?v=kfVsfOSbJY0
+Redirect /mail https://www.youtube.com/watch?v=kfVsfOSbJY0
+
+
+
+#RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+#RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+#RewriteRule ^/?$ "http\:\/\/myvendorcenter\.com\/live" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^join$ "http\:\/\/myvendorcenter\.com\/\/index\.php\?option\=com_camassistant\&controller\=vendorsignup\&task\=vendorsignup_p1\&Itemid\=66" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^lolads$ "http\:\/\/myvendorcenter\.com\/\/index\.php\?option\=com_content\&view\=article\&id\=268\&Itemid\=236" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^vendorinfo$ "http\:\/\/myvendorcenter\.com\/\/index\.php\?option\=com_content\&view\=article\&id\=256\&Itemid\=219" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^managerinfo$ "http\:\/\/myvendorcenter\.com\/\/index\.php\?option\=com_content\&view\=article\&id\=255\&Itemid\=218" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^manager$ "http\:\/\/myvendorcenter\.com\/\/index\.php\?option\=com_camassistant\&controller\=propertymanager\&view\=propertymanager\&Itemid\=57" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^vendor$ "http\:\/\/myvendorcenter\.com\/\/index\.php\?option\=com_camassistant\&controller\=vendorsignup\&task\=vendorsignup_p1\&Itemid\=66" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^webmail$ "https\:\/\/myvendorcenter\.com\:2096\/" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^forgot$ "http\:\/\/myvendorcenter\.com\/\/\?option\=com_user\&view\=reset\&Itemid\=137" [R=301,L]
+
+<Limit GET POST>
+ order allow,deny
+ allow from all
+ deny from 204.13.160.143
+ deny from 204.13.161.145
+</Limit>
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^FSR$ "http\:\/\/www\.myvendorcenter\.com\/fsr\/" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^firstservice$ "https\:\/\/www\.myvendorcenter\.com\/fsr\/" [R=301,L]
+
+<Files 403.shtml>
+order allow,deny
+allow from all
+</Files>
+
+deny from 173.70.100.66
+deny from 167.206.54.5
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^BellAnderson$ "https\:\/\/myvendorcenter\.com\/signup\/\?partner\=BellAnderson" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^bellanderson$ "https\:\/\/myvendorcenter\.com\/signup\/\?partner\=BellAnderson" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^amg$ "https\:\/\/myvendorcenter\.com\/signup\/\?partner\=amg" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^AMG$ "https\:\/\/myvendorcenter\.com\/signup\/\?partner\=amg" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^live\/?(.*)$ "http\:\/\/www\.myvendorcenter\.com\/$1" [R=301,L]
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^grs$ "https\:\/\/myvendorcenter\.com\/signup\/\?partner\=grs" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^GRS$ "https\:\/\/myvendorcenter\.com\/signup\/\?partner\=grs" [R=301,L]
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^managersignup$ "https\:\/\/myvendorcenter\.com\/index\.php\?option\=com_camassistant\&controller\=propertymanager\&view\=propertymanager\&Itemid\=57" [R=301,L]
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^app$ "https\:\/\/myvendorcenter\.com\/index\.php\?option\=com_content\&view\=article\&id\=300" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^apm$ "https\:\/\/myvendorcenter\.com\/signup\/\?partner\=apm" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^myvendorcenter\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com$
+RewriteRule ^404$ "https\:\/\/myvendorcenter\.com\/assets\/static\/thatday\.htm" [R=302,L]
+
+#Force non-www:
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^www\.myvendorcenter\.com [NC]
+RewriteRule ^(.*)$ https://myvendorcenter.com/$1 [L,R=301]
