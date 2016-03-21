@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0">
+    <name>Feedback Module</name> 
+    <author>Mertoinum</author> 
+	<creationDate>June 2010</creationDate> 
+    <copyright>Copyright 2010 Mertonium.  All rights reserved.</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <authorEmail>john@mertonium.com</authorEmail> 
+	<authorUrl>mertonium.com</authorUrl> 
+    <version>1.2.5</version>
+	<description><![CDATA[ <h2>Client Feedback (Module)</h2>
+							<p>An extension by <a href="http://mertonium.com" target="_blank">Mertonium</a>.</p>
+							<p>This module is the form used by the com_feedback extension.  It will NOT work without the Client Feedback component installed.</p>
+							<p>More information on the extension can be found here: <a href="http://mertonium.com/client-feedback-extension-for-joomla/" target="_blank">http://mertonium.com/client-feedback-extension-for-joomla/</a>.</p>]]>
+	</description>
+    <files>    
+		<filename module="mod_feedback">mod_feedback.php</filename>
+        <filename>index.html</filename>
+		<filename>images/feedback.png</filename>
+		<filename>images/index.html</filename>
+		<filename>tmpl/index.html</filename>
+		<filename>tmpl/default.php</filename>
+    </files>
+	<languages folder="languages">
+		<language tag="en-GB">en-GB/en-GB.mod_feedback.ini</language>
+		<language tag="es-ES">es-ES/es-ES.mod_feedback.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.mod_feedback.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.mod_feedback.ini</language>
+		<language tag="ar-AA">ar-AA/ar-AA.mod_feedback.ini</language>
+	</languages>
+    <params>
+		<param name="preface" type="textarea" default="" label="CUSTOMMSGLABEL" description="CUSTOMMSGDESC" rows="4" cols="40" />
+		<param name="location" type="radio" default="left" label="MODLOCATIONLABEL" description="MODLOCATIONDESC">
+		  <option value="left">Left side</option>
+		  <option value="right">Right side</option>
+		</param>
+		<param name="flood_limit" type="text" default="10" label="CUSTOMFLOODLABEL" description="CUSTOMFLOODDESC" />
+		<param name="z_index" type="text" default="1001" label="ZINDEXLABEL" description="ZINDEXDESC" />
+		<param name="mod_width" type="text" default="260" label="FBWIDTHLABEL" description="FBWIDTHDESC" />
+		<param name="mod_top" type="text" default="20" label="FBMODTOPLABEL" description="FBMODTOPDESC" />
+		<param name="start_state" type="radio" default="open" label="FBSTARTSTATELABEL" description="FBSTARTSTATEDESC">
+		  <option value="open">Open</option>
+		  <option value="closed">Closed</option>
+		</param>		
+		<param name="name_req" type="radio" default="1" label="FBNAMEREQLABEL" description="FBNAMEREQDESC">
+		  <option value="1">Yes</option>
+		  <option value="0">No</option>
+		</param>
+		<param name="email_req" type="radio" default="1" label="FBEMAILREQLABEL" description="FBEMAILREQDESC">
+		  <option value="1">Yes</option>
+		  <option value="0">No</option>
+		</param>
+		<param name="comment_req" type="radio" default="0" label="FBCOMMENTREQLABEL" description="FBCOMMENTREQDESC">
+		  <option value="1">Yes</option>
+		  <option value="0">No</option>
+		</param>
+		<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="PARAMMODULECLASSSUFFIX" />		
+	</params>
+</install>

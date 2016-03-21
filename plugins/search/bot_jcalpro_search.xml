@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="search" method="upgrade">
+	<name>JCal Pro Search plugin</name>
+	<author>Anything Digital</author>
+	<creationDate>2011-05-12</creationDate>
+	<copyright>2010 Anything Digital</copyright>
+	<license>http://www.gnu.org/copyleft/gpl.html	GNU/GPL</license>
+	<authorEmail>admin@anything-digital.com</authorEmail>
+	<authorUrl>dev.anything-digital.com</authorUrl>
+	<version>2.2.17.1587</version>
+	<description>Search plugin for JCal Pro</description>
+	<files>
+		<filename plugin="bot_jcalpro_search">bot_jcalpro_search.php</filename>
+	</files>
+	<params>
+	<param name="component_itemid" type="text" default=""
+      label="Use this Itemid to display events from search results"
+      description="Fill this option in case you want events in search results to open within a specific menu option. Left blank otherwise ." />
+  </params>    
+</install>

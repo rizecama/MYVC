@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0">
+	<name>Font Size Changer</name>
+	<author>UnDesign</author>
+	<creationDate>2008</creationDate>
+	<copyright>Copyright (C) 2005 - 2008 undesign.com.au</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>matt@undesign.com.au</authorEmail>
+	<authorUrl>www.undesign.com.au</authorUrl>
+	<version>1.0.2</version>
+	<description>
+	<![CDATA[
+		<h1>This font resizer module changes font sizes site-wide.</h1>
+		<h2>Make sure you use PERCENTAGES for your font sizes or fonts will not resize.</h2>
+		<p>Don't forget to publish the module! (go to Extensions/Module Manager/Font Size Changer)</p>
+		<p>You can set the default percentage of the font size (default is 100%).</p>
+		<p>The module uses a cookie to remember the user's preferred font size.</p>
+	]]>
+	 </description>
+	<files>
+		<filename module="mod_fontsize">mod_fontsize.php</filename>
+		<filename>js/md_stylechanger.js</filename>
+		<filename>img/resizer_01.jpg</filename>
+		<filename>img/resizer_02.jpg</filename>
+		<filename>img/resizer_03.jpg</filename>
+	</files>
+	<params>
+
+		<param name="defaultSize" type="text" default="100" label="Default Font Size %" description="The default size of your font is 100%." />
+		<param name="useImg" type="radio" default="1" label="Use Images for buttons?" description="This will use images/buttons instead of text for the controls. Images will not resize.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+
+	</params>
+</install>

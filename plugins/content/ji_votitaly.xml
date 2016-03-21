@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="content">
+	<name>Content - VOTItaly (JOOMItaly)</name>
+	<author>JOOMItaly</author>
+	<creationDate>August 2009</creationDate>
+	<copyright>Copyright (C) 2006-2009 SILOOS SNC. All rights reserved.</copyright>
+	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<authorEmail>info@joomitaly.com</authorEmail>
+	<authorUrl>www.joomitaly.com</authorUrl>
+	<version>1.2</version>
+	<description>VOTITALY_INSTALL_DESC</description>
+	<files>
+		<filename plugin="ji_votitaly">ji_votitaly.php</filename>
+		<filename>ji_votitaly_ajax.php</filename>
+		<folder>ji_votitaly</folder>
+	</files>
+	<languages folder="languages">
+		<language tag="en-GB">en-GB.plg_content_ji_votitaly.ini</language>
+		<language tag="it-IT">it-IT.plg_content_ji_votitaly.ini</language>
+		<language tag="da-DK">da-DK.plg_content_ji_votitaly.ini</language>
+		<language tag="de-DE">de-DE.plg_content_ji_votitaly.ini</language>
+		<language tag="el-GR">el-GR.plg_content_ji_votitaly.ini</language>
+		<language tag="es-ES">es-ES.plg_content_ji_votitaly.ini</language>
+		<language tag="fa-IR">fa-IR.plg_content_ji_votitaly.ini</language>
+		<language tag="nl-NL">nl-NL.plg_content_ji_votitaly.ini</language>
+		<language tag="pl-PL">pl-PL.plg_content_ji_votitaly.ini</language>
+		<language tag="pt-BR">pt-BR.plg_content_ji_votitaly.ini</language>
+		<language tag="ru-RU">ru-RU.plg_content_ji_votitaly.ini</language>
+		<language tag="sv-SE">sv-SE.plg_content_ji_votitaly.ini</language>
+		<language tag="zh-CN">zh-CN.plg_content_ji_votitaly.ini</language>
+		<language tag="zh-TW">zh-TW.plg_content_ji_votitaly.ini</language>
+	</languages>
+	<params>
+    <param name="show_stars" type="radio" default="1" label="VOTITALY_SHOW_STARS" description="VOTITALY_SHOW_STARS_DESC">
+      <option value="1">VOTITALY_YES</option>
+      <option value="0">VOTITALY_NO</option>
+    </param>
+
+    <param name="star_description" type="textarea" cols="30" default="({num_votes} #LANG_VOTES, #LANG_AVERAGE {num_average} #LANG_OUTOF)" label="VOTITALY_STAR_DESCRIPTION" description="VOTITALY_STAR_DESCRIPTION_DESC">    
+    </param>
+    
+    <param name="rating_access" type="list" default="all" label="VOTITALY_RATING_ACCESS" description="VOTITALY_RATING_ACCESS_DESC">
+      <option value="all">VOTITALY_ALL</option>
+      <option value="reg">VOTITALY_ONLY_REGISTERED</option>
+    </param>
+    
+    <param name="rating_periodical" type="list" default="12" label="VOTITALY_RATING_PERIODICAL" description="VOTITALY_RATING_PERIODICAL_DESC">
+      <option value="0">VOTITALY_ONCE</option>
+      <option value="1">VOTITALY_ONE_HOUR</option>
+      <option value="2">VOTITALY_TWO_HOURS</option>
+      <option value="4">VOTITALY_FOUR_HOURS</option>
+      <option value="6">VOTITALY_SIX_HOURS</option>
+      <option value="12">VOTITALY_TWELVE_HOURS</option>
+      <option value="18">VOTITALY_EIGHTEEN_HOURS</option>
+      <option value="24">VOTITALY_TWENTYFOUR_HOURS</option>
+    </param>
+    
+    <param name="check_dbtable" type="list" default="1" label="VOTITALY_CHECK_DBTABLE" description="VOTITALY_CHECK_DBTABLE_DESC">
+      <option value="1">YES</option>
+      <option value="0">NO</option>
+    </param>
+
+  </params>
+</install>

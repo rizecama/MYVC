@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="jcalpro" method="upgrade">
+	<name>JCal pro - reCaptcha plugin</name>
+	<author>Anything Digital</author>
+	<creationDate>2011-05-12</creationDate>
+	<copyright>2010 Anything Digital</copyright>
+	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<authorEmail>admin@anything-digital.com</authorEmail>
+	<authorUrl>dev.anything-digital.com</authorUrl>
+	<version>2.2.17.1587</version>
+	<description>ReCaptcha plugin for JCal Pro</description>
+
+	<files>
+		<filename plugin="jclrecaptcha">jclrecaptcha.php</filename>
+		<filename plugin="jclrecaptcha">jcl.recaptcha/jclrecaptcha.php</filename>
+	</files>
+	<params>
+		<param name="private_key" type="text" default=""
+			label="reCaptcha private key"
+			description="The private key you obtained from reCapctha when subscribing to their service." />
+		<param name="public_key" type="text" default=""
+			label="reCaptcha public key"
+			description="The public key you obtained from reCapctha when subscribing to their service." />
+		<param name="showHelpBtn" type="radio" default="1"
+			label="Show help button"
+			description="If yes, a button to access help will be displayed with captcha">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showAudioBtn" type="radio" default="1"
+			label="Show audio button"
+			description="If yes, a button to have chanllenge be played out as sound will be displayed">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="theme" type="text" default="" label="Use theme"
+			description="Force usage of a specific reCaptcha theme" />
+		<param name="lang" type="text" default="" label="Use language"
+			description="Force usage of a specific language" />
+		<param name="use_ssl" type="radio" default="0" label="Use ssl"
+			description="If yes, reCaptcha server will be accessed using ssl (ie: using https)">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	</params>
+</install>

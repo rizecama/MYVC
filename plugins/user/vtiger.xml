@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="user">
+	<name>User - vtiger</name>
+	<author>Joomla! Project</author>
+	<creationDate>December 2010</creationDate>
+	<copyright>Copyright (C) 2010 - 2010 Open Source Matters. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>hrobben@robusoft.nl</authorEmail>
+	<authorUrl>www.robusoft.us</authorUrl>
+	<version>1.0</version>
+	<description>Vtiger user synchronisation plugin, puts login actions from joomla users into LEADS. You can select if you want to see when users login again.And you can select when users change there data!</description>
+	<files>
+		<filename plugin="vtiger">vtiger.php</filename>
+		<filename plugin="vtiger">curl_http_client.php</filename>
+	</files>
+	<params>
+		<param name="vtigerurl" type="text" default="http://www.yoursite.com/vtigercrm" label="vtiger CRM URL" Size="35" description="Robusoft CRM URL"/>
+		<param name="leadsource" type="text" default="Web Site" label="Lead Source in vtiger" Size="25" description="Put in the Leadsource to know witch site is sending"/>
+		<param name="back" type="radio" default="1" label="Do you like a lead when user changes user data?" description="If Yes, you get a Lead when user changes his data.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="getlogin" type="radio" default="1" label="Do you like a lead when user login again?" description="If Yes, you get a Lead every time a user logs in.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+
+	</params>
+</install>

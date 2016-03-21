@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0" method="upgrade">
+    <name>Front-end Font Size Adjuster 4.7</name> 
+ 
+    <author>Kevin Florida</author> 
+ 
+    <creationDate>08/17/2009</creationDate> 
+ 
+    <copyright>2009 Florida Host Web, Inc. All Rights Reserved.</copyright> 
+ 
+    <license>GPL 2.5</license> 
+ 
+    <authorEmail>customerservice@floridahostweb.com</authorEmail> 
+ 
+    <authorUrl>http://www.floridahostweb.com</authorUrl> 
+ 
+    <version>4.7</version> 
+ 
+    <description>FHW_UPGRADE_SUCCESS</description>
+	
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_fhw_fontadjust.ini</language>
+		<language tag="de-DE">language/de-DE/de-DE.mod_fhw_fontadjust.ini</language>
+		<language tag="mk-MK">language/mk-MK/mk-MK.mod_fhw_fontadjust.ini</language>
+        <language tag="fr-FR">language/fr-FR/fr-FR.mod_fhw_fontadjust.ini</language>
+	</languages>
+	
+	<files>
+		<filename module="mod_fhw_fontadjust">mod_fhw_fontadjust.php</filename>
+		<filename>js/mod_fhw-fontadjust.js</filename>
+		<filename>js/mod_fhw-fontadjust-px.js</filename>
+		<filename>js/mod_fhw-fontadjust-pt.js</filename>
+		<filename>js/mod_fhw-fontadjust_nc.js</filename>
+		<filename>js/mod_fhw-fontadjust-px_nc.js</filename>
+		<filename>js/mod_fhw-fontadjust-pt_nc.js</filename>
+		<filename>images/fhw-logo.jpg</filename>
+		<filename>images/fifties-bg.jpg</filename>
+		<filename>index.html</filename>
+		<filename>images/index.html</filename>
+		<filename>js/index.html</filename>
+		<filename>images/larger.jpg</filename>
+		<filename>images/smaller.jpg</filename>
+		<filename>images/default.jpg</filename>
+		<filename>images/larger2.jpg</filename>
+		<filename>images/smaller2.jpg</filename>
+		<filename>images/default2.jpg</filename>
+		<filename>images/larger3.jpg</filename>
+		<filename>images/smaller3.jpg</filename>
+		<filename>images/default3.jpg</filename>
+		<filename>images/larger4.jpg</filename>
+		<filename>images/smaller4.jpg</filename>
+		<filename>images/default4.jpg</filename>
+		<filename>images/larger6.gif</filename>
+		<filename>images/smaller6.gif</filename>
+		<filename>images/default6.gif</filename>
+		<filename>images/larger6.png</filename>
+		<filename>images/smaller6.png</filename>
+		<filename>images/default6.png</filename>
+		<filename>images/larger7.gif</filename>
+		<filename>images/smaller7.gif</filename>
+		<filename>images/default7.gif</filename>
+		<filename>images/larger7.png</filename>
+		<filename>images/smaller7.png</filename>
+		<filename>images/default7.png</filename>
+		<filename>images/transparent.gif</filename>
+		<filename>tmpl/index.html</filename>
+		<filename>tmpl/default.php</filename>
+		<filename>js/mod_fhw-fontadjust-em.js</filename>
+		<filename>js/mod_fhw-fontadjust-per.js</filename>
+		<filename>js/mod_fhw-fontadjust-em_nc.js</filename>
+		<filename>js/mod_fhw-fontadjust-per_nc.js</filename>
+
+		<filename>helper.php</filename>
+	</files>
+	<params>
+	
+		<param name="mylanguage" type="languages" client="site" default="en-GB" label="Front-end Language" description="" />
+
+	
+		<param name="@spacer" type="spacer" default="CSS CLASS PARAMS (add style to module with your stylesheet)" label="CSS CLASS PARAMS (add style to module with your stylesheet)" description="" />
+	
+	<!-- parameter to allow placement of a module class suffix for the module table / xhtml display -->
+        <param name="moduleclass_sfx" type="text" default="" label="Main CSS Class" description="Enter a CSS class here.  Ie: if you enter, test; in your stylesheet add: .test { }" />
+		
+		<!-- parameter to allow placement of a module class suffix for the module table / xhtml display -->
+        <param name="LGclass_sfx" type="text" default="" label="Increase Font CSS Class" description="This CSS controls styles of the Increase Font icon as displayed on the front-end when using the text or image option." />
+		
+		<!-- parameter to allow placement of a module class suffix for the module table / xhtml display -->
+        <param name="Rsclass_sfx" type="text" default="" label="Reset Font CSS Class" description="This CSS controls styles of the Increase Font icon as displayed on the front-end when using the text or image option." />
+		
+		<!-- parameter to allow placement of a module class suffix for the module table / xhtml display -->
+        <param name="SMclass_sfx" type="text" default="" label="Decrease Font CSS Class" description="This CSS controls styles of the Increase Font icon as displayed on the front-end when using the text or image option." />
+	
+	<!-- just gives us a little room between the previous paramter and the next -->
+        <param name="@spacer" type="spacer" default="" label="" description="" />
+	
+		<param name="sizeStyle" type="radio" default="1" label="CSS Font Type" description="Select px if you control your site with pixels, pt if you control your site with points, em, or % if you control your site by percentage.">
+			<option value="1">% </option>
+			<option value="2">px </option>
+			<option value="3">pt</option>
+			<!--<option value="4">em</option>-->
+		</param>
+	<param name="@spacer" type="spacer" default="" label="" description="" />
+	
+	<param name="@spacer" type="spacer" default="% OPTIONS" label="% OPTIONS" description="" />
+	<!-- parameter to allow adjustment of the default font size button value -->	
+		<param name="originalFontper" type="text" default="100" label="Default Font Size (%)" description="Enter a number between 1 and 100 for the percentage of the original font size to display when the default font-size button is clicked." />
+		<param name="maxSizeper" type="text" default="150" label="Maximum Font Size (% option)" description="Enter the maximum font size in percentages." />
+		<param name="minSizeper" type="text" default="50" label="Minimum Font Size (% option)" description="Enter the minimum font size in percentages." />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		
+		<param name="@spacer" type="spacer" default="px OPTIONS" label="px OPTIONS" description="" />
+		<param name="originalFontpx" type="text" default="12" label="Default Font Size (px)" description="Enter the number of the original font size in pixels to display when the default font-size button is clicked.  This number should match what is in your template CSS file for the universal font size." />
+		<param name="maxSizepx" type="text" default="18" label="Maximum Font Size (px option)" description="Enter the maximum font size in pixels." />
+		<param name="minSizepx" type="text" default="6" label="Minimum Font Size (px option)" description="Enter the minimum font size in pixels." />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		
+		<param name="@spacer" type="spacer" default="pt OPTIONS" label="pt OPTIONS" description="" />
+		<param name="originalFontpt" type="text" default="8" label="Default Font Size (pt)" description="Enter the number of the original font size in points to display when the default font-size button is clicked. This number should match what is in your template CSS file for the universal font size." />
+		<param name="maxSizept" type="text" default="14" label="Maximum Font Size (pt option)" description="Enter the maximum font size in points." />
+		<param name="minSizept" type="text" default="6" label="Minimum Font Size (pt option)" description="Enter the minimum font size in points." />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		
+		<!--<param name="@spacer" type="spacer" default="em OPTIONS" label="em OPTIONS" description="" />
+		<param name="originalFontem" type="text" default="1" label="Default Font Size (em)" description="Enter the number of the original font size in points to display when the default font-size button is clicked. This number should match what is in your template CSS file for the universal font size." />
+		<param name="maxSizeem" type="text" default="2.5" label="Maximum Font Size (em option)" description="Enter the maximum font size in percentages." />
+		<param name="minSizeem" type="text" default=".25" label="Minimum Font Size (em option)" description="Enter the minimum font size in percentages." />
+		
+		<param name="@spacer" type="spacer" default="" label="" description="" />-->	
+	
+	<!-- A parameter that allows an administrator to modify the number of users that this module will display -->
+        <param name="PreFixText" type="text" default="" label="Enter Optional Pre-Text" description="(Optional) If you would like to display text before the module, enter it here. (ie: Site Fontsize:" />
+		<param name="newLine" type="radio" default="3" label="Pretext Position" description="Position pretext above or to the left of the buttons." >
+			<option value="1">Above Buttons </option>
+			<option value="2">Left of Buttons </option>
+			<option value="3">Disabled</option>
+		</param>
+	<!-- just gives us a little room between the previous paramter and the next -->
+        <param name="@spacer" type="spacer" default="" label="" description="" />
+	
+	
+		<param name="@spacer" type="spacer" default="BUTTON OPTIONS" label="BUTTON OPTIONS" description="" />
+	
+	<!-- parameter to select if you want text or image selector link -->		
+		<param name="TextOrImage" type="radio" default="1" label="Button Type" description="Use text font selector links instead of image buttons.">
+			<option value="1">Image Buttons</option>
+			<option value="2">Custom Text Buttons</option>
+		</param>
+		
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+	
+	
+		<param name="@spacer" type="spacer" default="CUSTOM TEXT PARAMS (custom text buttons option only)" label="CUSTOM TEXT PARAMS (custom text buttons option only)" description="" />
+		
+		<param name="largerTxt" type="text" default="A+" label="Larger Custom Text" description="Text Buttons Option Only: Custom text for Larger Font Button" />
+		<param name="resetTxt" type="text" default="Reset" label="Larger Custom Text" description="Text Buttons Option Only: Custom text for Font Reset" />
+		<param name="smallerTxt" type="text" default="A-" label="Larger Custom Text" description="Text Buttons Option Only: Custom text for Smaller Font Button" />
+		
+		
+	<!-- just gives us a little room between the previous paramter and the next -->
+        <param name="@spacer" type="spacer" default="" label="" description="" />
+		
+	
+		
+	<param name="@spacer" type="spacer" default="IMAGE BUTTON PARAMS (image buttons option only)" label="IMAGE BUTTON PARAMS (image buttons option only)" description="" />
+	<!-- parameter to select the button images you want to use -->		
+		<param name="ImageOption" type="list" default="5" label="Select the button image of your choice." description="Choose from five different button images">
+			<option value="1">Grey Buttons</option>
+			<option value="2">Red Buttons</option>
+			<option value="3">Yellow Buttons</option>
+			<option value="4">Blue Buttons</option>
+			<option value="5">Transparent Black Text (png - better quality)</option>
+			<option value="6">Transparent Black Text (gif - ie6 compatable)</option>
+			<option value="7">Transparent White Text (png - better quality)</option>
+			<option value="8">Transparent White Text (gif - ie6 compatable)</option>
+			<option value="9">Custom Buttons (images folder)</option>
+		</param>	
+		<param name="@spacer" type="spacer" default="-------------------------------" label="-------------------------------" description="" />
+		<param name="@spacer" type="spacer" default="Custom Buttons Selector(upload images to root/images folder)" label="Custom Buttons Selector(upload images to root/images folder)" description="" />
+		<param name="LgButton" type="imagelist" directory="images/" default="" hide_default="true" label="Increase Image Button" description="Select a custom image for the Increase Size button from your root/images/ directory." />
+		<param name="RtButton" type="imagelist" directory="images/" default="" hide_default="true" label="Reset Image Button" description="Select a custom image for the Reset Size button from your root/images/ directory." />
+		<param name="SmButton" type="imagelist" directory="images/" default="" hide_default="true" label="Decrease Image Button" description="Select a custom image for the Decrease Size button from your root/images/ directory." />
+		<param name="customWidth" type="text" default="0" label="Custom Buttons Width (px)" description="Enter the custom image button width in pixels. Custom Buttons option only." />
+		<param name="customHeight" type="text" default="0" label="Custom Buttons Height (px)" description="Enter the custom image button height in pixels. Custom Buttons option only." />
+			
+		<!-- just gives us a little room between the previous paramter and the next -->
+        <param name="@spacer" type="spacer" default="" label="" description="" />
+		
+		<param name="FHWfontAlign" type="list" default="center" label="Module Alignment" description="Module Alignment (standards compliant)">
+			<option value="center">Centered </option>
+			<option value="right">Right </option>
+			<option value="left">Left</option>
+		</param>
+		
+		<!--float left or right-->
+		<!--<param name="float" type="list" default="float: right;" label="Float buttons left or right" description="This is required for the module to look properly in IE 8.  This will align your buttons from the right or left. Does not affect Text links." >
+			<option value="right">Right</option>
+			<option value="left">Left</option>
+			<option value="1">Disable</option>
+		</param>
+		-->
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="@spacer" type="spacer" default="CLICK APPLY TO ENABLE THE PARAM TITLES" label="CLICK APPLY TO ENABLE THE PARAM TITLES" description="" />
+	</params>
+    <params group="advanced">
+        <param name="disableCookies" type="radio" default="1" label="Disable Cookies" description="If disabled, cookies will not be stored in visitor's browsers.  If disabled, the visitor settings will not be saved and font-size will reset on every page visit.">
+            <option value="1">Enabled </option>
+            <option value="2">Disabled</option>
+        </param>
+    </params>
+</install>
