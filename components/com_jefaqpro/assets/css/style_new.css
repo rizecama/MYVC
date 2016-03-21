@@ -1,0 +1,334 @@
+/**
+ * jeFAQ Pro package
+ * @author J-Extension <contact@jextn.com>
+ * @link http://www.jextn.com
+ * @copyright (C) 2010 - 2011 J-Extension
+ * @license GNU/GPL, see LICENSE.php for full license.
+**/
+
+/* --------------------------------------- Pagination start -------------------------------------------------------- */
+
+div#je-pagination {
+	padding : 8px;
+}
+
+div#je-pagination div.list-footer {
+	text-align: center;
+}
+
+div#je-pagination div.limit {
+	display : none;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+div#je-pagination div.counter {
+	text-align: center;
+	margin-top: 10px;
+}
+
+/* -------------------------------------- Pagination End  -------------------------------------------------------- */
+ul#je-response-ul {
+	list-style-type: none;
+	text-align : right;
+	margin :0;
+	padding :0;
+}
+
+ul#je-response-ul li#je-response {
+	display : inline;
+	padding : 3px ;
+}
+
+ul#je-response-ul li#je-response span#je-top {
+	background:url(../images/feedback/top.gif) no-repeat left 3px;
+	padding : 5px 15px 0px 0px;
+	line-height: 15px;
+}
+
+ul#je-response-ul li#je-response a {
+	text-decoration: none;
+}
+
+ul#je-response-ul li#je-response span#je-bot {
+	background:url(../images/feedback/bot.gif) no-repeat left 4px;
+	padding : 5px 15px 0px 0px;
+	line-height: 15px;
+}
+
+span#je-faqrequired {
+	font-size : 15pt;
+	color : #FF0000;
+}
+
+div#je-form {
+	padding : 10px ;
+}
+
+/* --- Back Button --- */
+
+div#je-backbutton {
+color:#000000;
+	padding : 10px 0px 10px 0px;
+	float : left;
+	width : 49%;
+}
+div#je-backbutton:hover{
+color:#8FD800;
+}
+a#je-button {
+color:#000000;
+	background: url(../images/back.png) no-repeat;
+	padding : 5px 8px 5px 33px;
+	border : solid 1px #E9E9E9;
+	text-decoration: none;
+}
+a#je-button :hover{color:#8FD800;}
+
+/* --- Back Button End ---- */
+
+/* --- Add New Button --- */
+
+div#je-newbutton {
+	padding : 10px 0px 10px 0px;
+	float : right;
+	width : 49%;
+}
+
+a#je-addbutton {
+color:#000000;
+	background: url(../images/new.png) no-repeat;
+	padding : 5px 8px 7px 33px;
+	border : solid 1px #E9E9E9;
+	text-decoration: none;
+}
+a#je-addbutton:hover{
+color:#FECB00;
+}
+
+/* --- Add New Button End --- */
+
+/* --- Intro text ---- */
+
+div#je-introtext {
+	padding : 5px 2px 10px 0px;
+	text-align: justify;
+}
+
+/* --- Intro text End. ---- */
+
+/* --- Category listing --- */
+div#je-categorylisting1 {
+	border : solid 1px #A3A3A3;
+	background : #EDF5FF;
+	padding : 8px;
+	color : #333333;
+text-align:center;
+height:22px;
+}
+
+div#je-categorylisting1 img {
+text-align:center;
+}
+
+div#je-categorylisting2 {
+	border : solid 1px #CCCCCC;
+	background : #ffffff;
+	padding : 8px;
+	color : #333333;
+}
+
+div#je-categorylisting3 {
+	border : solid 1px #B194B0;
+	background : #EDE6EE;
+	padding : 8px;
+	color : #333333;
+}
+
+div#je-categorylisting4 {
+	border : solid 1px #5E7985;
+	background : #D4DFE5;
+	padding : 8px;
+	color : #000105;
+}
+
+div#je-categorylisting5 {
+	border : solid 1px #48AD11;
+	background : #E1F6D5;
+	padding : 8px;
+	color : #000332;
+}
+
+div#je-categorylisting6 {
+	border : solid 1px #B6CEE8;
+	background : #E0EAF4;
+	padding : 8px;
+	color : #000107;
+}
+
+div#je-categorylisting7 {
+	border : solid 1px #F6F0E0;
+	background : #F9F9F7;
+	padding : 8px;
+	color : #000000;
+}
+
+div#je-categorylisting8 {
+	border : solid 1px #EFEFEF;
+	background : #EFEFEF;
+	padding : 8px;
+	color : #010101;
+}
+
+div#je-categorylisting9 {
+	border : solid 1px #FFE19B;
+	background : #FDF1D9;
+	padding : 8px;
+	color : #000032;
+}
+
+div#je-categorylisting10 {
+	border : solid 1px #35271C;
+	background : #E7E7E7;
+	padding : 8px;
+	color : #000000;
+}
+
+div#je-categorylisting11 {
+	border : solid 1px #980305;
+	background : #FBE9E9;
+	padding : 8px;
+	color : #080034;
+}
+
+div#je-categorylisting12 {
+	border : solid 1px #C75D23;
+	background : #F4F4F4;
+	padding : 8px;
+	color : #000036;
+}
+
+div#je-categorylisting13 {
+	border : solid 1px #B9A279;
+	background : #EAE4D4;
+	padding : 8px;
+	color : #360000;
+}
+
+div#je-categorylisting14 {
+	border : solid 1px #C9E785;
+	background : #F0F9DE;
+	padding : 8px;
+	color : #000100;
+}
+
+div#je-categorylisting15 {
+	border : solid 1px #8BA4A0;
+	background : #DEF1ED;
+	padding : 8px;
+	color : #000000;
+}
+
+div#je-categorylisting16 {
+	border : solid 1px #CEB80D;
+	background : #FCF8D5;
+	padding : 8px;
+	color : #000000;
+}
+
+div#je-categorylisting17 {
+	border : solid 1px #721617;
+	background : #EDDDDE;
+	padding : 8px;
+	color : #524E4D;
+}
+
+div#je-categorylisting18 {
+	border : solid 1px #C347A5;
+	background : #F3DAED;
+	padding : 8px;
+	color : #090909;
+}
+
+div#je-categorylisting19 {
+	border : solid 1px #FEB873;
+	background : #E6ECF8;
+	padding : 8px;
+	color : #2C2D2F;
+}
+
+div#je-categorylisting20 {
+	border : solid 1px #D6DFF4;
+	background : #E6ECF8;
+	padding : 8px;
+	color : #1E2025;
+}
+
+div#je-categorylisting21 {
+	border : solid 1px #B3B3B3;
+	background : #F6F8F7;
+	padding : 8px;
+	color : #040404;
+}
+
+div#je-categorylisting22 {
+	border : solid 1px #D6DFF4;
+	background : #E6ECF8;
+	padding : 8px;
+	color : #1E2025;
+}
+
+div#je-categorylisting23 {
+	border : solid 1px #C9E785;
+	background : #F0F9DE;
+	padding : 8px;
+	color : #000100;
+}
+
+div#je-categorylisting24 {
+	border : solid 1px #FEB873;
+	background : #E6ECF8;
+	padding : 8px;
+	color : #2C2D2F;
+}
+
+
+/*  -----------------------------------------------------------------------------------  */
+
+span#je-category a {
+	font-size : 14pt;
+color:#000000;
+}
+span#je-category a:hover {
+	font-size : 14pt;
+color:#8FD800;
+}
+
+span#je-category {
+float:left;
+font-size:14pt;
+margin-top:0px;
+padding-left:5px;
+text-align:center;
+width:600px;
+
+}
+
+/* --- Category listing end --- */
+
+div#je-posted span#je-author {
+	background: url(../images/author.gif) no-repeat left top;
+	padding-left : 15px;
+}
+
+div#je-posted span#je-posteddate {
+	background: url(../images/date.gif) no-repeat left top;
+	padding-left : 25px;
+	padding-right : 15px;
+}
+
+div#je-nofaqs {
+	padding : 5px;
+	font-weight : bold;
+	width : 100%;
+}

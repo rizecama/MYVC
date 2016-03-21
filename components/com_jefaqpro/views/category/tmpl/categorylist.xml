@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="JEFAQ_CATEGORY">
+		<message>
+			<![CDATA[JEFAQ_CATEGORY_TIP]]>
+		</message>
+	</layout>
+	<state>
+		<name>JEFAQ_CATEGORY</name>
+		<description>JEFAQ_CATEGORY_DESC</description>
+		<url addpath="/administrator/components/com_jefaqpro/elements">
+			<param name="catid" type="jecategory" default="0" label="JE_SELECT_CATEGORY" description="SELECT_CATEGORY_DESC" />
+		</url>
+	</state>
+</metadata>

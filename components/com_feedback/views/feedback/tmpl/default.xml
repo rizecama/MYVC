@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="feedback Layout">
+		<message>
+			<![CDATA[feedback Layout]]>
+		</message>
+	</layout>
+	<state>
+		<name>feedback Layout</name>
+		<description>feedback Layout</description>
+		<params>
+		</params>
+	</state>
+</metadata>

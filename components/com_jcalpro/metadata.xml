@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<name>JCalPro</name>
+	<author>Anything Digital</author>
+	<copyright>2010 Anything Digital</copyright>
+	<authorEmail>admin@anything-digital.com</authorEmail>
+	<authorUrl>dev.anything-digital.com</authorUrl>
+	<menu>
+		<options var="extmode">
+			<option value="cal" name="Month view"	msg="Display your calendar using the month view." />
+			<option value="flat" name="Flat view" msg="A link to the flat view of events." />
+			<option value="week" name="Week view" msg="A link to the week view of events." />
+			<option value="day" name="Day view" msg="A link to the day view of events." />
+			<option value="cats" name="Categories view"	msg="A link to the events categories view." />
+			<option value="extcal_search" name="Search events page"	msg="A link to the events search page." />
+			<option value="event" name="Add new event" msg="A link to the Add new event page." />
+		</options>
+	</menu>
+	<state switch="extmode" default="cal">
+		<cal>
+			<name>JCal pro month view</name>
+			<description>Display your calendar using the month view.</description>
+			<params addpath="/components/com_jcalpro/elements">
+				<param name="cal_list" type="calendars" multiple="1" default="" label="Calendars" description="Comma-separated calendar id list to show. Leave empty to show all calendars" />
+				<param name="cal_list_exclude" type="radio" default="0" label="Include/Exclude Calendars" description="Select ehether to include or exclude the given calendars">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="cat_list" type="categories" multiple="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude" type="radio" default="0" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="show_private_events" type="list" default="1" label="Show private events" description="Select how to display private events when the link is clicked">
+					<option value="1">Show public and read-only private events (owner still sees private events)</option>
+					<option value="2">Do not show private events (even if owner)</option>
+					<option value="4">Show events user owns (even if not private)</option>
+					<option value="3">Show only private events (if logged in)</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>I'll Be There RSVP&lt;/b>" />
+				<param name="show_illbethere" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_illbethere" type="categoriesillbethere" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude_illbethere" type="radio" default="" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>JomSocial&lt;/b>" />
+				<param name="show_community" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_community" type="categoriescommunity" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_community_exclude" type="radio" default="" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+			</params>
+		</cal>
+		<flat>
+			<name>Flat view</name>
+			<description>A page to add a new event to the calendar</description>
+			<params addpath="/components/com_jcalpro/elements">
+				<param name="cal_list" type="calendars" multiple="1" default="" label="Calendars" description="Comma-separated calendar id list to show. Leave empty to show all calendars" />
+				<param name="cal_list_exclude" type="radio" default="0" label="Include/Exclude Calendars" description="Select ehether to include or exclude the given calendars">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="cat_list" type="categories" multiple="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude" type="radio" default="0" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="show_private_events" type="list" default="1" label="Show private events" description="Select how to display private events when the link is clicked">
+					<option value="1">Show public and read-only private events (owner still sees private events)</option>
+					<option value="2">Do not show private events (even if owner)</option>
+					<option value="4">Show events user owns (even if not private)</option>
+					<option value="3">Show only private events (if logged in)</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>I'll Be There RSVP&lt;/b>" />
+				<param name="show_illbethere" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_illbethere" type="categoriesillbethere" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude_illbethere" type="radio" default="" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>JomSocial&lt;/b>" />
+				<param name="show_community" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_community" type="categoriescommunity" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_community_exclude" type="radio" default="" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+			</params>
+		</flat>
+		<week>
+			<name>Week view</name>
+			<description>A page displaying events within a week</description>
+			<params addpath="/components/com_jcalpro/elements">
+				<param name="cal_list" type="calendars" multiple="1" default="" label="Calendars" description="Comma-separated calendar id list to show. Leave empty to show all calendars" />
+				<param name="cal_list_exclude" type="radio" default="0" label="Include/Exclude Calendars" description="Select ehether to include or exclude the given calendars">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="cat_list" type="categories" multiple="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude" type="radio" default="0" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="show_private_events" type="list" default="1" label="Show private events" description="Select how to display private events when the link is clicked">
+					<option value="1">Show public and read-only private events (owner still sees private events)</option>
+					<option value="2">Do not show private events (even if owner)</option>
+					<option value="4">Show events user owns (even if not private)</option>
+					<option value="3">Show only private events (if logged in)</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>I'll Be There RSVP&lt;/b>" />
+				<param name="show_illbethere" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_illbethere" type="categoriesillbethere" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude_illbethere" type="radio" default="" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>JomSocial&lt;/b>" />
+				<param name="show_community" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_community" type="categoriescommunity" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_community_exclude" type="radio" default="" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+			</params>
+		</week>
+		<day>
+			<name>Day view</name>
+			<description>A page displaying events within a day</description>
+			<params addpath="/components/com_jcalpro/elements">
+				<param name="cal_list" type="calendars" multiple="1" default="" label="Calendars" description="Comma-separated calendar id list to show. Leave empty to show all calendars" />
+				<param name="cal_list_exclude" type="radio" default="0" label="Include/Exclude Calendars" description="Select ehether to include or exclude the given calendars">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="cat_list" type="categories" multiple="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude" type="radio" default="0" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="show_private_events" type="list" default="1" label="Show private events" description="Select how to display private events when the link is clicked">
+					<option value="1">Show public and read-only private events (owner still sees private events)</option>
+					<option value="2">Do not show private events (even if owner)</option>
+					<option value="4">Show events user owns (even if not private)</option>
+					<option value="3">Show only private events (if logged in)</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>I'll Be There RSVP&lt;/b>" />
+				<param name="show_illbethere" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_illbethere" type="categoriesillbethere" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude_illbethere" type="radio" default="" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>JomSocial&lt;/b>" />
+				<param name="show_community" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_community" type="categoriescommunity" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_community_exclude" type="radio" default="" label="Include/Exclude Categories" description="Select ehether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+			</params>
+			<url>
+				<param name="date" type="text" default="" label="Specific date"	description="A specific day to show, using the 2010-03-28 format" />
+			</url>
+		</day>
+		<cats>
+			<name>Categories view</name>
+			<description>A page displaying events categories</description>
+			<params addpath="/components/com_jcalpro/elements">
+				<param name="cal_list" type="calendars" multiple="1" default="" label="Calendars" description="Comma-separated calendar id list to show. Leave empty to show all calendars" />
+				<param name="cal_list_exclude" type="radio" default="0" label="Include/Exclude Calendars" description="Select whether to include or exclude the given calendars">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="cat_list" type="categories" multiple="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude" type="radio" default="0" label="Include/Exclude Categories" description="Select whether to include or exclude the given categories">
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+				<param name="hide_empty_cats" type="radio" default="" label="Hide empty categories" description="Select to hide empty categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="show_private_events" type="list" default="1" label="Show private events" description="Select how to display private events when the link is clicked">
+					<option value="1">Show public and read-only private events (owner still sees private events)</option>
+					<option value="2">Do not show private events (even if owner)</option>
+					<option value="4">Show events user owns (even if not private)</option>
+					<option value="3">Show only private events (if logged in)</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>I'll Be There RSVP&lt;/b>" />
+				<param name="show_illbethere" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_illbethere" type="categoriesillbethere" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_exclude_illbethere" type="radio" default="" label="Include/Exclude Categories" description="Select whether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+
+				<param name="@spacer" type="spacer" default="&lt;hr />&lt;b>JomSocial&lt;/b>" />
+				<param name="show_community" type="radio" default="" label="Enable Integration" description="Select to also show these events and categories">
+					<option value="">Default</option>
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</param>
+				<param name="cat_list_community" type="categoriescommunity" showdefault="1" default="" label="Categories" description="Comma-separated category id list to show. Leave empty to show all categories" />
+				<param name="cat_list_community_exclude" type="radio" default="" label="Include/Exclude Categories" description="Select whether to include or exclude the given categories">
+					<option value="">Default</option>
+					<option value="0">Include</option>
+					<option value="1">Exclude</option>
+				</param>
+			</params>
+		</cats>
+		<event>
+			<name>Add new event</name>
+			<description>A page to add a new event to the calendar</description>
+			<url>
+				<param name="event_mode" type="hidden" default="add" />
+			</url>
+		</event>
+	</state>
+
+</metadata>

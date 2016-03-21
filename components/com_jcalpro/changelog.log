@@ -1,0 +1,597 @@
+                              JCal Pro 2 changelog                              
+
+                        (2011-05-12 04:38 - build #1587)                        
+
+
+
+--------------------------------------------------------------------------------
+ [ 2011-05-12 ] Version 2.2.17.1587
+--------------------------------------------------------------------------------
+
+
+    [bug]    Notices in latest module
+    [chg]    Added ability to disable footer
+             Tracker #200
+
+--------------------------------------------------------------------------------
+ [ 2011-04-11 ] Version 2.2.16.1557
+
+--------------------------------------------------------------------------------
+
+
+    [bug]    Latest events module Itemid detection
+
+--------------------------------------------------------------------------------
+ [ 2011-04-04 ] Version 2.2.15.1488
+
+--------------------------------------------------------------------------------
+
+
+    [bug]    Malformed RSS links
+    [bug]    jclrecaptcha dom access before domready
+    [chg]    Editor button title links insert link to event
+    [chg]    Added global metadata configuration
+    [bug]    .ics import skipping events with UID differences involving
+             certain characters
+
+--------------------------------------------------------------------------------
+ [ 2011-03-01 ] Version 2.2.14.1401
+
+--------------------------------------------------------------------------------
+
+
+    [bug]    Remote ical import from https
+    [chg]    Added rel="nofollow" to print button in toolbar
+    [chg]    Modules use multiselects instead of comma delimited text
+    [chg]    Prepending "Print" to Print View titles
+    [chg]    Removed category sort option
+    [chg]    Installation SQL changed to support MySQL 5.5 (#34)
+    [chg]    More filter items available in event manager (#164)
+    [chg]    Option to switch RSS feed behavior
+    [bug]    Future events in RSS feeds (#140)
+    [bug]    Incorrect display of "print" button
+    [bug]    "Noon" and "Midnight" display when minute is greater than
+    [bug]    Fatal error during import in certain cases (#151)
+    [chg]    Installed themes reinstalled after update
+    [bug]    Fatal error caused by missing print_event()
+    [chg]    Upgrade process no longer requires uninstall
+
+--------------------------------------------------------------------------------
+ [ 2011-01-31 ] Version 2.2.14.620
+
+--------------------------------------------------------------------------------
+
+
+    [bug]    Multiple security issues
+    [chg]    JomSocial Events and I'll Be There RSVP integration
+
+--------------------------------------------------------------------------------
+ [ 2010-08-17 ] Version 2.2.13.575
+--------------------------------------------------------------------------------
+
+
+    [bug]    Low-level security issue : potential path disclosure on direct
+             file access
+             Tracker #148
+    [bug]    PHP error is displayed instead of message when iCal is disabled
+             in configuration, but a request is made for an iCal file
+             Tracker #137
+
+--------------------------------------------------------------------------------
+ [ 2010-06-30 ] Version 2.2.12.566
+--------------------------------------------------------------------------------
+
+
+    [bug]    Medium level security risk fixed
+             Tracker #139
+
+--------------------------------------------------------------------------------
+ [ 2010-06-12 ] Version 2.2.11.557
+--------------------------------------------------------------------------------
+
+
+    [bug]    Incorrect upcoming events count on categories view, if show past
+             event is set to yes
+             Tracker #127
+    [chg]    New lines in imported ical files are now turned into <br />, so
+             as to display properly (when HTML is allowed in descriptions)
+             Tracker #131
+    [bug]    WHen importing from iCal file, floating dates are assumed to be
+             UTC instead of website timezone
+             Tracker #135
+    [bug]    Events in "registered" categories show up in the search
+             Tracker #133
+    [bug]    Notice errors on minical on some servers
+             Tracker #134
+    [bug]    Missing CONFIG_EXT declararation causes notice error on frontend
+             Tracker #132
+    [new]    Added workaround for PHP timezone database issue as per
+             http://bugs.php.net/bug.php?id=51819
+             Tracker #125
+    [chg]    Better detection of JomSocial being installed. Was causing errors
+             when Mighty Touch was installed, as they share same directory
+             structure
+             Tracker #123
+    [bug]    Incorrect pixel image name in default theme, pixel.gif instead of
+             spacer.gif
+             Tracker #121
+    [new]    Added Romanian language file
+             Tracker #119
+    [chg]    Typo in French language file
+    [chg]    Legacy plugin content syntax cannot handle some signs in
+             description
+             Tracker #128
+    [bug]    Possible notice error when viewing an event
+
+--------------------------------------------------------------------------------
+ [ 2010-03-30 ] Version 2.2.10.545
+--------------------------------------------------------------------------------
+
+
+    [chg]    Minical should not show "Add new event" link when viewed from
+             within Flex module
+             Tracker #115
+    [chg]    Remmoved main toolbar display when creating or editing an event
+             Tracker #117
+    [new]    Added support code for new JCal Editor plugin, which allows easy
+             insert of events in Joomla content
+    [bug]    Sometimes jcalpro plugin for sh404sef can generate a fatal error
+             (jcUTCDateToFormat does not exist)
+    [bug]    JCal toolbar icons may not display sometimes after uninstalling
+             premium theme
+             Tracker #112
+    [chg]    Updated display and print stylesheet for default theme
+    [bug]    Empty cell when displaying the add new event form to not-logged
+             in users
+             Tracker #111
+    [new]    Missing index.html file
+             Tracker #110
+    [chg]    Improved printing for all views, with new layout, button and css
+             Tracker #8
+    [chg]    We now remove all html from an event description when exporting
+             to iCal. Only raw text is left
+    [new]    Added METHOD field to exported iCal files, to improve
+             compatibility with Outlook 2003
+    [chg]    Updated links to download and documentation page on documentation
+             page in backend
+             Tracker #107
+    [bug]    Searched events displayed date differ from actual dates
+             Tracker #99
+    [new]    Added separate stylesheet for calendar printouts
+             Tracker #8
+    [chg]    Removed depracted "Show default view" menu item type, replaced by
+             "Show month view"
+             Tracker #59
+    [chg]    Removed bold attributes in css for default theme
+             Tracker #85
+    [bug]    Mini cal validation error
+             Tracker #71
+    [chg]    Updated Spanish Language file
+             Tracker #66
+    [new]    Added date format parameter to latest event content plugin
+             Tracker #26
+    [new]    Use cookie instead of url to return to correct page after editing
+             an event
+             Tracker #68
+    [bug]    Several notice type error display removed (including in ical
+             generation)
+             Tracker #98
+    [bug]    Itemid is not passed around correctly in modules and navigation
+             Tracker #90
+    [chg]    Several notice type errors when adding new event on front end,
+             plus improved print layout
+             Tracker #105
+    [chg]    Updated language string when deleting child events
+             Tracker #42
+    [bug]    Popup display of events don't work from Latest events module
+             Tracker #104
+    [bug]    Minical not using its own parameters, picks up itemid of first
+             Jcal Menu item
+             Tracker #102
+    [bug]    Itemid is not passed along in main menu when Joomla SEF is used
+             Tracker #90
+    [bug]    Direct access to this location forbidden for Greek and SLovak
+             languages
+             Tracker #100
+    [bug]    Show only own events setting may not work when use as a menu item
+             override
+             Tracker #95
+    [bug]    Several "notices" errors (show if error_reporting php function
+             does not work)
+             Tracker #98
+    [bug]    ical import not working : error Class 'JCalEvent' not found
+             Tracker #75
+    [bug]    Logged in user can edit private, read-only, event of other user
+             Tracker #94
+
+--------------------------------------------------------------------------------
+ [ 2010-02-09 ] Version 2.2.9.469
+--------------------------------------------------------------------------------
+
+
+    [bug]    Calendar popup when creating recurring events in backend is not
+             initialized with today's date
+             Tracker #44
+    [chg]    Removed deprecated backend parameters : popup sizes and flat view
+             pictures display
+             Tracker #79
+    [bug]    Links to overlib library may sometimes be wrong
+             Tracker #78
+    [bug]    Dates out of order in category view when events span more than
+             one month
+             Tracker #64
+    [chg]    Jomsocial 1.6.x now requires userid to be passed in url. Adjusted
+             JCal pro plugins accordingly
+             Tracker #83
+    [bug]    iCal download may not apply categories and calendars restrictions
+    [bug]    Class JCalEvent not found error when importing events
+             Tracker #75
+
+--------------------------------------------------------------------------------
+ [ 2010-01-17 ] Version 2.2.8.459
+--------------------------------------------------------------------------------
+
+
+    [new]    Better integration with sh404sef and more url control : sh404sef
+             now has a Jcal pro section in its "Plugins" configuration,
+             providing several settings to adjust url layout
+    [bug]    Javascript using bad event names (onClick) would cause failed
+             validation
+             Tracker #71
+    [new]    Added check in Flex module, to avoid Fatal error if JCal has been
+             uninstalled
+    [chg]    Added dummy database entries in manifest file, to avoid Community
+             Builder showing warning messages about our plugin when running
+             database tools
+    [bug]    End time display may be missing for some events on monthly view
+             Tracker #72
+    [chg]    Added some checks to prevent notice errors when
+             installing/uninstalling
+    [bug]    When used with sh404sef, append/prepend to page title feature of
+             sh404sef does not work on jcalpro pages
+             Tracker #70
+    [new]    Parameters to control SEF url creation with sh404sef have been
+             added to sh404sef main control panel. Updated JCal pro SEF URL
+             plugin to comply
+    [bug]    Bad value when using "get as ical" with "All-day" events, can
+             cause fatal error
+             Tracker #65
+
+--------------------------------------------------------------------------------
+ [ 2009-12-22 ] Version 2.2.7.441
+--------------------------------------------------------------------------------
+
+
+    [bug]    Events could show twice in Flex module if JCal is set to show
+             only start and end day of multi-days events
+    [bug]    Fatal error when copying event in backend
+             Tracker #60
+    [bug]    Missing success message when adding event in backend
+             Tracker #58
+    [new]    Past events are now displayed up until one second ago, instead of
+             current time, to improve ability to open correct panel in Flex
+             module
+    [new]    Whether CB is still installed when uninstalling JCal pro. Could
+             cause errors when trying to preserve config upon uninstallation,
+             if CB has been removed by user prior to JCal
+    [chg]    Changes to Joomla accordion to allow for multiple instances of
+             Flex module on same page
+             Tracker #52
+
+--------------------------------------------------------------------------------
+ [ 2009-12-15 ] Version 2.2.6.413
+--------------------------------------------------------------------------------
+
+
+    [chg]    Updated Portuguese translation
+             Tracker #53
+    [chg]    Added support for storing parameters of multiple instances of
+             JCal pro modules when going through an upgrade
+             Tracker #51
+    [bug]    Wrong end date for multi-days events, when Jcal is set to display
+             only start and end day of event
+             Tracker #45
+
+--------------------------------------------------------------------------------
+ [ 2009-12-09 ] Version 2.2.5.329
+--------------------------------------------------------------------------------
+
+
+    [bug]    All days events don't show start time in backend, only "all day"
+             Tracker #47
+    [chg]    Replaced Moovur anti-spam with reCaptcha
+             Tracker #34
+    [bug]    On some MYSQL servers, an error 1048 is thrown when editing a
+             recurring event
+             Tracker #41
+    [bug]    Display error on categories view if display of iCal export icon
+             is switched off in configuration
+             Tracker #38
+
+--------------------------------------------------------------------------------
+ [ 2009-12-02 ] Version 2.2.4.293
+--------------------------------------------------------------------------------
+
+
+    [bug]    Editing recurring events from backend deletes child events
+             Tracker #37
+
+--------------------------------------------------------------------------------
+ [ 2009-11-23 ] Version 2.2.3.289
+--------------------------------------------------------------------------------
+
+
+    [bug]    WHen adding event, if user does not have enough privilege, there
+             is an infinite redirect loop instead of a simple error message
+             Tracker #33
+    [new]    Flex module can now display events either as an event list or as
+             a minicalendar
+    [bug]    Category list does not comply to "Show past events setting as
+             other views do
+    [chg]    Get as iCal button removed from toolbar on "View categories"
+             view, as there are no events on that view
+             Tracker #32
+    [chg]    Move template javascript to separate file
+             Tracker #6
+    [bug]    All day events are not exported correctly to iCal. End time
+             should be set to end of day
+             Tracker #29
+    [new]    Php 5.3 compatibility
+             Tracker #7
+    [bug]    Using Joomfish, only parent event of a recurring event was
+             translated correctly. Children would loose their translation upon
+             saving
+             Tracker #13
+    [bug]    Missing hidden field in edit form would cause loosing common
+             event id (internal id) in some cases
+    [bug]    On some servers, events happening on same day as a DST switch
+             will be displayed on wrong day in month, flat, week and day views
+             Tracker #24
+    [bug]    Latest events 12hrs/24hrs display setting works opposite to what
+             they should
+             Tracker #23
+
+--------------------------------------------------------------------------------
+ [ 2009-10-29 ] Version 2.2.2.257
+--------------------------------------------------------------------------------
+
+
+    [chg]    More consistent time display on all views, for events spanning
+             more than one day : display start time on first day, end time on
+             last day, and a symbol for middle days
+    [chg]    Better title for "Categories" view link, now adds "Categories"
+             text in title only if a specific calendar is selected, to avoid
+             having Categories twice in the title
+    [bug]    Wrong Itemid used when calculating page title, if several menu
+             items leading to a calendar view
+    [bug]    Incorrect link to logo on post-install welcome page
+    [chg]    SEF urls creation with sh404sef changed : menu item title no
+             longer inserted as root of url (can still be forced by setting
+             constant in com_jcalpro/sef_ext/com_jcalpro_lib). Also,
+             superfluous &date=XX-YY-ZZ removed from some links displayed in
+             main monthly view
+             Tracker #9
+    [bug]    Javascript error when editing a child or detached from recurrence
+             event
+             Tracker #20
+    [chg]    Add new method for entering am/pm times to backend event editing
+             Tracker #19
+    [chg]    Missing "eventsdate" class in latest events module
+             Tracker #17
+    [bug]    Events may appear twice on same day
+             Tracker #15
+    [bug]    Event displays on wrong date depending on timezone/dst
+             configuration
+             Tracker #14
+    [chg]    Latest events module now defaults to 24hrs time display, like
+             Flex module
+    [chg]    Replaced time format parameter in Flex module by simple choice
+             between 12hrs/24hrs format as in other modules. Allow using our
+             JCal libraries to correctly display am/pm even in languages for
+             which PHP does not support it
+             Tracker #18417
+    [bug]    Categories view and category content view do not apply categories
+             and calendar restrictions that may be set at menu item level
+             Tracker #17619
+    [bug]    When creating Jcal pro menu items, parameters are shown in boht
+             Basic and Components sections by Joomla
+    [chg]    Minical and monthly view now only show links to individual days
+             if they have events
+    [chg]    Changed time selection method when creating/editing events to
+             better distinguish between noon and midnight when using am/pm
+             notation
+             Tracker #18413
+    [bug]    Joomla sef router adds Itemid to menu items links, preventing
+             direct links to views to work properly (always show month view)
+             Tracker #18439
+    [bug]    Drop down calendar selection list is not centered about the
+             calendar icons toolbar
+             Tracker #18222
+    [bug]    Repeating events show date of start day instead of current day in
+             rss feeds
+    [bug]    Editing an event on the frontend would not store it as the per
+             the currently selected language, but instead always modify the
+             original event
+             Tracker #18236
+    [new]    Added new types of menu items (displayed when creating a JCal pro
+             menu item) : day, week, flat, categories, search page
+    [bug]    On showing a category content, date of events displayed on other
+             day than their start date show start date instead of actual day
+    [bug]    Warning messages displayed when showing empty category content
+             (if server is set to dsiplay warnings)
+             Tracker #18379
+    [new]    Added parameter to control the format of time display in Flex
+             module
+             Tracker #18417
+    [chg]    Now using Joomla JFolder class to delete folder after theme
+             install. As such, removed usage of chmod
+             Tracker #18422
+    [chg]    Removed un-needed, legacy, slash stripping, may cause issue with
+             other extensions such as iJoomla
+             Tracker #18220
+    [bug]    Today's date on Categories view and per category view show
+             yesterday date
+             Tracker #18242
+    [bug]    Bad language string identifier in Danish language file
+             Tracker #18291
+    [new]    Added menu item type to add a new event
+             Tracker #18026
+    [bug]    CB plugins use php short tags
+             Tracker #18316
+    [bug]    When events are shown in popups, link to cateory generates a 404
+             error, page not found
+             Tracker #17868
+    [chg]    Changed backend display to 24 hours format, using JDate for UTF-8
+             compat
+             Tracker #18119-18120
+    [bug]    iCal export : now export all dates/times as UTC times, to avoid
+             timezones ceonversions errors when using the file. Also, now trim
+             description and summary for unneeded leading and trailing line
+             feeds
+    [bug]    Export event as iCal may give incorrect times on some servers, if
+             server timezone is different from site timezone
+    [bug]    Multi-days events may be displayed on wrong date, or disappear,
+             under some combinations of site and server timezones and dst
+             Tracker #17992
+    [bug]    All day events may be displayed on wrong days on monthly view
+             Tracker #18188
+    [bug]    Incorrect database selection when searching events based on last
+             update date. May affect rss feeds
+    [chg]    Added php 5.3 compatibility
+             Tracker #18047
+    [chg]    In Latest events module, no text is displayed when there is no
+             upcoming events but user has defined number of events to display
+             to
+             Tracker #18033
+    [bug]    Search plugin would return default language version of event,
+             instead of current language (when Joomfish installed)
+             Tracker #17965
+    [bug]    Categories view would show count of all events, even if Show past
+             events is switched off
+             Tracker #18005
+    [bug]    Missing strings in some languages files for theme manager
+             Tracker #18121
+    [bug]    Approval field not displayed in event form on the front-end, for
+             non-admin users
+             Tracker #18092
+    [chg]    Added loading joomla html library to search plugin for use
+             together with Advanced search plugin
+             Tracker #17940
+    [bug]    Bad translation for e-mail field name in German language files
+             Tracker #17911
+    [bug]    Importing iCalendar from url would not work - also added some
+             cases of importing recurring events (from iCalendar)
+             Tracker #17434
+    [chg]    Moved hardcoded strong tags to css in default theme
+             Tracker #17514
+    [bug]    Flex module does not initially open correct pane if some panes
+             are disabled
+             Tracker #16966
+    [chg]    Bad French language wording for all-day events
+    [bug]    Rss feed body does not show description but title instead
+             Tracker #17546
+    [bug]    All-day events still show start times if "Show start times only"
+             is activated
+             Tracker #17250
+    [bug]    Incorrect tooltip in Flex module backend
+             Tracker #17268
+    [bug]    User does not see his own event in CB/JS tabs
+             Tracker #17440
+    [bug]    Undefined offset notice display on approval page when changing
+             display setting
+             Tracker #17442
+    [bug]    Incorrect timezone handling for timezones with uneven offsets (ie
+             +04:30)
+    [bug]    Fixed privacy label when editing event in the backend
+    [chg]    Improved handling of user own events restrictions for Community
+             Builder and Joomsocial plugins
+    [chg]    Removed legacy compare functions, conflicting with older versions
+             of CB
+    [chg]    Improved navigation through various views and events, conserving
+             current date while navigating
+             Tracker #17324
+    [new]    Added return url logic to Add event for a given day from the main
+             Monthly view
+    [bug]    Wrong routing of URL prevents date pre-filling when adding a new
+             evetn from monthly view, using the small + icon on a given day
+    [chg]    Changed text lable for Privacy field in backend event entry form
+             Tracker #17353
+    [new]    Added new option in Flex module : show events currently on
+    [chg]    Today's all-day events now appear in Latest event module as
+             Upcoming event instead of recent event
+             Tracker #17294
+    [bug]    Fixed import of recurrng events from Jcal pro 1.5
+             Tracker #17270
+    [bug]    Wrongly formatted administrator approval alert email for "all
+             day" and "no event date" events
+             Tracker #17281
+    [new]    Added print icon on every view, can be disabled in
+    [chg]    After deleting an event upon approval, we now redirect back to
+             the approval page instead of main calendar page
+             Tracker #17266
+    [bug]    Flex module would not open initial panel as per backend settings,
+             due to internal refactoring of code
+             Tracker #16966
+    [chg]    Refactored hcal/Rdfa microformat output in flex module using
+             decorator pattern (uses shAbstractDecorator class)
+    [chg]    Integrated event import from previous JCal pro version with iCal
+             sources import page
+    [bug]    All day events may display start time
+             Tracker #17250
+    [bug]    Unwanted line break in default theme cause bad request to
+             event-active.gif
+             Tracker #17185
+    [chg]    Changed table styling to css class for new/edit event form
+             Tracker #17209
+    [bug]    sh404sef plugin does not take into account event approval, thus
+             preventing admin approval to work if sh404sef is in use
+             Tracker #17194
+    [bug]    Time display off by one hour on some servers for latest events
+             and flex module, due to dst issue
+             Tracker #17189
+    [bug]    iCalcreator creates empty ics file in root dir when downloading
+             events as iCal
+             Tracker #17208
+    [bug]    Wrong joomla sef urls routing would prevent admin to approve,
+             edit or delete events
+             Tracker #17194
+    [bug]    Correct Itemid not set on search results (correct template may
+             not be shown when clicking on event link)
+             Tracker #17146
+    [bug]    Undefined index message on joomla event search
+             Tracker #17145
+    [new]    Import of iCal events from file (*.ics) or url
+    [bug]    Wrong default value for recur until value
+    [bug]    Incorrect return value in iCalCreator class when parsing an ics
+             file
+    [bug]    Flex module displays All-day events on every panel
+    [chg]    Disable compression routines in shajax lib, would cause utf-8
+             compatibility issues
+    [new]    Added support for iCal export of events
+    [chg]    Removed unneeded xmlrpc lib
+    [bug]    Cat and cal translations in Latest events module are not used
+             Tracker #17066
+    [bug]    Wrong SEF url on front end event approval link
+             Tracker #17039
+    [new]    Added parameter to enable/disable Moovur/mollom anti-spam check
+             Tracker #16964
+    [bug]    Opening state settings of flex module not respected
+             Tracker #16966
+    [new]    Added default text to display when no events to show in Flex
+             module
+             Tracker #16965
+    [chg]    Default values for privacy settings in Jomsocial/CB plugins
+             changed to show only events the user owns
+             Tracker #16962
+    [bug]    Special characters wrongly displayed in page title
+    [new]    Added microformat on flex module output (hcalendar and RDFa)
+    [new]    First alpha version release
+    [new]    Added flex module
+    [chg]    Replaced multiple radio button with select list in component
+             parameters
+    [new]    Added Mollom anti-spam support through Moovur component
+    [new]    Improved display and sorting options when viewing events in
+             backend
+    [new]    Added Community builder minical plugin
+    [new]    Added Joomsocial latest event plugin
+    [new]    Added Community Builder latest events plugin

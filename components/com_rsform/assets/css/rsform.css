@@ -1,0 +1,153 @@
+/* CSS Document */
+
+#submit {
+  background: url("/live/images/submit.png") no-repeat scroll left center rgba(0, 0, 0, 0);
+  border: 0 none;
+  cursor: pointer;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  width: 163px;
+}
+#reset {
+  background: url("/live/images/Reset.png") no-repeat scroll left center rgba(0, 0, 0, 0);
+  border: 0 none;
+  cursor: pointer;
+  float: left;
+  height: 50px;
+  margin: 0 0 0 210px;
+  padding: 0;
+  width: 159px;
+}
+#userForm #userTable {
+    background: url("/images/rfp_bg.gif") repeat-x scroll 0 0 transparent;
+    color: #636363;
+    font-family: Arial;
+    font-size: 13px;
+    width:649px;
+	margin-left:-3px;
+}
+.componentheading {
+    background:transparent url(../../images/greenbar.gif) repeat-x scroll 0 0;
+color:#FFFFFF;
+font-size:18px;
+font-weight:bold;
+height:28px;
+line-height:18px;
+margin-bottom:3px;
+_margin-top:-18px;
+padding:5px 0 0 5px;
+line-height:24px;
+}
+#userForm table input{
+    margin-bottom: 3px;
+	margin-top:20px;
+}
+#userForm table div{
+    margin-bottom: 2px;
+}
+#userForm table .subHead
+{
+ font-weight: bold;
+}
+
+#userTable span
+{
+padding-left:10px;
+}
+#userTable .subres
+{
+padding-left:90px;
+}
+#ui-datepicker-div
+{
+font-size:13px;
+}
+.rsform{
+font-family:arial;
+font-size:12px;
+height:21px;
+color:#333333;
+margin-left:10px;
+margin-right:10px;
+
+}
+.rsform label{
+font-family:arial;
+font-size:12px;
+height:21px;
+padding:3px 0px;
+color:#333333;
+}
+.rsform input{
+/* border:1px solid #DEDEDE; */
+font-family:arial;
+font-size:12px;
+height:18px;
+vertical-align:middle;
+}
+.rsform input[type=text]{
+border:1px solid #DEDEDE;
+font-family:arial;
+font-size:12px;
+height:12px;
+margin:4px 11px;
+vertical-align:middle;
+}
+.rsform input[type=radio]{
+font-family:arial;
+font-size:12px;
+height:12px;
+margin:4px 3px;
+vertical-align:middle;
+}
+.rsform input[type=check]{
+font-family:arial;
+font-size:12px;
+height:12px;
+margin:4px 3px;
+vertical-align:middle;
+}
+.rsform .subHead{
+margin:10px;
+font-weight:bold;
+}
+
+.rsform textarea{
+border:1px solid #DEDEDE;
+font-family:arial;
+font-size:12px;
+height:35px;
+width:197px;
+margin:4px 0px;
+vertical-align:text-top;
+
+}
+body.contentpane {
+margin:0px;
+padding:0px;
+}
+
+#i_bar_terms {
+  background: none repeat scroll 0 0 #77b800;
+  box-shadow: 1px 2px 1px #808080;
+  height: 34px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size:16px;
+  text-transform:uppercase;
+}
+#i_bar_txt_terms {
+  padding: 9px 0 0 7px;
+}
+.rsform table {
+  border-top: 1px dotted #808080 !important;
+  margin-left:12px !important;
+  width:97% !important;
+}
+#submit:hover{
+opacity:0.8
+}
+#reset:hover{
+opacity:0.8
+}
