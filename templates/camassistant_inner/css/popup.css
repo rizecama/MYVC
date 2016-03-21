@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS Document */
+
+Body{ padding:0px; margin:0px; background:url(../images/body-bg.gif) repeat-x; font-family:Arial; font-size:12px; color: #000000;  line-height:18px;} 
+
+#maincontainer{ padding:0px; margin:0px auto; width:927px;  padding:15px; color:fff }
+.clear{ clear:both;}
+
+
+/**/
+#l_box{ width:629px;}
+#l_box_topcurve{ background:url(../images/lightbox_curvs.png) no-repeat 0 -47px; height:26px; color:#FFF; font-size:13px; padding:20px 0 0 25px; font-weight:bold; text-align: center;} 
+#l_box_topcurve p{ padding:0px; margin:0px;} 
+#l_box_midbg{ background:url(../images/lightbox_midbg.png) repeat-y; padding: 15px;} 
+#l_box_botomcurve{ background:url(../images/lightbox_curvs.png) no-repeat 0 0; height:14px;}
+#l_box_close{ float:right; width:60px;} 
+/**/
+
+/**/
+#txt_box{ width:396px; float:right; padding-right:38px;}
+#txt_box_topcurve{ background:url(../images/textbox_curvs.png) no-repeat 0 -22px; height:7px;} 
+#txt_box_botomcurve{ background:url(../images/textbox_curvs.png) no-repeat 0 0; height:14px;}
+#txt_box_midbg{ background:url(../images/textbox_midbg.png) repeat-y; padding:5px 24px 5px  10px; color:#666} 
+#txt_box_midbg textarea{ padding:0px; margin:0px; padding:5px; border: solid 1px #CCC; width:100%; min-height:100px; color:#666; font-size:12px; font-family:arial; } 
+#txt_box_midbg h1{ padding:0px; margin:0px; font-size:13px; font-weight:bold; color:#666; padding-bottom:5px;} 
+
+
+/**/
+
+
+
+.form_row{ padding-bottom:5px; color:#666;}
+.form_row_button{ padding-bottom:5px; color:#666;}
+.form_text{ width:150px; float:left; text-align: right; padding:5px 15px 0 0;}
+
+.form_row label{ padding:0px; margin:0px; background:url(../images/input_bg.png) no-repeat; float:left; width:7px; height:32px;}
+.form_row input{ padding:0px; margin:0px; background:url(../images/input_bg.png) no-repeat 100% 0px;  border:0px; padding:4px 15px 10px 5px; color:#666;}
+
+h2, .contentheading {
+    color: #21314D;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 1.9em;
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+    vertical-align: bottom;
+    width: 100%;

@@ -1,0 +1,104 @@
+/*  FirstService Residential  */
+.Body_rfp {
+background: url(../../images/company/fsr/rfp_bg.gif) repeat-x;
+}
+
+#header
+{
+ height:44px; 
+}
+#welocme { background:none; padding-top:17px; }
+div#logo
+{
+  padding: 16px 0 0 0;
+}
+div#logo a:after {
+content: "Powered by MyVendorCenter.com";
+font-weight: bold;
+color: #6e6e6e;
+text-decoration: none;
+}
+
+div#logo a {
+text-decoration: none;
+}
+
+div#logo a img { display:none; }
+
+
+#footer{background-image:url(../../images/company/fsr/footer_bg.gif); background:none;}
+
+
+#footer_nav {
+
+text-shadow: 1px 1px 0 #787878;
+}
+
+#footer_nav li
+{
+  background-image:url(../../images/company/fsr/footer_navdevider.gif);
+}
+.head_greybg { color:#fff; }
+
+.likns_pan {
+background: url(../../images/company/fsr/tabs_box_midbg.gif) repeat-y;
+}
+.likns_pan_top, .likns_pan_bot { background-image:url(../../images/company/fsr/tabs_box_bg.gif); background: none;
+ }
+
+#i_bar, .head_greybg
+{
+ background-image: url(../../images/company/fsr/blue_bg-bar2.gif);
+   text-shadow:0px 1px 2px rgba(0,0,0,0.23);
+} 
+
+.table_blue_rowdots_submitted.active
+{
+  background:#00a6dc;
+}
+
+.likns_pan_top a, .green a:visited
+{
+ color:#444; 
+}
+.likns_pan_top a.active, .likns_pan_top a:hover, .green a.active, .alink0215dash a, .table_bottomlinks a, .table_blue_rowdots2 a, .search-panel-left li a, .addednumclosed li a, .table_blue_rowdotsextend a, .addednum_bread li a
+{
+  color:#008bc5;
+}
+
+.green li
+{
+  background-image: url(../../images/company/fsr/green_arrow.gif)
+}
+
+
+.likns_pan
+{
+ box-shadow: inset 0 0 15px rgba(0,0,0,0.08);
+background: #e7e7e7; 
+}
+
+
+#menulink_4:after
+{
+ content: " MyVendorCenter";
+  
+}
+
+#navigation_in2 {
+position: relative;
+/*float: right;
+left: 28px;*/
+}
+#footer_nav { display:none; }
+#coright {
+text-align: center;
+padding-left: 0px;
+border-top: 2px dotted #d7d7d7;
+margin-top: 31px;
+}
+
+ul.dropdown li a:hover
+{
+ color:#d7d7d7; 
+}

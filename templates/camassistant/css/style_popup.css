@@ -1,0 +1,42 @@
+#compliant@charset "utf-8";
+/* CSS Document */ /* added on 28thJan 2011 to highlight the error message with red border */ 
+
+#i_bar_txt {
+  padding: 8px 0 0;
+  text-align: left;
+}
+
+#i_bar_basicinfo {
+  background: none repeat scroll 0 0 #21314d;
+  box-shadow: 1px 2px 1px #808080;
+  font-size: 14px;
+  height: 34px;
+  margin: 0 auto 10px;
+  text-align: center;
+}
+#i_bar_txt {
+  padding: 8px 0 0;
+  text-align: left;
+}
+
+#i_bar_basicinfo span {
+  color: #fff;
+  font-family: Arial;
+}
+
+
+.printicons {
+  background: url("../images/full-print.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+  height: 52px;
+  text-align: center;
+  width: 152px;
+  display:inline-block;
+}
+.printicons:hover {
+background-position:0 -51px;
+}
+.print_separate {
+  border-top: 2px dotted gray;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
