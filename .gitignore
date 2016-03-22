@@ -26,5 +26,10 @@ components/com_camassistant/assets
 # var/www/vhosts/myvendorcenter.com/httpdocs/components
 components
 
+# includes
+# Includes a “resized” subfolder and a “pdf_resized” subfolder.
+# var/www/vhosts/myvendorcenter.com/httpdocs/includes
+includes
+
 
 
