@@ -8,36 +8,38 @@ configuration.php
 #======================================
 # Ignore user documents in repo
 #======================================
-
+# Property Folders with Proposal Reports (copies of RFPs and the collected vendor attachments and compliance doc snapshot):
+# var/www/vhosts/myvendorcenter.com/httpdocs/PropertyDocuments
+PropertyDocuments
 
 # Manager “Cloud Storage” that we call “Document Center” (company files):
-# public_html/myvendorcenter/live/components/com_camassistant/doc
+# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/doc
 components/com_camassistant/doc
 
 # Manager Logos:
 # Includes a “resized” subfolder and a “pdf_resized” subfolder.
-# public_html/myvendorcenter/live/components/com_camassistant/assets/images/properymanager
+# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager
 components/com_camassistant/assets/images/properymanager
 
 # Vendor Logos:
 # Includes a “resized” subfolder and a “pdf_resized” subfolder.
-# public_html/myvendorcenter/live/components/com_camassistant/assets/images/vendors
+# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/vendors
 components/com_camassistant/assets/images/vendors
 
 # Photos for the property
-# public_html/myvendorcenter/live/components/com_camassistant/assets/images/property_pictures
+# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/property_pictures
 components/com_camassistant/assets/images/property_pictures
 
 # Vendor Compliance Docs (Source files uploaded by vendors):
-# public_html/myvendorcenter/live/components/com_camassistant/assets/images/vendorcompliances
+# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/vendorcompliances
 components/com_camassistant/assets/images/vendorcompliances
 
 # Vendor Marketing Docs:
-# public_html/myvendorcenter/live/components/com_camassistant/assets/images/market
+# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/market
 components/com_camassistant/assets/images/market
 
 # Vendor References (docs):
-# public_html/myvendorcenter/live/components/com_camassistant/assets/images/companyrefs
+# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/companyrefs
 components/com_camassistant/assets/images/companyrefs
 
 components/com_camassistant/assets/images/vendorcompliances/Alfred_SauvÃ©,email=sateesh_85-6666666/W9/524426722_Apr2013.PDF
