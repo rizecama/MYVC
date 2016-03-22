@@ -1,6 +1,3 @@
-
-
-
 #!/usr/bin/php
 <?php   
 define( '_JEXEC', 1 );
