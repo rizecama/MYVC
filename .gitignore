@@ -31,6 +31,18 @@ components/com_camassistant/assets
 # var/www/vhosts/myvendorcenter.com/httpdocs/includes:
 includes
 
+# libraries
+# Includes a “resized” subfolder and a “pdf_resized” subfolder.
+# var/www/vhosts/myvendorcenter.com/httpdocs/libraries:
+libraries
+
+# components
+# Includes a “resized” subfolder and a “pdf_resized” subfolder.
+# var/www/vhosts/myvendorcenter.com/httpdocs/components:
+components
+
+
+
 # Vendor Logos:
 # Includes a “resized” subfolder and a “pdf_resized” subfolder.
 # var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/vendors
