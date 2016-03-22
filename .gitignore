@@ -8,7 +8,9 @@ configuration.php
 #======================================
 # Ignore user documents in repo
 #======================================
-
+# Property Folders with Proposal Reports (copies of RFPs and the collected vendor attachments and compliance doc snapshot):
+# var/www/vhosts/myvendorcenter.com/httpdocs/PropertyDocuments
+PropertyDocuments
 
 # Manager “Cloud Storage” that we call “Document Center” (company files):
 # public_html/myvendorcenter/live/components/com_camassistant/doc
