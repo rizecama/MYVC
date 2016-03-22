@@ -14,6 +14,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+$user = JFactory::getUser();
 if($_REQUEST['controller'] == 'vendorsignup' || $_REQUEST['controller'] == 'propertymanager' && $_REQUEST['task'] != 'company_edit_form' && $_REQUEST['task'] != 'customer_edit_form' || $_REQUEST['task'] == 'view_upld_cert' || $_REQUEST['task'] == 'pdf_view_upld_cert' || $_REQUEST['task'] == 'downloadfile'|| $_REQUEST['task'] == 'open' || $_REQUEST['task'] == 'vendor_download_proposals_summary'|| $_REQUEST['task'] == 'vendor_download_awarded_proposals' || $_REQUEST['task'] == 'mail_redirect_form'  || $_REQUEST['task'] == 'invitation_pdf' ) {
 $redirect=1;
 }
