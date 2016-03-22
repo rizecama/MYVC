@@ -21,6 +21,10 @@ components/com_camassistant/doc
 # var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager
 components/com_camassistant/assets/images/properymanager
 
+# assets :
+# Includes a “resized” subfolder and a “pdf_resized” subfolder.
+# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/
+
 # Vendor Logos:
 # Includes a “resized” subfolder and a “pdf_resized” subfolder.
 # var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/vendors
