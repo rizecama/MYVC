@@ -16,52 +16,15 @@ PropertyDocuments
 # var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/doc
 components/com_camassistant/doc
 
-# Manager Logos:
-# Includes a ìresizedî subfolder and a ìpdf_resizedî subfolder.
-# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager
-components/com_camassistant/assets/images/properymanager
-
 # assets :
 # Includes a ìresizedî subfolder and a ìpdf_resizedî subfolder.
 # var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets
 components/com_camassistant/assets
 
-# includes:
+# components:
 # Includes a ìresizedî subfolder and a ìpdf_resizedî subfolder.
-# var/www/vhosts/myvendorcenter.com/httpdocs/includes:
-includes
-
-# libraries
-# Includes a ìresizedî subfolder and a ìpdf_resizedî subfolder.
-# var/www/vhosts/myvendorcenter.com/httpdocs/libraries:
-libraries
-
-# components
-# Includes a ìresizedî subfolder and a ìpdf_resizedî subfolder.
-# var/www/vhosts/myvendorcenter.com/httpdocs/components:
+# var/www/vhosts/myvendorcenter.com/httpdocs/components
 components
 
 
 
-# Vendor Logos:
-# Includes a ìresizedî subfolder and a ìpdf_resizedî subfolder.
-# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/vendors
-components/com_camassistant/assets/images/vendors
-
-# Photos for the property
-# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/property_pictures
-components/com_camassistant/assets/images/property_pictures
-
-# Vendor Compliance Docs (Source files uploaded by vendors):
-# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/vendorcompliances
-components/com_camassistant/assets/images/vendorcompliances
-
-# Vendor Marketing Docs:
-# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/market
-components/com_camassistant/assets/images/market
-
-# Vendor References (docs):
-# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/companyrefs
-components/com_camassistant/assets/images/companyrefs
-
-components/com_camassistant/assets/images/vendorcompliances/Alfred_Sauv√©,email=sateesh_85-6666666/W9/524426722_Apr2013.PDF
