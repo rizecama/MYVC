@@ -252,7 +252,7 @@ function senderrormsg(){
 
 function getstandards(rfpid,vendorid,status){
 el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=rfp&task=getcompliance&rfpid='+rfpid+'&vendorid='+vendorid+'&status='+status+'';
-	var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:700}}"))
+	var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:600}}"))
 	SqueezeBox.fromElement(el,options);
 G("#sbox-window").addClass("newclasssate");	
 }	

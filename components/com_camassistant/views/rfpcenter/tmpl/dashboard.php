@@ -351,7 +351,7 @@ alert("You have already given rating to this vendor.");
 }
 function getcompliancestate(rfpid,vendorid,custid,status){
 el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=rfp&task=getcompliance_active&from=active&rfpid='+rfpid+'&custid='+custid+'&vendorid='+vendorid+'&status='+status+'';
-var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:700}}"))
+var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:600}}"))
 SqueezeBox.fromElement(el,options);
 G("#sbox-window").addClass("newclasssate");	
 }
@@ -588,7 +588,7 @@ SqueezeBox.fromElement(el,options);
 
 function getbasiccompliance(vendorid,status){
 var el ='index.php?option=com_camassistant&controller=vendorscenter&task=preferredcompliance&vendorid=&vendorid='+vendorid+'&status='+status+'';
-var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:700}}"))
+var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:600}}"))
 SqueezeBox.fromElement(el,options);
 G("#sbox-window").addClass("newclasssate");	
 }
@@ -624,6 +624,52 @@ function uninvitevendor(rfpid,any){
 		var el ='index.php?option=com_camassistant&controller=rfpcenter&task=uninvitevendors&any='+any+'&rfpid='+rfpid;
 		var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:"+height+"}}"))
 		SqueezeBox.fromElement(el,options);
+}
+</script>
+<script type="text/javascript">
+G = jQuery.noConflict();
+G(document).ready( function(){
+G(".rfp_<?php echo $_REQUEST['type']; ?>").addClass('active');
+
+G('.proposal_cancel').click(function(){
+
+//G('#proposaldetails_'+rfpid).addClass('loader');
+rfpdata=G(this).attr('data').split('|');
+if(!G(this).hasClass("active")){
+getcancelproposals(rfpdata[0],rfpdata[1]);
+G('.proposal_cancel').removeClass('active');
+G(this).addClass('active');
+}else{
+G('#cancelproposaldetails_'+rfpdata[0]).slideUp('slow').html('');
+G('.table_blue_rowdots_submitted').removeClass('active');
+G(this).removeClass('active');
+
+}
+G('#cancelproposaldetails_'+rfpid).removeClass('loader');
+
+});
+});
+function getcancelproposals(rfpid,rfpname){
+G = jQuery.noConflict();
+G('#cancelproposaldetails_'+rfpid).addClass('loader');
+G.post("index2.php?option=com_camassistant&controller=rfpcenter&task=getcancelproposals", {rfpid: ""+rfpid+"", rfpname: ""+rfpname+""}, function(data){
+if(data) {
+G('#cancelproposaldetails_'+rfpid).removeClass('loader');
+G('.cancelprop_details').slideUp();
+G('.table_blue_rowdots_submitted').removeClass('active');
+G('#table_blue_rowdots'+rfpid).addClass('active');
+G('#cancelproposaldetails_'+rfpid).html(data).slideDown('slow');
+//G('#getproposals_'+rfpid).hide();
+//G('#getproposalshide_'+rfpid).show();
+G('#cancelproposaldetails_'+rfpid).show();
+}
+else{
+G('#cancelproposaldetails_'+rfpid).removeClass('loader');
+G('#cancelproposaldetails_'+rfpid).html("No proposals for this RFP");
+//G('#getproposals_'+rfpid).hide();
+//G('#getproposalshide_'+rfpid).show();
+}
+		});
 }
 </script>
 <style>
@@ -1269,7 +1315,7 @@ if ($user->user_type=='12') { ?>
 	  <tr class="table_blue_rowdots_submitted" id="table_blue_rowdots<?php echo $row->id; ?>" >
 
 			<td valign="middle" align="center" valign="middle" width="15">
-			<a id="getproposals_<?php echo $row->id; ?>" class="proposal_opener" data="<?php echo $row->id; ?>|<?php echo $row->projectName; ?>" href="javascript:void(0);"></a>
+			<a id="getproposals_<?php echo $row->id; ?>" class="proposal_cancel" data="<?php echo $row->id; ?>|<?php echo $row->projectName; ?>" href="javascript:void(0);"></a>
 
 			<td valign="middle" align="center" width="37"><?php echo sprintf('%06d', $row->id); //echo $row->id; ?></td>
 	 		<td align="center" valign="middle" width="222"><?php echo str_replace('_',' ',$row->property_name); ?></td>
@@ -1314,7 +1360,7 @@ if ($user->user_type=='12') { ?>
 			</span></td>
 </tr>
   </tr>
-  <tr><td colspan="5"><div id="proposaldetails_<?php echo $row->id; ?>" class="prop_details" ></div></td></tr>
+  <tr><td colspan="5"><div id="cancelproposaldetails_<?php echo $row->id; ?>" class="cancelprop_details" ></div></td></tr>
 		<?php
 		$k = 1 - $k;
 		endforeach;

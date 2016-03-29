@@ -274,6 +274,7 @@ else {
 		H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=checkvendorpre", {vendorid: ""+matchesa+""}, function(datares){
 		datas = datares.trim();
 		
+		
 			if( datas == 'cannot' ) {
 				geterrorpopuptodelete();
 			}	
@@ -323,7 +324,7 @@ function getnormalpopup(matchesa){
 		L('#maskv').hide();
 		L('.windowv').hide();
 				H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=removevendor", {vendorid: ""+matchesa+""}, function(data){
-				if(data==' removed'){
+				if(data==1){
 				location.reload(); 
 				}
 				else{
@@ -894,7 +895,7 @@ function getstandards(vendorid,status){
 if(status == '')
 	var height = '240';
 	else
-	var height = '700';
+	var height = '600';
 el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=vendorscenter&task=preferredcompliance&vendorid='+vendorid+'&status='+status+'';
 	var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:"+height+"}}"))
 	SqueezeBox.fromElement(el,options);
@@ -1757,10 +1758,12 @@ if($corporate){
 	  $corporates[] = '';
 	  else
 	  $corporates[] = $corporates;
-	  
+	 // echo '<pre>';print_r($corporate);exit;
 $count_coworkers = 0;
 	  if($firmids) {
 foreach($firmids as $am ) {  
+
+
 	if($ownids || $corporates){
 			if( $user->accounttype != 'master'  ){
 				if ( in_array($am->v_id, $ownids) || in_array($am->id, $corporates) )

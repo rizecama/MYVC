@@ -323,7 +323,7 @@ L = jQuery.noConflict();
 	if( globals == 'fail' )
 		height = '240';
 	else
-		height = '700';
+		height = '600';
 	el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=vendorscenter&task=preferredcompliance&vendorid='+vendorid+'&global='+globals+'&status='+status+'';
 	var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:"+height+"}}"))
 	SqueezeBox.fromElement(el,options);

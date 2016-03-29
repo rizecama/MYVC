@@ -421,7 +421,7 @@ function senderrormsg(){
 	
 function getstandards(vendorid,status){
 el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=vendorscenter&task=preferredcompliance&vendorid='+vendorid+'&status='+status+'';
-	var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:700}}"))
+	var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:600}}"))
 	SqueezeBox.fromElement(el,options);
 	if( status == 'Compliant' )
 	G("#sbox-window").addClass("newclasssate_green");	

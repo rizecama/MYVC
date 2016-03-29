@@ -323,7 +323,7 @@ function getnormalpopup(matchesa){
 		L('#maskv').hide();
 		L('.windowv').hide();
 				H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=removevendor", {vendorid: ""+matchesa+""}, function(data){
-				if(data==' removed'){
+				if(data==1){
 				location.reload(); 
 				}
 				else{
