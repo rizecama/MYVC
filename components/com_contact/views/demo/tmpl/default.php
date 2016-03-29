@@ -115,6 +115,32 @@ G('#lastname').keyup(function(){
 		else
 		G( this ).prev().addClass( 'active' );
 	});	
+	
+	G('#firstname').bind('input',function(){ 
+    if( G(this).val() == '' )
+	G( this ).prev().removeClass( 'active' );
+	else
+	G( this ).prev().addClass( 'active' );          
+    });
+    G('#lastname').bind('input',function(){ 
+    if( G(this).val() == '' )
+	G( this ).prev().removeClass( 'active' );
+	else
+	G( this ).prev().addClass( 'active' );          
+    });
+    G('#companyname').bind('input',function(){ 
+    if( G(this).val() == '' )
+	G( this ).prev().removeClass( 'active' );
+	else
+	G( this ).prev().addClass( 'active' );          
+    });
+	 G('#email').bind('input',function(){ 
+    if( G(this).val() == '' )
+	G( this ).prev().removeClass( 'active' );
+	else
+	G( this ).prev().addClass( 'active' );          
+    });
+
 
 G("input[type='radio']").click(function(){
 var radioValue = G("input[name='rep']:checked").val();
@@ -143,7 +169,7 @@ G( ".new" ).addClass( "addclass" );
 </li>
 <li class="email" style="margin-bottom:20px;"><label>Email Address</label><input type="textbox" value="" name="email" id="email"></li>
 <li class="demo"><p><span class="new"></span>When would you like a Demo?</p></li>
-<li class="check"><input type="radio" name="rep" id="rep" class="rep" value="rep"><p>Have a MyVC Representative contact me</p></li>
+<li class="check"><input type="radio" name="rep" id="rep" class="rep" value="rep">Have a MyVC Representative contact me</li>
 <li class="specific"><input type="radio" name="rep" id="spec" class="rep" value="rep"><label style="background:none; padding:0px; line-height:0px;">Request a Date</label>
 <div class="clear"></div><input style="display:none; margin-left:17px; margin-top:7px;" type="text" name="pickdate" id="pickdate" value="" readonly="readonly">
 </li>

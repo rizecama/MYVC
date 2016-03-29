@@ -1,16 +1,17 @@
-<?php 
-$country = '';
+
+<?php /*?>$country = '';
 $IP = $_SERVER['REMOTE_ADDR'];
 if (!empty($IP)) {
    $country = trim(file_get_contents("http://ipinfo.io/{$IP}/country"));
 }
+
 $allowed = array(
 'CA',
 'US',
 'IN',
 );
-if(!in_array($country,$allowed)) { echo "<div class='noentry_country'><img src='templates/camassistant/images/myvendorcenter.gif'><br /><span>MyVendorCenter is currently available in the United States and Canada only. <br />Please email <a href='mailto:support@myvendorcenter.com'>support@myvendorcenter.com</a> <br />if you're interested in finding out when our program will be available in your country.</span></div>"; die();}
-
+if(!in_array($country,$allowed)) { echo "<div class='noentry_country'><img src='templates/camassistant/images/myvendorcenter.gif'><br /><span>MyVendorCenter is currently available in the United States and Canada only. <br />Please email <a href='mailto:support@myvendorcenter.com'>support@myvendorcenter.com</a> <br />if you're interested in finding out when our program will be available in your country.</span></div>"; die();}<?php */?>
+<?php 
 /**
 
 
@@ -115,7 +116,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/assets/css/style.css" type="text/css" />
 
 
-<script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/camassistant/js/jquery-latest.js"></script>
+<!--<script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/camassistant/js/jquery-latest.js"></script>-->
 
 
 
@@ -516,7 +517,9 @@ document.writeln('<scr' + 'ipt language="JavaScript" src="'+tl_loc0+'" type="tex
         <div class="slide" style="background-image: url('templates/camassistant/images/slide3_s.jpg');"></div>
     </div>
     <script type="text/javascript">
+	G = jQuery.noConflict();
         var hoverTimeout2 = false;
+		
         function nextSlide2()
         {
             if(hoverTimeout2)
@@ -524,17 +527,17 @@ document.writeln('<scr' + 'ipt language="JavaScript" src="'+tl_loc0+'" type="tex
                 hoverTimeout2 = false;
                 return;
             }
-            jQuery(".slide-imgs2 .slide").removeClass("previous");
-            jQuery(".slide-imgs2 .slide.active").addClass("previous");
-            var idx2 = jQuery(".slide-imgs2 .slide").index(jQuery(".slide.active")) + 1;
-            jQuery(".slide-imgs2 .slide").removeClass("active");
-            if(idx2 >= jQuery(".slide-imgs2 .slide").length)
+            G(".slide-imgs2 .slide").removeClass("previous");
+            G(".slide-imgs2 .slide.active").addClass("previous");
+            var idx2 = G(".slide-imgs2 .slide").index(G(".slide.active")) + 1;
+            G(".slide-imgs2 .slide").removeClass("active");
+            if(idx2 >= G(".slide-imgs2 .slide").length)
             {
-                jQuery(".slide-imgs2 .slide").eq(0).addClass("active");
+                G(".slide-imgs2 .slide").eq(0).addClass("active");
             }
             else
             {
-                jQuery(".slide-imgs2 .slide").eq(idx2).addClass("active");
+                G(".slide-imgs2 .slide").eq(idx2).addClass("active");
             }
         }
         setInterval(nextSlide2, 8000);
