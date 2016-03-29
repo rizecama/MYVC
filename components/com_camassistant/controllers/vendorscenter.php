@@ -21,6 +21,7 @@ jimport('joomla.application.component.controller');
 class vendorscenterController extends JController
 {
 
+
 	function __construct()
 	{
 		parent::__construct();
@@ -981,13 +982,14 @@ if($totalcompanies){ ?>
 	$user	= JFactory::getUser();
 	$db =& JFactory::getDBO();
 	$vendorid = JRequest::getVar( 'vendorid','');
+	
 	$query_delete = "DELETE FROM #__vendor_inviteinfo WHERE vid IN (".$vendorid.") and userid=".$user->id." " ;
 	$db->setquery($query_delete);
 	if($db->query()) {
-	echo "removed";
+	echo "1";
 	}
 	else{
-	echo "notremoved";
+	echo "0";
 	}		
 	exit;
 	}
@@ -4963,6 +4965,7 @@ function checktoallemails()
 		$emailtest = htmlentities($_REQUEST['mailtext'], ENT_QUOTES);
 		$emailtest = str_replace('\&quot','&quot',$emailtest);
 		$emailtest = str_replace('\\','',$emailtest);
+		
 		$mailbody = $emailtest;
 		$mailtext['email_text'] = $mailbody;
 		$model = $this->getModel('vendorscenter');

@@ -20,6 +20,7 @@ require_once ( JPATH_BASE .DS.'libraries'.DS.'tcpdf'.DS.'tcpdf.php' );
 
 class MYPDF extends TCPDF {
 
+
 		public function Footer() {
 			$this->SetY(-15);
 			//$this->SetFontSize(8);
@@ -1442,7 +1443,7 @@ function save_uploadfile()
 	JUtility::sendMail($mailfrom, $fromname, $vemail, $mailsubject, $body,$mode = 1);
 	$rize_support='rize.cama@gmail.com';
 	JUtility::sendMail($mailfrom, $fromname, $rize_support, $mailsubject, $body,$mode = 1);
-    //JUtility::sendMail($mailfrom, $fromname, $support, $mailsubject, $body,$mode = 1);
+    JUtility::sendMail($mailfrom, $fromname, $support, $mailsubject, $body,$mode = 1);
 	//To send the mails to CC
 	$cclist = explode(';',$ccemail);
 		for($c=0; $c<=count($cclist); $c++){
