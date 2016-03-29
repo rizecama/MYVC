@@ -3546,6 +3546,12 @@ padding-left:3px;
 }
 #property_logo-img  img{ width:100%;}
 
+#uploadimagetextes > img {
+  border: 1px solid #f9c300;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .property_nologo-img > p {
   color: #7d7d7d;
   font-size: 14px;
@@ -3567,20 +3573,6 @@ padding-left:3px;
   width: 99.5%;
   min-height: 178px;
 }
-#property_logo-img {
-  -moz-border-bottom-colors: none;
-  -moz-border-left-colors: none;
-  -moz-border-right-colors: none;
-  -moz-border-top-colors: none;
-  border-color: #f9c300;
-  border-image: none;
-  border-style: solid;
-  border-width: 1px 1px 16px;
-  box-sizing: padding-box;
-  width: 99.5%;
-  min-height: 150px;
-}
-
 #reg_form {
   float: left;
   width: 80%;
@@ -3746,7 +3738,7 @@ h2.inner_ttlunlink{
 }
 .signUp-left #prop_list {
   display: block;
-  height: 235px;
+  height: auto;
   position: relative;
   text-align: center;
   width: 235px;
@@ -4045,6 +4037,16 @@ h2.inner_ttlunlink{
 .proposal_opener.active {
 	background:url("../images/minus-icon.gif") repeat-x scroll 0 0 transparent;
 }
+
+.proposal_cancel {
+	background:url("../images/plus-icon.gif") repeat-x scroll 0 0 transparent;
+	height:21px;
+	width:20px;
+	display:block;
+}
+.proposal_cancel.active {
+	background:url("../images/minus-icon.gif") repeat-x scroll 0 0 transparent;
+}
 .prop_details.loader {
 	display:block;
 	min-height:50px;
@@ -4052,6 +4054,15 @@ h2.inner_ttlunlink{
 	width:100%;
 }
 .prop_details {
+	display:none;
+}
+.cancelprop_details.loader {
+	display:block;
+	min-height:50px;
+	background:url("../images/loading_icon.gif") no-repeat center transparent;
+	width:100%;
+}
+.cancelprop_details {
 	display:none;
 }
 .rfpproposal_opener {
@@ -11554,14 +11565,15 @@ padding-top: 16px;
 
 .regisreclientbutton {
   float: left;
-  margin-left: -8px;
+  margin-left:0px;
   width: 50%;
   color: #3b3b3b;
 }
 .regisreclientbutton > img {
   border-bottom: 2px solid #ddc000;
   padding-bottom: 14px;
-  margin-bottom: 6px;
+  margin-bottom:6px;
+  
 }
 .linkedclient_button {
   float: right;
@@ -11766,6 +11778,37 @@ width: 100%;
 }
 
 
+
+.newuploadbutton{
+	width: 155px;
+	height:47px;
+	background: url("../images/newupload.png") no-repeat;
+	display: inline-block;
+	margin-top:3px;
+}
+.newuploadbutton:hover{
+	background-position: 2px -49px ;
+}
+.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span {
+  display: block !important;
+  left: 4px !important;
+  margin-left: 0 !important;
+  margin-top: 0 !important;
+  position: absolute !important;
+  top: 7px !important;
+}
+.ui-datepicker .ui-datepicker-header {
+  background-size: cover !important;
+  height: auto !important;
+  padding: 5px 0 !important;
+  position: relative !important;
+}
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { top:4px !important;}
+
+
+
+
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
 	.signup input[type='checkbox'] { width:auto !important;}
+	.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { top:3px !important;}
 }

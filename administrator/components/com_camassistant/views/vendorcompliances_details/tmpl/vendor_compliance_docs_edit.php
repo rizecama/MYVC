@@ -1,3 +1,4 @@
+
 <?php
 /**
  * @version		1.0.0 camassistant $
@@ -1592,7 +1593,11 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		
+		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } if($WCI_data[0]->WCI_end_date){ 
+                    $WCI_data[0]->WCI_end_date=$WCI_data[0]->WCI_end_date;
+                   } else { 
+                    $WCI_data[0]->WCI_end_date='0000-00-00';                            
+                    }  ?>
           <?PHP 
 		  if( $WCI_data[0]->WCI_end_date != 'Does Not Expire' ){
 		  $WCI_end_date = explode('-',$WCI_data[0]->WCI_end_date);  ?>
@@ -1814,6 +1819,12 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
+		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } if($WCI_data[0]->WCI_end_date){ 
+                    $WCI_data[0]->WCI_end_date=$WCI_data[0]->WCI_end_date;
+                   } else { 
+                    $WCI_data[0]->WCI_end_date='0000-00-00';                            
+                    }  ?>
+
          <?PHP 
 		 if( $WCI_data[$m]->WCI_end_date != 'Does Not Expire' ){
 		 $WCI_end_date2 = explode('-',$WCI_data[$m]->WCI_end_date);  ?>
@@ -2018,6 +2029,7 @@ else{
 		<?php if($UMB_data[0]->UMB_expdate < date('Y-m-d')) { $color_exp = 'red'; } if($UMB_data[0]->UMB_expdate){ 
                     $UMB_data[0]->UMB_expdate=$UMB_data[0]->UMB_expdate;
                    } else { 
+				   
                     $UMB_data[0]->UMB_expdate='0000-00-00';                            
                     }  ?>
            <?PHP $UMB_date = explode('-',$UMB_data[0]->UMB_expdate); ?>
