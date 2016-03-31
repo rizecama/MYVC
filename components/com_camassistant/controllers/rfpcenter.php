@@ -6483,9 +6483,10 @@ You have not uploaded a sample certificate for your Vendors
 		$db=&JFactory::getDBO();
 		$user=JFactory::getUser();
 		$email = JRequest::getVar('email','');
-		$query5 ="INSERT INTO #__cam_master_compliancereport_emails (`id`, `user_id`, `email`,`checkval`) VALUES ( '','".$user->id."','".$email."','1')";
+		echo $query5 ="INSERT INTO #__cam_master_compliancereport_emails (`id`, `user_id`, `email`,`checkval`) VALUES ( '','".$user->id."','".$email."','1')";
 	    $db->setQuery( $query5 );
 	    $res5=$db->query();
+		exit;
 		if($res5){
 		echo "1";
 		}
