@@ -11573,7 +11573,10 @@ padding-top: 16px;
   border-bottom: 2px solid #ddc000;
   padding-bottom: 14px;
   margin-bottom:6px;
-  
+ }
+.regisreclientbutton span, .linkedclient_button span{
+display:inline-block;
+width:100%;
 }
 .linkedclient_button {
   float: right;
@@ -11804,10 +11807,94 @@ width: 100%;
   position: relative !important;
 }
 .ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { top:4px !important;}
+.remove_field{
+display:none;
+text-decoration:none;
+color:red;
+}
+.add_field_button{
+display:none;
+cursor:pointer;
+text-decoration:none
+color:gray;
+}
+.add_field_button:hover{
+text-decoration:underline;
 
-
-
-
+}
+.addanotheremail{
+display:none;
+}
+.add_email{
+display:none;
+border-right: 1px solid #808080;
+text-decoration:none;
+color:#808080;
+text-decoration: none;
+margin-left:8px;
+margin-right:6px;
+padding-right:6px;
+}
+.reportemails{
+display:none;
+font-size: 13px;
+  height: 25px;
+  margin-right: 10px;
+  padding-left: 10px;
+  width: 192px;
+}
+.emaltexthide{
+display:none;
+margin-bottom:10px;
+}
+.input_fields_wrap input.reportemails {
+  font-size: 13px;
+  height: 25px;
+ 
+  margin-right: 10px;
+  padding-left: 10px;
+  width: 192px;
+}
+.add_email:hover {
+  text-decoration: underline;
+}
+.remove_field:hover{
+text-decoration:underline;
+}
+.add_field_button:hover{
+text-decoration:underline;
+}
+.deletepreemail{
+text-decoration:none;
+color:red;
+margin-left:17px;
+}
+.deletepreemail:hover{
+text-decoration:underline;
+color:red;
+}
+.specifyemailtext{
+display:none;
+}
+.uncheckemails{
+font-size: 13px;
+  height: 25px;
+  margin-right: 10px;
+  padding-left: 10px;
+  width: 192px;
+}
+.newaddemail{
+border-right: 1px solid #808080;
+text-decoration:none;
+color:#808080;
+text-decoration: none;
+margin-left:8px;
+margin-right:6px;
+padding-right:6px;
+}
+.newaddemail:hover {
+  text-decoration: underline;
+}
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
 	.signup input[type='checkbox'] { width:auto !important;}
 	.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { top:3px !important;}

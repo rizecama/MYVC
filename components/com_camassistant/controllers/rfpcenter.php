@@ -6483,9 +6483,41 @@ You have not uploaded a sample certificate for your Vendors
 		$db=&JFactory::getDBO();
 		$user=JFactory::getUser();
 		$email = JRequest::getVar('email','');
-		$query5 ="INSERT INTO #__cam_master_compliancereport_emails (`id`, `user_id`, `email`) VALUES ( '','".$user->id."','".$email."' )";
+		$query5 ="INSERT INTO #__cam_master_compliancereport_emails (`id`, `user_id`, `email`,`checkval`) VALUES ( '','".$user->id."','".$email."','1')";
 	    $db->setQuery( $query5 );
 	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
+	function updateuncheck(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$uncheck = JRequest::getVar('check','');
+		$query5 = "UPDATE #__cam_master_compliancereport_emails SET checkval='".$uncheck."' WHERE user_id=".$user->id;
+	    $db->setQuery( $query5 );
+	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
+	function checkexectingmanageremail(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$email = JRequest::getVar('email','');
+		$query5 = "SELECT id from #__cam_master_compliancereport_emails WHERE email ='".$email."' and user_id=".$user->id;
+	    $db->setQuery( $query5 );
+	    $res5=$db->loadResult();
 		if($res5){
 		echo "1";
 		}
@@ -6512,7 +6544,21 @@ You have not uploaded a sample certificate for your Vendors
 	}
 	
 	
-	
+	function deletepreemail(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$email = JRequest::getVar('email','');
+		$query5 ="DELETE FROM #__cam_master_compliancereport_emails WHERE email ='".$email."'";
+	    $db->setQuery( $query5 );
+	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
 	
 	function updatedocuments_second(){
 		$db=&JFactory::getDBO();
