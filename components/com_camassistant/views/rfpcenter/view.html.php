@@ -277,6 +277,7 @@ class rfpcenterViewrfpcenter extends Jview
 			$model = $this->getModel('rfpcenter');
 			$industries = $model->allindustries();
 			$this->assignRef('industries', $industries);
+			
 			$existingdata = $model->getallinsdataforindus();
 			$this->assignRef('existingdata', $existingdata);
 			$aboutus = $model->getaboutus();
@@ -289,6 +290,8 @@ class rfpcenterViewrfpcenter extends Jview
 
 			$reportsmsg = $model->getpreferredvendors_list();  
 			$this->assignRef('reportsmsg', $reportsmsg);
+			$allotheremails = $model->allotheremails();
+			$this->assignRef('otheremails', $allotheremails);
 			
 			$this->setLayout('compliancereport');
 			parent::display($tpl);

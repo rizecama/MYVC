@@ -19,7 +19,6 @@ jimport('joomla.application.component.controller');
 class rfpcenterController extends JController
 {
 
-
 	function __construct()
 	{
 		parent::__construct();
@@ -2033,6 +2032,7 @@ if( $user->user_type == '16' )
 	 }
 	 
 	function getcancelproposals(){
+	
 	
 	$rfpid = $_REQUEST['rfpid'];
 	$rfpname = $_REQUEST['rfpname'];
@@ -6478,6 +6478,42 @@ You have not uploaded a sample certificate for your Vendors
 		$res=$db->query();
 		exit;
 	}
+	
+	function updatemail(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$email = JRequest::getVar('email','');
+		$query5 ="INSERT INTO #__cam_master_compliancereport_emails (`id`, `user_id`, `email`) VALUES ( '','".$user->id."','".$email."' )";
+	    $db->setQuery( $query5 );
+	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
+	function deleteemail(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$id = JRequest::getVar('id','');
+		$query5 ="DELETE FROM #__cam_master_compliancereport_emails WHERE id =".$id;
+	    $db->setQuery( $query5 );
+	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
+	
+	
+	
 	function updatedocuments_second(){
 		$db=&JFactory::getDBO();
 		$user=JFactory::getUser();

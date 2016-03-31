@@ -6179,7 +6179,15 @@ $ratecount = "SELECT V.apple FROM `#__cam_vendor_proposals` as U, `#__cam_rfpinf
 			return $per;
 		}
 		
-	
+	  function allotheremails()
+	  {
+	        $db=&JFactory::getDBO();
+			$user=&JFactory::getUser();
+			$emails = "select id,email FROM #__cam_master_compliancereport_emails WHERE user_id = '".$user->id."'";
+			$db->setQuery($emails);
+			$emails = $db->loadobjectList();
+			return $emails;
+	  }
 	
 }
 ?>
