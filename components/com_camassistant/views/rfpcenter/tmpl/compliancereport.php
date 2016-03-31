@@ -582,7 +582,11 @@ window.onload = Custom.init;
  return false;
 	}
  }
- alert(email);
+
+
+
+
+
  N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=checkexectingmanageremail", {email:""+email+""}, function(data){
  if(data == '1')
  {
