@@ -11882,10 +11882,11 @@ display:none;
 }
 .uncheckemails{
 font-size: 13px;
-  height: 25px;
-  margin-right: 10px;
-  padding-left: 10px;
-  width: 192px;
+height: 25px;
+margin-right: 10px;
+padding-left: 10px;
+width: 192px;
+border:none;
 }
 .newaddemail{
 border-right: 1px solid #808080;
@@ -11898,6 +11899,10 @@ padding-right:6px;
 }
 .newaddemail:hover {
   text-decoration: underline;
+}
+.removemanageremail
+{
+margin-left:10px;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
 	.signup input[type='checkbox'] { width:auto !important;}

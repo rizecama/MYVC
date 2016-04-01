@@ -168,7 +168,7 @@ window.onload = Custom.init;
 	N = jQuery.noConflict();
 	N(document).ready(function() {	
 		
-	 var max_fields      = 10; //maximum input boxes allowed
+	 var max_fields      = 100; //maximum input boxes allowed
        var wrapper         = N(".input_fields_wrap"); //Fields wrapper
      
       var x = 1;
@@ -228,6 +228,12 @@ window.onload = Custom.init;
    
     N(wrapper).on("click",".remove_field", function(e){ //user click on remove text
         e.preventDefault();
+		if(x == 1)
+		{
+		N('.add_field_button').hide();
+		N('.specifyemailtext').hide();
+		
+		}
         email = N('#val_'+x).val();
 	   if(email){
 		N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=deletepreemail", {email: ""+email+""}, function(data){
@@ -517,12 +523,17 @@ window.onload = Custom.init;
 	
 	
 	
-	function deleteemail(id)
+	function deleteemail(id,value)
 	 {
-			
+      
+	  if(value == 2)
+	  {
+		  N('.specifyemailtext').hide();
+		  N('.add_field_button').hide();
+	  	}	
 		 N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=deleteemail", {id:""+id+""}, function(data){
 		if(data == 1)
-		N('.hideemail_'+id).hide();
+		N('.hideemail_'+value).hide();
 	     });
 	}	
 	
@@ -532,7 +543,8 @@ window.onload = Custom.init;
 	email = N('#val_'+x).val();
 		if(email == '')
 		{
-			alert("please select email");
+			alert("please enter the mail");
+			N('#val_'+x).focus();
 			return false;
 		}
 	  var mail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
@@ -550,6 +562,8 @@ window.onload = Custom.init;
 		if(data==1)
 		{
 		  N('#hidesave_'+x).hide();
+		 N('#val_'+x).css('border', 'none');
+		  
 		}
 	  });
   }
@@ -802,20 +816,24 @@ else
 <td>&nbsp;</td>
 <td>
 <div class="input_fields_wrap" style="display:<?php echo $dis;?>">
-<?php if(count($otheremails)>0) { 
+<?php if(count($otheremails)>0) {
+$i = 1; 
 for( $e=0; $e<count($otheremails); $e++)
-{?>
-   <div style="margin-top:8px;" class="hideemail_<?php echo $otheremails[$e]->id;?>"><input type="text" name="mytext[]" id="val_0" readonly="readonly" class="uncheckemails" value ="<?php echo $otheremails[$e]->email;?>"><a href="javascript:void(0);" onclick="deleteemail(<?php echo $otheremails[$e]->id;?>)" class="deletepreemail">REMOVE</a></div>
+{
+$i++;
+?>
+<div style="margin-top:8px;" class="hideemail_<?php echo $i;?>"><input type="text" name="mytext[]"  readonly="readonly" class="uncheckemails" value ="<?php echo $otheremails[$e]->email;?>"><a href="javascript:void(0);" onclick="deleteemail(<?php echo $otheremails[$e]->id;?>,<?php echo $i;?>)" class="deletepreemail">REMOVE</a></div>
  <?php } ?>
 
 <?php  } else {?>
 
-   <div style="margin-top:8px;"><input type="text" name="mytext[]" id="val_0" class="reportemails"><a href="javascript:void(0);" onclick="addemail(0)" id="hidesave_0" class="add_email">SAVE</a><a href="#" class="remove_field">REMOVE</a></div>
+<div style="margin-top:8px;"><input type="text" name="mytext[]" id="val_0" class="reportemails"><a href="javascript:void(0);" onclick="addemail(0)" id="hidesave_0" class="add_email">SAVE</a><a href="#" class="remove_field">REMOVE</a></div>
 <?php }?>   
 </div>
-<div style="margin-top:10px;"> <a class="add_field_button" style="display:<?php echo $dis;?>">ADD ANOTHER</a></div>
+<div style="margin-top:10px;"> <a class="add_field_button" href="javascript:void(0);" style="display:<?php echo $dis;?>">ADD ANOTHER</a></div>
 </td>
 </tr>
+
 <tr height="10"></tr>
 <tr><td colspan="2">Which types of Vendors would you like included in your auto-generated reports?</td></tr>
 <?php 
