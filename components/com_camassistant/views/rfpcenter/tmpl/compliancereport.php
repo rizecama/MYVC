@@ -174,30 +174,8 @@ window.onload = Custom.init;
       var x = 1;
        //initlal text box count
     N('.add_field_button').click(function(e){
-	
-		
-      e.preventDefault();
-        if(x == 1)
-        {
-		premail = N('#val_0').val();
-			if(premail == ''){
-			alert("Please enter the text box value");
-			N('#val_0').focus();
-			return false;
-			}
-			var mail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-			if(premail)
-			{
-			if(mail.test(premail)==false)
-			{
-			alert("Please enter the valid email");
-			return false;
-			}
-			}
-			}
-			else
-			{
-			 premail = N('#val_'+x).val();
+	       e.preventDefault();
+      	  premail = N('#val_'+x).val();
 			if(premail == ''){
 			alert("text box value is not empty");
 			N('#val_'+x).focus();
@@ -212,7 +190,7 @@ window.onload = Custom.init;
 			return false;
 			}
 			  } 
-			}	
+				
 			if(premail)
 			{
          	N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=checkexectingmanageremail", {email: ""+premail+""}, function(data){
@@ -250,11 +228,8 @@ window.onload = Custom.init;
    
     N(wrapper).on("click",".remove_field", function(e){ //user click on remove text
         e.preventDefault();
-		if(x == 1 )
-		email = N('#val_0').val();
-		else
-		email = N('#val_'+x).val();
-		if(email){
+        email = N('#val_'+x).val();
+	   if(email){
 		N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=deletepreemail", {email: ""+email+""}, function(data){
 		
 				});
@@ -398,34 +373,18 @@ window.onload = Custom.init;
 		});
 		
 		N('.include_emails').click(function(){
-		
 		if(N(this).is(':checked')) {
 		uncheck =1;
-		
+		N('.input_fields_wrap').show();
 		N('.add_field_button').show();
-		N('.addanotheremail').show();
-		N('.remove_field').show();
-		N('.add_email').show();
-		N('.reportemails').show();
 		N('.specifyemailtext').show();
-		N('.uncheckemails').show();
-		N('.specifyemailtext').show();
-		N('.deletepreemail').show();
 		
-	
 		}
 		else{
 		uncheck =0;
-	
-		N('.add_field_button').hide();
-		N('.remove_field').hide();
-		N('.addanotheremail').hide();
-		N('.add_email').hide();
-		N('.reportemails').hide();
-		N('.uncheckemails').hide();
-		N('.specifyemailtext').hide();
-		N('.deletepreemail').hide();
-		
+	     N('.input_fields_wrap').hide();
+	     N('.add_field_button').hide();
+	     N('.specifyemailtext').hide();
 		}
 		
 		N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateuncheck", {check: ""+uncheck+""}, function(data){
@@ -435,11 +394,6 @@ window.onload = Custom.init;
 		});
 	
 
-
-
-     
-	
-	
 
 		
 		N('.include_few').click(function(){
@@ -561,40 +515,48 @@ window.onload = Custom.init;
 
 	}
 	
-	function deleteemail(id){
-	 N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=deleteemail", {id:""+id+""}, function(data){
-	 if(data == 1)
-	 location.reload();
-});
+	
+	
+	function deleteemail(id)
+	 {
+			
+		 N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=deleteemail", {id:""+id+""}, function(data){
+		if(data == 1)
+		N('.hideemail_'+id).hide();
+	     });
+	}	
+	
+	
+	function addemail(x)
+	{
+	email = N('#val_'+x).val();
+		if(email == '')
+		{
+			alert("please select email");
+			return false;
+		}
+	  var mail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+		 if(mail.test(email)==false)
+		 {
+			 alert("Please enter the valid email");
+			 return false;
+		 }
+      N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=checkexectingmanageremail", {email:""+email+""}, function(data){
+		if(data == 1)
+		alert('alreday email exits');
+		 else
+	     {
+		N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updatemail", {email:""+email+""}, function(data){
+		if(data==1)
+		{
+		  N('#hidesave_'+x).hide();
+		}
+	  });
+  }
+	   });
 	}
 	
 	
-	
-	
-function addemail(x)
-{
-email = N('#val_'+x).val();
-if(email == '')
-{
-alert("please select email");
-return false;
-}
-var mail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
- if(mail.test(email)==false)
- {
- alert("Please enter the valid email");
- return false;
-	}
-
- 
-N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updatemail", {email:""+email+""}, function(data){
-if(data == '1')
-N('#hidesave'+x).hide();
- });
- }
-
-
-
 </script>
 <script type='text/javascript'>
 var z = 1;
@@ -839,18 +801,19 @@ else
 <tr>
 <td>&nbsp;</td>
 <td>
-<div class="input_fields_wrap">
+<div class="input_fields_wrap" style="display:<?php echo $dis;?>">
 <?php if(count($otheremails)>0) { 
 for( $e=0; $e<count($otheremails); $e++)
 {?>
-   <div style="margin-top:8px;"><input type="text" name="mytext[]" id="val_0" readonly="readonly" class="uncheckemails" value ="<?php echo $otheremails[$e]->email;?>"><a href="javascript:void(0);" onclick="deleteemail(<?php echo $otheremails[$e]->id;?>)" class="deletepreemail">REMOVE</a></div>
+   <div style="margin-top:8px;" class="hideemail_<?php echo $otheremails[$e]->id;?>"><input type="text" name="mytext[]" id="val_0" readonly="readonly" class="uncheckemails" value ="<?php echo $otheremails[$e]->email;?>"><a href="javascript:void(0);" onclick="deleteemail(<?php echo $otheremails[$e]->id;?>)" class="deletepreemail">REMOVE</a></div>
  <?php } ?>
 
 <?php  } else {?>
+
    <div style="margin-top:8px;"><input type="text" name="mytext[]" id="val_0" class="reportemails"><a href="javascript:void(0);" onclick="addemail(0)" id="hidesave_0" class="add_email">SAVE</a><a href="#" class="remove_field">REMOVE</a></div>
 <?php }?>   
 </div>
-<div style="margin-top:10px;"> <a class="add_field_button">ADD ANOTHER</a></div>
+<div style="margin-top:10px;"> <a class="add_field_button" style="display:<?php echo $dis;?>">ADD ANOTHER</a></div>
 </td>
 </tr>
 <tr height="10"></tr>

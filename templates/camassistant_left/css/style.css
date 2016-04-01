@@ -11808,13 +11808,13 @@ width: 100%;
 }
 .ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { top:4px !important;}
 .remove_field{
-display:none;
 text-decoration:none;
 color:red;
 }
 .add_field_button{
 cursor:pointer;
-text-decoration:none
+text-decoration:none;
+display:none;
 color:gray;
 }
 .add_field_button:hover{
@@ -11825,7 +11825,7 @@ text-decoration:underline;
 display:none;
 }
 .add_email{
-display:none;
+
 border-right: 1px solid #808080;
 text-decoration:none;
 color:#808080;
@@ -11835,7 +11835,7 @@ margin-right:6px;
 padding-right:6px;
 }
 .reportemails{
-display:none;
+
 font-size: 13px;
   height: 25px;
   margin-right: 10px;
@@ -11854,6 +11854,9 @@ margin-bottom:10px;
   padding-left: 10px;
   width: 192px;
 }
+.input_fields_wrap{
+display:none;
+}
 .add_email:hover {
   text-decoration: underline;
 }
@@ -11863,18 +11866,12 @@ text-decoration:underline;
 .add_field_button:hover{
 text-decoration:underline;
 }
-.add_field_button1:hover{
-text-decoration:underline;
-}
-.add_field_button1{
-text-decoration:none;
-color:gray;
-}
+
 
 .deletepreemail{
 text-decoration:none;
 color:red;
-margin-left:17px;
+
 }
 .deletepreemail:hover{
 text-decoration:underline;
