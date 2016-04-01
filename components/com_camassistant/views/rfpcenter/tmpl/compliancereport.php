@@ -177,7 +177,7 @@ window.onload = Custom.init;
 	       e.preventDefault();
       	  premail = N('#val_'+x).val();
 			if(premail == ''){
-			alert("text box value is not empty");
+			alert("please enter the email");
 			N('#val_'+x).focus();
 			return false;
 			}
