@@ -11825,7 +11825,6 @@ text-decoration:underline;
 display:none;
 }
 .add_email{
-
 border-right: 1px solid #808080;
 text-decoration:none;
 color:#808080;
@@ -11835,30 +11834,28 @@ margin-right:6px;
 padding-right:6px;
 }
 .reportemails{
-
 font-size: 13px;
-  height: 25px;
-  margin-right: 10px;
-  padding-left: 10px;
-  width: 192px;
+height: 25px;
+margin-right: 10px;
+padding-left: 10px;
+width: 192px;
 }
 .emaltexthide{
 display:none;
 margin-bottom:10px;
 }
 .input_fields_wrap input.reportemails {
-  font-size: 13px;
-  height: 25px;
- 
-  margin-right: 10px;
-  padding-left: 10px;
-  width: 192px;
+font-size: 13px;
+height: 25px;
+margin-right: 10px;
+padding-left: 10px;
+width: 192px;
 }
 .input_fields_wrap{
 display:none;
 }
 .add_email:hover {
-  text-decoration: underline;
+text-decoration: underline;
 }
 .remove_field:hover{
 text-decoration:underline;
@@ -11866,12 +11863,9 @@ text-decoration:underline;
 .add_field_button:hover{
 text-decoration:underline;
 }
-
-
 .deletepreemail{
 text-decoration:none;
 color:red;
-
 }
 .deletepreemail:hover{
 text-decoration:underline;

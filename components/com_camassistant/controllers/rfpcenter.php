@@ -6527,23 +6527,6 @@ You have not uploaded a sample certificate for your Vendors
 		exit;
 	}
 	
-	function deleteemail(){
-		$db=&JFactory::getDBO();
-		$user=JFactory::getUser();
-		$id = JRequest::getVar('id','');
-		$query5 ="DELETE FROM #__cam_master_compliancereport_emails WHERE id =".$id;
-	    $db->setQuery( $query5 );
-	    $res5=$db->query();
-		if($res5){
-		echo "1";
-		}
-		else{
-		echo "0";
-		}
-		exit;
-	}
-	
-	
 	function deletepreemail(){
 		$db=&JFactory::getDBO();
 		$user=JFactory::getUser();
@@ -6559,6 +6542,7 @@ You have not uploaded a sample certificate for your Vendors
 		}
 		exit;
 	}
+	
 	
 	function updatedocuments_second(){
 		$db=&JFactory::getDBO();
