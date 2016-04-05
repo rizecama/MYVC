@@ -52,10 +52,12 @@ function __construct( $default = array())
         function imageupload23()
 	{
 		$db =& JFactory::getDBO();
+		
 		//$Email=$_POST['queryString'];
                 $post	= JRequest::get('post');
 		$model = $this->getModel('vendorcompliances_details');
                 $type	= JRequest::getVar('type');
+				
                 $type_id	= JRequest::getVar('type_id');
                 $id	= JRequest::getVar('id');
  		$userid	= JRequest::getVar('userid');
@@ -127,7 +129,7 @@ function __construct( $default = array())
 
 
 			    JFolder::create( $base_Dir );
-
+                
 				$OLN_files['name'] = str_replace(" ", "_", $OLN_files['name']);
 				$OLN_files['name'] = str_replace("&", "_", $OLN_files['name']);
 				$OLN_files['name'] = str_replace("#", "_", $OLN_files['name']);
@@ -143,6 +145,9 @@ function __construct( $default = array())
 				$OLN_files['name'] = str_replace("/", "_", $OLN_files['name']);
 				$OLN_files['name'] = str_replace("//", "_", $OLN_files['name']);
 				$OLN_files['name'] = ereg_replace("/", "_", $OLN_files['name']);
+				$OLN_files['name'] = ereg_replace(".", "_", $OLN_files['name']);
+				$OLN_files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $OLN_files['name']);
+				   
 
 				$OLN_data['OLN_upld_cert'] 		=	$OLN_files['name'];
                                 $folderid= 'OLN_'.$OLN_No ;
@@ -238,7 +243,8 @@ if($type=='UMB'){
 				$UMB_files['name'] = str_replace("/", "_", $UMB_files['name']);
 				$UMB_files['name'] = str_replace("//", "_", $UMB_files['name']);
 				$UMB_files['name'] = ereg_replace("/", "_", $UMB_files['name']);
-
+                $UMB_files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $UMB_files['name']);
+				
 				$UMB_data['UMB_upld_cert'] 		=	$UMB_files['name'];
                                 $folderid= 'UMB_'.$UMB_No ;
                                 $filename=$UMB_files['name'];
@@ -341,6 +347,8 @@ if($type=='UMB'){
 				$OMI_files['name'] = str_replace("/", "_", $OMI_files['name']);
 				$OMI_files['name'] = str_replace("//", "_", $OMI_files['name']);
 				$OMI_files['name'] = ereg_replace("/", "_", $OMI_files['name']);
+				 $OMI_files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $OMI_files['name']);
+				
 
 				$OMI_data['OMI_upld_cert'] 		=	$OMI_files['name'];
                                 $folderid= 'OMI_'.$OMI_No ;
@@ -436,7 +444,7 @@ if($type=='UMB'){
 					$PLN_files['name'] = str_replace("/", "_", $PLN_files['name']);
 					$PLN_files['name'] = str_replace("//", "_", $PLN_files['name']);
 					$PLN_files['name'] = ereg_replace("/", "_", $PLN_files['name']);
-
+                    $PLN_files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $PLN_files['name']);
 					$PLN_data['PLN_upld_cert'] = $PLN_files['name'];
                                 $folderid= 'PLN_'.$PLN_No ;
                                 $filename=$PLN_files['name'];
@@ -477,7 +485,6 @@ if($type=='GLI'){
 			//code to store GLI data
 				$GLI_data['id']				=$type_id;
 				$GLI_data['vendor_id'] 			=  $user->id;
-
 				if($GLI_files['name'] != '')
 
 				{
@@ -507,7 +514,7 @@ if($type=='GLI'){
 					}
 
 			   		JFolder::create( $base_Dir );
-
+                 	
 					$GLI_files['name'] = str_replace(" ", "_", $GLI_files['name']);
 					$GLI_files['name'] = str_replace("%", "_", $GLI_files['name']);
 					$GLI_files['name'] = str_replace("#", "_", $GLI_files['name']);
@@ -523,15 +530,16 @@ if($type=='GLI'){
 					$GLI_files['name'] = str_replace("/", "_", $GLI_files['name']);
 					$GLI_files['name'] = str_replace("//", "_", $GLI_files['name']);
 					$GLI_files['name'] = ereg_replace("/", "_", $GLI_files['name']);
-
+					$GLI_files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $GLI_files['name']);
+				
 					$GLI_data['GLI_upld_cert'] 			= $GLI_files['name'];
                                 $folderid= 'GLI_'.$GLI_No ;
                                 $filename=$GLI_files['name'];
                                  $ext = end(explode('.', $GLI_files['name']));
+								// echo $ext; exit;
 					$filepath = $base_Dir .$GLI_files['name'];
-
+					//echo $GLI_files['tmp_name'].'<br /><br />'.$filepath; exit;
 					move_uploaded_file($GLI_files['tmp_name'], $filepath);
-
 					$GLI_arr[$g] = '<a href="'.JURI::root().'index.php?option=com_camassistant&controller=vendors&task=view_upld_cert&vndr='.$user->id.'&doc=GLI_'.$GLI_No.'&filename='.$GLI_files["name"] .'">'.$GLI_files["name"] .'</a>';
 
 					$g++;
@@ -615,7 +623,7 @@ if($type=='wc'){
 						$WC_files['name'] = str_replace("/", "_", $WC_files['name']);
 						$WC_files['name'] = ereg_replace("/", "_", $WC_files['name']);
 						$WC_files['name'] = str_replace("//", "_", $WC_files['name']);
-
+                        $WC_files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $WC_files['name']);
 						$WC_data['wc_upld_cert'] 		= $WC_files['name'];
                                  $folderid= 'WC_'.$WC_No ;
                                 $filename=$WC_files['name'];
@@ -702,7 +710,7 @@ $WCI_files		= JRequest::getVar('uploadfile','','files','array' );
 						$WCI_files['name'] = str_replace("/", "_", $WCI_files['name']);
 						$WCI_files['name'] = ereg_replace("/", "_", $WCI_files['name']);
 						$WCI_files['name'] = str_replace("//", "_", $WCI_files['name']);
-
+                         $WCI_files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $WCI_files['name']);
 						$WCI_data['WCI_upld_cert'] 			= $WCI_files['name'];
 
 						$filepath = $base_Dir .$WCI_files['name'];
@@ -792,7 +800,7 @@ if($type=='aip'){
 				$aip_files['name'] = str_replace("/", "_", $aip_files['name']);
 				$aip_files['name'] = str_replace("//", "_", $aip_files['name']);
 				$aip_files['name'] = ereg_replace("/", "_", $aip_files['name']);
-
+                $aip_files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $aip_files['name']);
 				$aip_data['aip_upld_cert'] 		=	$aip_files['name'];
                                 $folderid= 'aip_'.$aip_No;
                                 $filename=$aip_files['name'];
@@ -847,6 +855,7 @@ if($type=='W9'){
 				$W9files['name'] = str_replace("/", "_", $W9files['name']);
 				$W9files['name'] = ereg_replace("/", "_", $W9files['name']);
 				$W9files['name'] = str_replace("//", "_", $W9files['name']);
+				$W9files['name'] = preg_replace('/\.(?=.*?\.)/', '_', $W9files['name']);
 
 
 
@@ -959,6 +968,7 @@ if($type=='W9'){
 	//function to save vendor compliance docs
 	function save_compliance()
 	{
+		
 		$post	= JRequest::get('post');
 		$saveddoc	= JRequest::getVar('document_type','');
 		$Itemid	= JRequest::getVar('Itemid','');
@@ -990,6 +1000,7 @@ if($type=='W9'){
 				$OLN_data['id']					= $post['old_line_task_OLN_ids'][$i];
 				$OLN_data['vendor_id']			= $vendor_user->id;
 				$OLN_data['OLN_license'] 		= $post['OLN_license'][$i];
+				
 				if (strpos($post['OLN_expdate'][$i], 'Does Not Expire') !== false){
 				$OLN_data['OLN_expdate']		= 'Does Not Expire';
 				}
@@ -997,6 +1008,8 @@ if($type=='W9'){
 				$date = explode('-',$post['OLN_expdate'][$i]);
 				$OLN_data['OLN_expdate']		= $date[2].'-'.$date[0].'-'.$date[1];
 				}
+				
+				
 				$OLN_data['OLN_city_country'] 	= $post['OLN_city_country'][$i];
 				//$OLN_data['OLN_upld_cert'] 		= $post['OLN_upld_cert'][$i];
 				$OLN_data['OLN_state'] 			= $post['OLN_state'][$i];
@@ -1498,8 +1511,9 @@ $WC_files		= JRequest::getVar('wc_upld_cert','','files','array' );
 				$WCI_data['vendor_id']				= $vendor_user->id;
 				$WCI_data['WCI_name'] 				= $post['WCI_name'][$i];
 				$WCI_data['WCI_policy'] 			= $post['WCI_policy'][$i];
+				
 				$date = explode('-',$post['WCI_start_date'][$i]);
-				$WCI_data['WCI_start_date'] 		= $date[2].'-'.$date[0].'-'.$date[1];
+				$WCI_data['WCI_start_date'] 			= $date[2].'-'.$date[0].'-'.$date[1];
 				
 				if (strpos($post['WCI_end_date'][$i], 'Does Not Expire') !== false){
 				$WCI_data['WCI_end_date'] 		= 'Does Not Expire';
@@ -1508,6 +1522,8 @@ $WC_files		= JRequest::getVar('wc_upld_cert','','files','array' );
 				$date = explode('-',$post['WCI_end_date'][$i]);
 				$WCI_data['WCI_end_date'] 		= $date[2].'-'.$date[0].'-'.$date[1];
 				}
+				
+				
 				
 				$WCI_data['WCI_agent_first_name'] 	= $post['WCI_agent_first_name'][$i];
 				$WCI_data['WCI_agent_last_name'] 	= $post['WCI_agent_last_name'][$i];

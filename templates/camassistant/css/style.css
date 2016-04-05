@@ -3438,7 +3438,10 @@ float:left;
   padding: 71px 61px 61px 47px;
 }
 
-
+.text-side_owner > p sup {
+  font-size: 7px;
+  margin-left: -2px;
+}
 /* Rotating background */
 .fakeBG {
             position: absolute;
