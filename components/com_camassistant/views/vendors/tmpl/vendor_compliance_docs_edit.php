@@ -746,7 +746,9 @@ document.getElementById(field+id).value = data;
         <label>Exp. Date:</label>
 		<?php 
 	if($GLI_data[0]->GLI_end_date < date('Y-m-d') || !$GLI_data[0]->GLI_end_date || $GLI_data[0]->GLI_end_date == '00-00-0000')
-	 { $color_exp = 'red'; } ?>
+	 { $color_exp = 'red'; } 
+	  else{	$color_exp = '';}
+	  ?>
 	 
 	 <?php 
 	 	if($GLI_data[0]->GLI_end_date) {
@@ -1027,7 +1029,9 @@ document.getElementById(field+id).value = data;
       <div class="comm">
 	   <div class="in-pan">
         <label>Exp. Date:</label>
-	<?php if($GLI_data[$k]->GLI_end_date < date('Y-m-d') || $GLI_data[$k]->GLI_end_date == '00-00-0000') { $color_exp = 'red'; } ?>	
+	<?php if($GLI_data[$k]->GLI_end_date < date('Y-m-d') || $GLI_data[$k]->GLI_end_date == '00-00-0000') { $color_exp = 'red'; } 
+	 else{	$color_exp = '';}
+	?>	
 	
 	<?php 
 		if($GLI_data[$k]->GLI_end_date){
@@ -1275,7 +1279,9 @@ else{
       <div class="comm">
 	   <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($AIP_data[0]->aip_end_date < date('Y-m-d') || $AIP_data[0]->aip_end_date == '00-00-0000'  ) { $color_exp = 'red'; } ?>
+		<?php if($AIP_data[0]->aip_end_date < date('Y-m-d') || $AIP_data[0]->aip_end_date == '00-00-0000'  ) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		 <?php
 		 	if($AIP_data[0]->aip_end_date){
 				$AIP_data[0]->aip_end_date = $AIP_data[0]->aip_end_date ;
@@ -1487,7 +1493,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($AIP_data[$mj]->aip_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($AIP_data[$mj]->aip_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php
 	if($AIP_data[$mj]->aip_end_date){
 		$AIP_data[$mj]->aip_end_date = $AIP_data[$mj]->aip_end_date;
@@ -1702,7 +1710,9 @@ else{
 	<div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php
 		if($WCI_data[0]->WCI_end_date){
 			$WCI_data[0]->WCI_end_date = $WCI_data[0]->WCI_end_date ;	
@@ -1887,7 +1897,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($WCI_data[$m]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($WCI_data[$m]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php 
 	if($WCI_data[$m]->WCI_end_date){
 		$WCI_data[$m]->WCI_end_date = $WCI_data[$m]->WCI_end_date;	
@@ -2081,7 +2093,11 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($UMB_data[0]->UMB_expdate < date('Y-m-d')) { $color_exp = 'red'; } if($UMB_data[0]->UMB_expdate){ 
+		<?php if($UMB_data[0]->UMB_expdate < date('Y-m-d')) { $color_exp = 'red'; }
+		
+		 else{	$color_exp = '';}
+		
+		 if($UMB_data[0]->UMB_expdate){ 
                     $UMB_data[0]->UMB_expdate=$UMB_data[0]->UMB_expdate;
                    } else { 
                     $UMB_data[0]->UMB_expdate='0000-00-00';                            
@@ -2224,7 +2240,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($UMB_data[$i]->UMB_expdate < date('Y-m-d')){ $color_exp = 'red'; } ?>
+		<?php if($UMB_data[$i]->UMB_expdate < date('Y-m-d')){ $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php
 			if($UMB_data[$i]->UMB_expdate){
 				$UMB_data[$i]->UMB_expdate = $UMB_data[$i]->UMB_expdate;
@@ -2364,7 +2382,9 @@ else{
 	<div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($OMI_data[0]->OMI_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($OMI_data[0]->OMI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php
 		if($OMI_data[0]->OMI_end_date){
 			$OMI_data[0]->OMI_end_date = $OMI_data[0]->OMI_end_date ;	
@@ -2516,7 +2536,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($OMI_data[$m]->OMI_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($OMI_data[$m]->OMI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php 
 	if($OMI_data[$m]->OMI_end_date){
 		$OMI_data[$m]->OMI_end_date = $OMI_data[$m]->OMI_end_date;	
@@ -2673,6 +2695,7 @@ else{
         <label>Exp. Date:</label>
 		<?php $color_exp = ''; ?>
 		<?php if($OLN_data[0]->OLN_expdate < date('Y-m-d')) { $color_exp = 'red'; }
+		 else{	$color_exp = '';}
 		
 					if($OLN_data[0]->OLN_expdate){ 
                     $OLN_data[0]->OLN_expdate = $OLN_data[0]->OLN_expdate;
@@ -2799,7 +2822,9 @@ else{
     <div class="lic-pan-right" id="OLN<?PHP echo $i+1; ?>">
       <div class="comm">
         <label>Exp. Date:</label>
-		<?php if($OLN_data[$i]->OLN_expdate < date('Y-m-d')){ $color_exp = 'red'; } ?>
+		<?php if($OLN_data[$i]->OLN_expdate < date('Y-m-d')){ $color_exp = 'red'; }
+		 else{	$color_exp = '';}
+		 ?>
 		<?php
 		if($OLN_data[$i]->OLN_expdate){
 			$OLN_data[$i]->OLN_expdate = $OLN_data[$i]->OLN_expdate ;	
@@ -2928,7 +2953,9 @@ else{
     <div class="lic-pan-right" id="PLN1">
       <div class="comm">
         <label>Exp. Date:</label>
-		<?php if($PLN_data[0]->PLN_expdate < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($PLN_data[0]->PLN_expdate < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php
 		if($PLN_data[0]->PLN_expdate){
 			$PLN_data[0]->PLN_expdate = $PLN_data[0]->PLN_expdate;
@@ -3069,7 +3096,9 @@ else{
     <div class="lic-pan-right" id="PLN<?PHP echo $j+1; ?>">
       <div class="comm">
         <label>Exp. Date:</label>
-		<?php if($PLN_data[$j]->PLN_expdate < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($PLN_data[$j]->PLN_expdate < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php if($PLN_data[$j]->PLN_expdate){
 				$PLN_data[$j]->PLN_expdate = $PLN_data[$j]->PLN_expdate ;
 			  }
@@ -3220,7 +3249,9 @@ else{
     <div class="lic-pan-right" id="wc1">
       <div class="comm">
         <label>Exp. Date:</label>
-		<?php if($WC_data[0]->wc_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($WC_data[0]->wc_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php if($WC_data[0]->wc_end_date) {
 			$WC_data[0]->wc_end_date = $WC_data[0]->wc_end_date ;
 		}
@@ -3318,7 +3349,9 @@ else{
     <div class="lic-pan-right" id="wc<?PHP echo $mj+1; ?>" style="pointer-events:none;">
       <div class="comm">
         <label>Exp. Date:</label>
-		<?php if($WC_data[$mj]->wc_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($WC_data[$mj]->wc_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php
 			if($WC_data[$mj]->wc_end_date){
 				$WC_data[$mj]->wc_end_date = $WC_data[$mj]->wc_end_date;

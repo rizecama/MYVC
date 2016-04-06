@@ -1532,7 +1532,7 @@ if(doctype == 'W9'){
  	
 	var inputdate = document.getElementById('WCI_end_date'+wci).value ;
 	wcis = inputdate.split("-"); 
-	wcidate = wci[2] + "-" + wci[0] + "-" + wci[1] ;
+	wcidate = wcis[2] + "-" + wcis[0] + "-" + wcis[1] ;
 	var wcidate = new Date(wcidate);
 	
 	var currentDate = new Date()
