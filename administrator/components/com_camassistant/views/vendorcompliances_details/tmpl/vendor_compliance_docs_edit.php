@@ -509,7 +509,9 @@ var val = parseFloat(x).toFixed(2)+'',
         <label>Exp. Date:</label>
 		<?php 
 	if($GLI_data[0]->GLI_end_date < date('Y-m-d') || !$GLI_data[0]->GLI_end_date || $GLI_data[0]->GLI_end_date == '00-00-0000')
-	 { $color_exp = 'red'; } ?>
+	 { $color_exp = 'red'; } 
+	 else{	$color_exp = '';}
+	 ?>
 	 
 	 <?php 
 	 	if($GLI_data[0]->GLI_end_date) {
@@ -816,7 +818,9 @@ var val = parseFloat(x).toFixed(2)+'',
       <div class="comm">
 	   <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($GLI_data[$k]->GLI_end_date < date('Y-m-d') || $GLI_data[$k]->GLI_end_date == '00-00-0000') { $color_exp = 'red'; } ?>	
+		<?php if($GLI_data[$k]->GLI_end_date < date('Y-m-d') || $GLI_data[$k]->GLI_end_date == '00-00-0000') { $color_exp = 'red'; }
+		else{	$color_exp = '';}
+		 ?>	
 	
 	<?php 
 		if($GLI_data[$k]->GLI_end_date){
@@ -1082,7 +1086,9 @@ else{
       <div class="comm">
 	   <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($AIP_data[0]->aip_end_date < date('Y-m-d') || $AIP_data[0]->aip_end_date == '00-00-0000'  ) { $color_exp = 'red'; } ?>
+		<?php if($AIP_data[0]->aip_end_date < date('Y-m-d') || $AIP_data[0]->aip_end_date == '00-00-0000'  ) { $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		?>
 		 <?php
 		 	if($AIP_data[0]->aip_end_date){
 				$AIP_data[0]->aip_end_date = $AIP_data[0]->aip_end_date ;
@@ -1282,7 +1288,7 @@ else{
       <?php } ?>
        <div class="rmv"><?PHP if($AIP_data[$mj]->aip_upld_cert != '') {?>
                 <span id="removeaip<?PHP echo $mj+1; ?>" class="removeaip<?PHP echo $mj+1; ?>" style="display:none;" ><a href="javascript:del_upld_cert('aip_upld_cert1','<?PHP echo $AIP_data[$mj]->aip_upld_cert; ?>','vendor_auto_insurance','aip','<?PHP echo $AIP_data[$mj]->id; ?>','<?PHP echo $mj+1; ?>')" class="adminedit_complaince" style="margin-left:10px;"></a></span>
-             <span class="uploadaip<?PHP echo $mj+1; ?>"  id="uploadaip<?PHP echo $mj+1; ?>" style="width:160px; left:1px; display: none;"><a href="javascript:doc_upload(<?PHP echo $mj+1; ?>,'aip','<?PHP echo $AIP_data[$mj]->id; ?>');"><img src="<?php echo Juri::root(); ?>components/com_camassistant/assets/images/upload-document.jpg" alt="" /></a><span style="color:red; font-size: 20px; float:right; left: 0px;position: relative; top: -49px;">*</span></span>
+             <span class="uploadaip<?PHP echo $mj+1; ?>"  id="uploadaip<?PHP echo $mj+1; ?>" style="width:160px; left:1px;"> <a class="aip<?PHP echo $mj+1; ?>" style="display:none;" href="javascript:doc_upload(<?PHP echo $mj+1; ?>,'aip','<?PHP echo $AIP_data[$mj]->id; ?>');" id="adminupdate_compliance"></a></span>
 
       <?php  } else { ?>
 
@@ -1304,7 +1310,7 @@ else{
       </div>
 	  
    <div class="reeditbuttons">
-<div class="aip<?PHP echo $mj+1; ?>" style="display:none;float:left; margin-left:-4px;">
+<div class="aip<?PHP echo $mj+1; ?>" style="display:none;float:left;">
 <a href="javascript: Alt_saveassubmit('AIP<?PHP echo $mj+1; ?>');" class="adminsave_complaince"></a>
 <a href="javascript:cenceleditdocs();" class="admincancel_complaince"></a>
 </div>
@@ -1316,7 +1322,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($AIP_data[$mj]->aip_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($AIP_data[$mj]->aip_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		 else{	$color_exp = '';}
+		?>
 		<?php
 	if($AIP_data[$mj]->aip_end_date){
 		$AIP_data[$mj]->aip_end_date = $AIP_data[$mj]->aip_end_date;
@@ -1592,7 +1600,11 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } if($WCI_data[0]->WCI_end_date){ 
+		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		
+		
+		if($WCI_data[0]->WCI_end_date){ 
                     $WCI_data[0]->WCI_end_date=$WCI_data[0]->WCI_end_date;
                    } else { 
                     $WCI_data[0]->WCI_end_date='0000-00-00';                            
@@ -1818,7 +1830,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } if($WCI_data[0]->WCI_end_date){ 
+		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		if($WCI_data[0]->WCI_end_date){ 
                     $WCI_data[0]->WCI_end_date=$WCI_data[0]->WCI_end_date;
                    } else { 
                     $WCI_data[0]->WCI_end_date='0000-00-00';                            
@@ -2024,7 +2038,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($UMB_data[0]->UMB_expdate < date('Y-m-d')) { $color_exp = 'red'; } if($UMB_data[0]->UMB_expdate){ 
+		<?php if($UMB_data[0]->UMB_expdate < date('Y-m-d')) { $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		if($UMB_data[0]->UMB_expdate){ 
                     $UMB_data[0]->UMB_expdate=$UMB_data[0]->UMB_expdate;
                    } else { 
                     $UMB_data[0]->UMB_expdate='0000-00-00';                            
@@ -2203,7 +2219,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($UMB_data[$i]->UMB_expdate < date('Y-m-d')){ $color_exp = 'red'; } ?>
+		<?php if($UMB_data[$i]->UMB_expdate < date('Y-m-d')){ $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		?>
 		<?php
 			if($UMB_data[$i]->UMB_expdate){
 				$UMB_data[$i]->UMB_expdate = $UMB_data[$i]->UMB_expdate;
@@ -2404,6 +2422,8 @@ else{
 		<?php $color_exp = ''; ?>
 		<?php if($OLN_data[0]->OLN_expdate < date('Y-m-d')) { $color_exp = 'red'; }
 		
+		else{	$color_exp = '';}
+		
 					if($OLN_data[0]->OLN_expdate){ 
                     $OLN_data[0]->OLN_expdate = $OLN_data[0]->OLN_expdate;
                    } else { 
@@ -2570,7 +2590,9 @@ else{
     <div class="lic-pan-right" id="OLN<?PHP echo $i+1; ?>" style="pointer-events:none;">	
       <div class="comm">
         <label>Expiration Date:</label>
-		<?php if($OLN_data[$i]->OLN_expdate < date('Y-m-d')){ $color_exp = 'red'; } ?>
+		<?php if($OLN_data[$i]->OLN_expdate < date('Y-m-d')){ $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		?>
 		<?php
 		if($OLN_data[$i]->OLN_expdate){
 			$OLN_data[$i]->OLN_expdate = $OLN_data[$i]->OLN_expdate ;	
@@ -2767,7 +2789,9 @@ else{
     <div class="lic-pan-right" id="PLN1" style="pointer-events:none;">	
       <div class="comm">
         <label>Expiration Date:</label>
-		<?php if($PLN_data[0]->PLN_expdate < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($PLN_data[0]->PLN_expdate < date('Y-m-d')) { $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		?>
 		<?php
 		if($PLN_data[0]->PLN_expdate){
 			$PLN_data[0]->PLN_expdate = $PLN_data[0]->PLN_expdate;
@@ -2962,7 +2986,9 @@ else{
     <div class="lic-pan-right" id="PLN<?PHP echo $j+1; ?>" style="pointer-events:none;">	
       <div class="comm">
         <label>Expiration Date:</label>
-		<?php if($PLN_data[$j]->PLN_expdate < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($PLN_data[$j]->PLN_expdate < date('Y-m-d')) { $color_exp = 'red'; }
+		else{	$color_exp = '';}
+		 ?>
 		<?php if($PLN_data[$j]->PLN_expdate){
 				$PLN_data[$j]->PLN_expdate = $PLN_data[$j]->PLN_expdate ;
 			  }
@@ -3132,7 +3158,9 @@ else{
     <div class="lic-pan-right" id="wc1" style="pointer-events:none;">	
       <div class="comm">
         <label>Expiration Date:</label>
-		<?php if($WC_data[0]->wc_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($WC_data[0]->wc_end_date < date('Y-m-d')) { $color_exp = 'red'; }
+		else{	$color_exp = '';}
+		 ?>
 		<?php if($WC_data[0]->wc_end_date) {
 			$WC_data[0]->wc_end_date = $WC_data[0]->wc_end_date ;
 		}
@@ -3284,7 +3312,9 @@ else{
       <div class="comm">
         <label>Expiration Date:</label>
 		
-		<?php if($WC_data[$mj]->wc_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($WC_data[$mj]->wc_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		?>
 		<?php
 			if($WC_data[$mj]->wc_end_date){
 				$WC_data[$mj]->wc_end_date = $WC_data[$mj]->wc_end_date;
@@ -3417,7 +3447,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($OMI_data[0]->OMI_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+		<?php if($OMI_data[0]->OMI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		else{	$color_exp = '';}
+		?>
 		<?php
 		if($OMI_data[0]->OMI_end_date){
 			$OMI_data[0]->OMI_end_date = $OMI_data[0]->OMI_end_date ;	
@@ -3592,7 +3624,9 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-			<?php if($OMI_data[$i]->OMI_end_date < date('Y-m-d')) { $color_exp = 'red'; } ?>
+			<?php if($OMI_data[$i]->OMI_end_date < date('Y-m-d')) { $color_exp = 'red'; }
+			else{	$color_exp = '';}
+			 ?>
 		<?php 
 	if($OMI_data[$i]->OMI_end_date){
 		$OMI_data[$i]->OMI_end_date = $OMI_data[$i]->OMI_end_date;	
