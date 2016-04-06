@@ -1256,8 +1256,8 @@ else{
        <?php /*?><span id="removeaip1" class="remove1"  style="width:160px; left:-6px;"><a href="javascript:del_upld_cert('aip_upld_cert1','<?PHP echo $AIP_data[0]->aip_upld_cert; ?>','vendor_auto_insurance','aip','<?PHP echo $AIP_data[0]->id; ?>','1')" id="update_compliance"></a></span><?php */?>
 	
 <div class="aip1" style="display:none;" id="savedocs_vendor">
-<a href="javascript: Alt_saveassubmit('AIP1');" class="save_complaince"></a>
-<a href="javascript:cenceleditdocs();" class="cancel_compliance"></a>
+<a href="javascript: Alt_saveassubmit('AIP1');" class="save_complaince" style="margin-left:6px;"></a>
+<a href="javascript:cenceleditdocs();" class="cancel_compliance" style="margin-left:6px;"></a>
 </div>
 
    <?php } ?></div><input type="hidden" class="file_input_textbox" name="aip_upld_cert[]" id="aip_upld_cert1"  value="<?PHP echo $AIP_data[0]->aip_upld_cert; ?>" />

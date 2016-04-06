@@ -875,9 +875,9 @@ var val = parseFloat(x).toFixed(2)+'',
 			$loc = "checked='checked'";
 		 ?><p style="height:10px"></p>
 		 <table cellpadding="0" cellspacing="0"><tr><td><label>Applies To:&nbsp;</label></td>
-		 <td style="vertical-align:top;"><input type="radio" disabled="disabled" <?php echo $pol; ?> name="GLI_applies<?php echo $k; ?>" value="pol" class="attrInputs" id="attrInputs<?php echo $k; ?>" /></td><td>&nbsp;Pol&nbsp;</td>
-		 <td style="vertical-align:top;"><input <?php echo $proj; ?> type="radio" disabled="disabled" name="GLI_applies<?php echo $k; ?>" value="proj" class="attrInputs" id="attrInputs<?php echo $k; ?>" /></td><td>&nbsp;Proj&nbsp;</td>
-		 <td style="vertical-align:top;"><input type="radio"  disabled="disabled" <?php echo $loc; ?> name="GLI_applies<?php echo $k; ?>" value="loc" class="attrInputs" id="attrInputs<?php echo $k; ?>" /></td><td>&nbsp;Loc
+		 <td style="vertical-align:top;"><input type="radio" disabled="disabled" <?php echo $pol; ?> name="GLI_applies<?php echo $k; ?>" value="pol" class="attrInputs<?php echo $k+1; ?>" id="attrInputs<?php echo $k; ?>" /></td><td>&nbsp;Pol&nbsp;</td>
+		 <td style="vertical-align:top;"><input <?php echo $proj; ?> type="radio" disabled="disabled" name="GLI_applies<?php echo $k; ?>" value="proj" class="attrInputs<?php echo $k+1; ?>" id="attrInputs<?php echo $k; ?>" /></td><td>&nbsp;Proj&nbsp;</td>
+		 <td style="vertical-align:top;"><input type="radio"  disabled="disabled" <?php echo $loc; ?> name="GLI_applies<?php echo $k; ?>" value="loc" class="attrInputs<?php echo $k+1; ?>" id="attrInputs<?php echo $k; ?>" /></td><td>&nbsp;Loc
 		 <?php if(!$GLI_data[$k]->GLI_applies) { ?> <span style="color:red; font-size: 20px;">*</span><?php } ?>
 		 </td></tr></table>
         </div>
@@ -1071,8 +1071,8 @@ else{
 	  
 	  <div class="reeditbuttons"> 
 <div class="aip1" style="display:none;" id="savedocs_vendor">
-<a href="javascript: Alt_saveassubmit('AIP1');" class="adminsave_complaince"></a>
-<a href="javascript:cenceleditdocs();" class="admincancel_complaince"></a>
+<a href="javascript: Alt_saveassubmit('AIP1');" class="adminsave_complaince" style="margin-left:6px;"></a>
+<a href="javascript:cenceleditdocs();" class="admincancel_complaince" style="margin-left:6px;"></a>
    
 </div>
 </div>
@@ -1823,7 +1823,6 @@ else{
                    } else { 
                     $WCI_data[0]->WCI_end_date='0000-00-00';                            
                     }  ?>
-
          <?PHP 
 		 if( $WCI_data[$m]->WCI_end_date != 'Does Not Expire' ){
 		 $WCI_end_date2 = explode('-',$WCI_data[$m]->WCI_end_date);  ?>
@@ -2028,7 +2027,6 @@ else{
 		<?php if($UMB_data[0]->UMB_expdate < date('Y-m-d')) { $color_exp = 'red'; } if($UMB_data[0]->UMB_expdate){ 
                     $UMB_data[0]->UMB_expdate=$UMB_data[0]->UMB_expdate;
                    } else { 
-				   
                     $UMB_data[0]->UMB_expdate='0000-00-00';                            
                     }  ?>
            <?PHP $UMB_date = explode('-',$UMB_data[0]->UMB_expdate); ?>
@@ -2393,7 +2391,7 @@ else{
   <div class="clear"></div>
   <div class="reeditbuttons">
 <div style="display:none; margin:0px;" class="OLN1" id="savedocs_vendor">
-<a href="javascript: Alt_saveassubmit('OLN1');" class="adminsave_complaince" style="margin-top:-1px;"></a>
+<a href="javascript: Alt_saveassubmit('OLN1');" class="adminsave_complaince"></a>
 <a href="javascript:cenceleditdocs();" class="admincancel_complaince"></a>
 </div>
 </div>

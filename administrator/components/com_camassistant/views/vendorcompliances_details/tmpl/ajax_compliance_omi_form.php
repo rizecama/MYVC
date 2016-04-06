@@ -60,7 +60,7 @@ $delid = $compliance;
       <div class="comm">
 	  <div class="in-pan">
         <label style="padding-top:5px;">Last Verified By MyVendorCenter On:</label>
-        <input name="OMI_date_verified[]" id="OMI_date_verified<?PHP echo $compliance; ?>" readonly="readonly" type="text" value=""/>
+      <input name="OMI_date_verified[]" id="OMI_date_verified<?PHP echo $OMI_title; ?>" type="text"  size="20" value=""/><script type="text/javascript">G('#OMI_date_verified<?PHP echo $OMI_title; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,maxDate: "+2y"});</script>
 		</div>
       </div>
     </div>

@@ -110,7 +110,7 @@ $delid = $compliance;
       <div class="comm">
 	  <div class="in-pan">
         <label>Last Verified By MyVendorCenter On:</label>
-       <input type="text" class="bak" size="10" name="aip_date_verified[]" id="aip_date_verified"  readonly="readonly"  type="text" value=""/>
+       <input name="aip_date_verified[]" id="AIP_date_verified<?PHP echo $AIP_title; ?>" type="text"  size="20" value=""/><script type="text/javascript">G('#AIP_date_verified<?PHP echo $AIP_title; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,maxDate: "+2y"});</script>
       </div>
 	  </div>
     </div>
