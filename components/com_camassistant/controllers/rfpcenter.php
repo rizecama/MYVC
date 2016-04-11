@@ -1508,7 +1508,7 @@ if( $publish->cust_id == $user->id )
     </td>
 	<td width="25%" height="20" bgcolor="#707070" style="padding-left:25px; color:#FFF;">
    <strong>COMPLIANCE STATUS</strong></td>
-	<td width="21%" height="10" bgcolor="#707070" style="color:#FFF;">
+	<td width="21%" height="10" bgcolor="#707070" style="color:#FFF;" align="center">
     <strong>INVITATION STATUS</strong></td>
      <td width="15%" height="10" bgcolor="#707070" align="center" style="padding-left:0px; color:#FFF;">
   <strong>PRICE</strong></td>
@@ -2076,7 +2076,7 @@ $getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, bidding, rfp_ty
     </td>
 	<td width="25%" height="20" bgcolor="#707070" style="padding-left:25px; color:#FFF;">
    <strong>COMPLIANCE STATUS</strong></td>
-	<td width="21%" height="10" bgcolor="#707070" style="color:#FFF;">
+	<td width="21%" height="10" bgcolor="#707070" style="color:#FFF;" align="center">
     <strong>INVITATION STATUS</strong></td>
      <td width="15%" height="10" bgcolor="#707070" align="center" style="padding-left:0px; color:#FFF;">
   <strong>PRICE</strong></td>

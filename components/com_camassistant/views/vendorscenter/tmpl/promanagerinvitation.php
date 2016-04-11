@@ -21,7 +21,7 @@ e.preventDefault();
 		var re = /,/g;
 		for( var c = 0; re.exec(s); ++c );
 		var mail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-		if(!property_name) {
+		if(!property_name || property_name == '0') {
 		alert("Please select property");
 		return false;
 		}
@@ -56,7 +56,7 @@ e.preventDefault();
 		}*/
 		if(email)
 		 {
-		H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=usercheck", {mailid: ""+email+""}, function(data){
+		H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=checktoallemails", {mailid: ""+email+""}, function(data){
 		if(data == 1){
 		alert("Already user exists with this email");
 		return false;

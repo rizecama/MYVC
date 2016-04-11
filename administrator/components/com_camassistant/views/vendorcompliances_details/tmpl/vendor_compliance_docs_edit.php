@@ -1830,12 +1830,12 @@ else{
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-		<?php if($WCI_data[0]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
+		<?php if($WCI_data[$m]->WCI_end_date < date('Y-m-d')) { $color_exp = 'red'; } 
 		else{	$color_exp = '';}
-		if($WCI_data[0]->WCI_end_date){ 
-                    $WCI_data[0]->WCI_end_date=$WCI_data[0]->WCI_end_date;
+		if($WCI_data[$m]->WCI_end_date){ 
+                    $WCI_data[$m]->WCI_end_date=$WCI_data[$m]->WCI_end_date;
                    } else { 
-                    $WCI_data[0]->WCI_end_date='0000-00-00';                            
+                    $WCI_data[$m]->WCI_end_date='0000-00-00';                            
                     }  ?>
          <?PHP 
 		 if( $WCI_data[$m]->WCI_end_date != 'Does Not Expire' ){
