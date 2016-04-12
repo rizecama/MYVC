@@ -339,11 +339,11 @@ $propertyowner_logo = $model->getpropertyowner_logo($bid);
 ?>
 <div class="client_info">
 <div class="propertyowner_module">
-<?php if( $propertyowner_logo && $link ==1 ) { ?>
+<?php if( $propertyowner_logo && ( $link == 1 || $clientemail == 1 ) ) { ?>
 <div class= "property_logo" >
 <div class="property_logo-img">
  <img src="components/com_camassistant/assets/images/properymanager/<?php echo $propertyowner_logo ?>" alt="#" /></div>
-<?php } else if (!$propertyowner_logo && $link ==1) {?>
+<?php } else if (!$propertyowner_logo && $link ==1 ) {?>
 <div class= "property_logo" >
 <div class="property_nologo-img">
 <p>Your Client has not uploaded an image for their account</p>
@@ -375,7 +375,7 @@ $propertyowner_logo = $model->getpropertyowner_logo($bid);
  </div>
  
  <?php }
-  else if( $clientemail == 1 && $link == 1) {
+  else if( $clientemail == 1 && $link == 1 ) {
 ?>
  <div class="manage_section">
      <div class="property_management">

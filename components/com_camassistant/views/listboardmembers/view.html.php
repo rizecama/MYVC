@@ -27,6 +27,8 @@ class boardmembersViewlistboardmembers extends Jview
 		//echo "<pre>"; print_r($boardmembers);
 	    /*?>modified by anand kumar 25-7-11<?php */
 		$rows = $model->getProperties();
+		$vendors = $model->getprevious();
+		$this->assignRef('vendors',$vendors);
 		//$Managers_list=$db->loadObjectList();
 		$row1[0] = new stdClass();
 		$row1[0]->value = "";
@@ -43,6 +45,8 @@ class boardmembersViewlistboardmembers extends Jview
 		//$this->assignRef('propertyList',$propertyList);
 		$this->assignRef('boardmembers',$boardmembers);
 		$task = JRequest::getVar("task",''); 
+		
+		
 		if($task == 'not_authorized')
 		{
 		$this->setLayout('not_authorized'); 

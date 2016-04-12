@@ -21,7 +21,6 @@ jimport('joomla.application.component.controller');
 class vendorscenterController extends JController
 {
 
-
 	function __construct()
 	{
 		parent::__construct();
@@ -4753,7 +4752,6 @@ $licdata = '';
 	$msg=1;
 	else
 	$msg=0;
-	
 	echo $msg; 
 	exit;
 	

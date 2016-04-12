@@ -1410,6 +1410,497 @@ exit;
 	  echo "success"; exit;
 
 	}
+	
+	function getcancelproposals(){
+	
+	$rfpid = $_REQUEST['rfpid'];
+	$rfpname = $_REQUEST['rfpname'];
+	$db = & JFactory::getDBO();
+	$getprops = "SELECT U.id, U.name, U.email, U.ccemail, U.lastname, V.company_phone,P.contact_name, V.company_name, V.phone_ext, P.proposaltype, P.proposal_total_price,P.Alt_bid, P.publish, P.bidfrom, P.id as proposalid, U.subscribe_type, P.proposeddate  FROM jos_users as U
+LEFT JOIN jos_cam_vendor_company  as V on U.id=V.user_id
+LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno=".$rfpid." ";
+	$db->setQuery( $getprops);
+	$listprps = $db->loadObjectList();
+	?>
+	<table width="100%" border="0" style="margin:0px 0px; border:1px solid #A3A3A3; background:#F7F7F7">
+    <tbody>
+    
+<tr><td align="center">
+<?php
+$model = $this->getModel('rfpcenter');
+$draftprops = $model->alldraftproposals_count($rfpid);
+
+$exp_count = explode('---',$draftprops);
+if( $exp_count[0] == $exp_count[1] )
+	$count_drafts = 'no';
+else
+	$count_drafts = 'yes';
+
+?>
+<ul class="addednum" style="padding-top:0px;">
+<?php
+$getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, bidding, rfp_type, maxProposals, cust_id, jobtype, property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
+	$db->setQuery( $getpublish);
+	$publish = $db->loadObject();
+	?>
+
+ </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:0px 0px; border:">
+  <tbody> <tr>
+    <td width="42%" height="10" bgcolor="#707070" style="color:#fff; padding-left:15px;"><strong>VENDOR</strong>
+    </td>
+	<td width="25%" height="20" bgcolor="#707070" style="padding-left:25px; color:#FFF;">
+   <strong>COMPLIANCE STATUS</strong></td>
+	<td width="21%" height="10" bgcolor="#707070" style="color:#FFF;">
+    <strong>INVITATION STATUS</strong></td>
+     <td width="15%" height="10" bgcolor="#707070" align="center" style="padding-left:0px; color:#FFF;">
+  <strong>PRICE</strong></td>
+  </tr>
+
+  </tr>
+  <?php if(count($listprps) > 0){ ?>
+  <?php for($i=0; $i<count($listprps); $i++){ ?>
+  
+ <?php if($listprps[$i]->contact_name){ 
+  $listprps[$i]->contact_name = $listprps[$i]->contact_name;
+	} else { 
+  $listprps[$i]->contact_name = $listprps[$i]->name. ' '. $listprps[$i]->lastname ;
+	} 
+	
+	//To get the contact name of alternative proposals
+	if($listprps[$i]->Alt_bid == 'yes') {
+		$getconame = "SELECT contact_name  FROM #__cam_vendor_proposals WHERE rfpno=".$rfpid." and proposedvendorid=".$listprps[$i]->id." and Alt_bid='' ";
+		$db->setQuery( $getconame);
+		$getcname = $db->loadResult();
+		if($getcname){ 
+		$listprps[$i]->contact_name = $getcname ;
+		}
+		else{
+		$listprps[$i]->contact_name = $listprps[$i]->name. ' '. $listprps[$i]->lastname ;
+		}
+	}
+	//Completed
+	
+	//To avoid declined vendors
+	$dec_users = "SELECT not_interested from #__cam_vendor_availablejobs where rfp_id=".$rfpid." and user_id=".$listprps[$i]->id." "; 
+	$db->setQuery( $dec_users);
+	$declinedrfp = $db->loadResult();
+	if($declinedrfp == '2')
+	$style='none';
+	else
+	$style='';
+	
+	if( $listprps[$i]->Alt_bid == 'yes' && ( $listprps[$i]->proposaltype =='ITB' || $listprps[$i]->proposaltype =='Draft' || $listprps[$i]->proposaltype =='review'  || $listprps[$i]->proposaltype =='uninvited' ) )
+		$display_alt_draft = 'none';
+	else
+		$display_alt_draft = '';	
+		
+	if( $style == 'none' || $display_alt_draft == 'none' )	
+	$final_display = 'none' ;
+	else
+	$final_display = '' ;
+	
+		//Completed
+	?>
+	
+	<tr class="table_blue_rowdotsextend" style="display:<?php echo $final_display;?>">
+    <td width="40%" style="text-align:left"><strong><a href="index.php?option=com_camassistant&controller=vendors&task=vendordetailslayout&id=<?php echo $listprps[$i]->id; ?>" target="_blank"><?php echo $listprps[$i]->company_name ; ?></a></strong>
+<p style="padding:0px 0px;"><?php echo $listprps[$i]->contact_name.': ' .$listprps[$i]->company_phone;  if($listprps[$i]->phone_ext) { echo "&nbsp;-&nbsp;(" . $listprps[$i]->phone_ext . '&nbsp;)' ; }?></p>
+<a style="color:gray;" class="miniemails" href="mailto:<?php echo $listprps[$i]->email. '?cc=' .$listprps[$i]->ccemail; ?>" style="color:gray;" >Email</a>
+
+<?php 
+	$reminder_sql = "SELECT reminder_type, managerid, send_reminder_date, proposal_type from #__cam_rfp_reminders where rfpid=".$rfpid." and vendorid=".$listprps[$i]->id." and proposalid=".$listprps[$i]->proposalid." order by id DESC "; 
+	$db->setQuery( $reminder_sql);
+	$last_reminder = $db->loadObject();
+	if( $last_reminder ){
+		if( $last_reminder->reminder_type != 'm' ){
+		$type_reminder = 'MyVendorCenter'; 
+		}
+		else{
+		$reminder_name = "select name, lastname from #__users where id=".$last_reminder->managerid." "; 
+		$db->setQuery( $reminder_name );
+		$reminder_sent_name = $db->loadObject();
+		$type_reminder = $reminder_sent_name->name.'&nbsp;'.$reminder_sent_name->lastname; 
+		}
+		$datesenmt = explode(' ',$last_reminder->send_reminder_date);
+		
+		$property_sql = "select timezone from #__cam_property where id=".$publish->property_id." "; 
+		$db->setQuery( $property_sql );
+		$timezone_prop = $db->loadResult();
+		
+			if( $timezone_prop == '' || $timezone_prop == 'est' ) $timezone = 'EST';
+			else if( $timezone_prop == 'cen' ) $timezone = 'CEN';
+			else if( $timezone_prop == 'mou' ) $timezone = 'MOU';
+			else if( $timezone_prop == 'pac' ) $timezone = 'PAC';
+			else if( $timezone_prop == 'ala' ) $timezone = 'ALA';
+			else if( $timezone_prop == 'haw' ) $timezone = 'HAW';
+			else if( $row->timezone == 'eni' ) $timezone = 'ENI';
+			else if( $row->timezone == 'midw' ) $timezone = 'MIDW';
+			else if( $row->timezone == 'car' ) $timezone = 'CAR';
+			else if( $row->timezone == 'atl' ) $timezone = 'ATL';
+			else if( $row->timezone == 'new' ) $timezone = 'NEW';
+			else if( $row->timezone == 'bra' ) $timezone = 'BRA';
+			else if( $row->timezone == 'mid' ) $timezone = 'MID';
+			else if( $row->timezone == 'azo' ) $timezone = 'AZO';
+			else if( $row->timezone == 'wes' ) $timezone = 'WES';
+			else if( $row->timezone == 'bru' ) $timezone = 'BRU';
+			else if( $row->timezone == 'kal' ) $timezone = 'KAL';
+			else if( $row->timezone == 'bag' ) $timezone = 'BAG';
+			else if( $row->timezone == 'teh' ) $timezone = 'TEH';
+			else if( $row->timezone == 'abu' ) $timezone = 'ABU';
+			else if( $row->timezone == 'kab' ) $timezone = 'KAB';
+			else if( $row->timezone == 'eka' ) $timezone = 'EKA';
+			else if( $row->timezone == 'mum' ) $timezone = 'MUM';
+			else if( $row->timezone == 'kath' ) $timezone = 'KATH';
+			else if( $row->timezone == 'alm' ) $timezone = 'ALM';
+			else if( $row->timezone == 'yan' ) $timezone = 'YAN';
+			else if( $row->timezone == 'ban' ) $timezone = 'BAN';
+			else if( $row->timezone == 'bei' ) $timezone = 'BEI';
+			else if( $row->timezone == 'tok' ) $timezone = 'TOK';
+			else if( $row->timezone == 'ade' ) $timezone = 'ADE';
+			else if( $row->timezone == 'eas' ) $timezone = 'EAS';
+			else if( $row->timezone == 'mag' ) $timezone = 'MAG';
+			else if( $row->timezone == 'auk' ) $timezone = 'AUK';
+		
+		if( $last_reminder->proposal_type == '1' )	
+		$reminder_for = 'Invitation';
+		else
+		$reminder_for = 'Proposal';
+      echo "<br /><p class='invitation_reminder'>".$reminder_for." reminder sent by ".$type_reminder." </p>
+	  <span>on ".$datesenmt[0]." at ".date("h:i A", strtotime($datesenmt[1]))." ".$timezone."</span>";
+	 }
+?>
+<p style="height:5px"></p></td>
+
+	<?php /*?><td valign="middle" width="17%" align="center"><?php if($listprps[$i]->proposaltype)  { ?><img alt="" src="templates/camassistant_left/images/right-icon_new.png"> <?php } ?></td><?php */?>
+	<td valign="middle" width="22%" style="padding-left:30px;" align="center">
+	 <?php
+	$totalprefers_new_w9	=	$this->checknewspecialrequirements_w9($listprps[$i]->id,$rfpid);  
+	$totalprefers_new_gli	=	$this->checknewspecialrequirements_gli($listprps[$i]->id,$rfpid);
+	$totalprefers_new_aip	=	$this->checknewspecialrequirements_aip($listprps[$i]->id,$rfpid);
+	$totalprefers_new_wci	=	$this->checknewspecialrequirements_wci($listprps[$i]->id,$rfpid);
+	$totalprefers_new_umb	=	$this->checknewspecialrequirements_umb($listprps[$i]->id,$rfpid);
+	$totalprefers_new_pln	=	$this->checknewspecialrequirements_pln($listprps[$i]->id,$rfpid);
+	$totalprefers_new_occ	=	$this->checknewspecialrequirements_occ($listprps[$i]->id,$rfpid);
+	$totalprefers_new_omi	=	$this->checknewspecialrequirements_omi($listprps[$i]->id,$rfpid);
+	
+	// Check even rfp have some standards or not
+	$existed_standards	=	$this->getallstandardsrfp($rfpid);
+	if($existed_standards == 'yes') {
+	//Completed
+	
+	if( $totalprefers_new_w9 == 'success' && $totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success'  && $totalprefers_new_omi == 'success'){
+			$result_final = 'success' ;
+			$masteraccount = $this->getmasterfirmaccount();
+			$sql_terms = "SELECT termsconditions FROM #__cam_vendor_aboutus WHERE vendorid=".$masteraccount." "; 
+			$db->setQuery($sql_terms);
+			$terms_exist = $db->loadResult();
+			if($terms_exist == '1'){
+			$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$listprps[$i]->id." and masterid=".$masteraccount." "; 
+			$db->setQuery($sql);
+			$terms = $db->loadResult();
+				if($terms == '1'){
+				$result_final = 'success' ;
+				}
+				else{
+				$result_final = 'fail' ;
+				}
+			}
+			else{
+			$result_final = 'success' ;
+			}
+			
+		}
+		else{
+			$result_final = 'fail' ;
+		}
+	}
+	else{
+		$result_final = 'notset' ;
+	}
+	// Compliance status in case of basic request
+	if( $publish->jobtype == 'yes' ){
+	$model = $this->getModel('rfpcenter');
+	$c_status =	$model->checkcompliancestatus($listprps[$i]->id);
+	$result_final = $c_status ;
+	
+	}
+	// Completed
+		
+	 ?>
+	 <?php 
+		if($result_final == 'success' ){ 
+			$id_cccbasic = 'checkmarkbox_small';
+			$title = 'Compliant';
+		}
+		else if($result_final == 'fail'){
+			$id_cccbasic = 'redmarkbox_small';
+			$title = 'Non-Compliant';
+		}
+		else{
+			$id_cccbasic = 'bothicons_small';
+			$title = 'Compliant & Non-Compliant';
+		}
+			
+	 if( $publish->jobtype == 'yes' ){
+	 	if($result_final == 'nostandards'){ ?>
+		<a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $listprps[$i]->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
+		<?php } else { 
+	 	?>
+	 	<a href="javascript:void(0);" title="<?php echo $title; ?>" onclick="getbasiccompliance('<?php echo $listprps[$i]->id; ?>','<?php echo $title; ?>');" class="<?php echo $id_cccbasic; ?>"></a>
+	 	<?php
+	 	}
+	 }
+	 else {
+	 	if($result_final == 'notset'){ ?>
+		<a id="nostandards" title="No Standards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>);">N/A</a>&nbsp;&nbsp;
+		<?php } 
+		else if($result_final == 'success' ){ ?>
+	<a class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');">	</a>
+			<?php }  else if($result_final == 'fail'){ ?>
+	<a class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');">	</a>	
+			<?php } ?>
+		<?php } ?>
+<?php
+if( $listprps[$i]->subscribe_type == 'free' ) { ?>
+<div class="unverifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'unverified');" title="Click for more info">UNVERIFIED</a></div>
+<?php } else {  ?>
+<div class="verifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'verified');" title="Click for more info">VERIFIED</a></div>
+<?php } ?>				
+	 </td>
+	 
+	<td valign="middle" width="17%" align="center">
+	<?php if($listprps[$i]->proposaltype)  { 
+	//To check this rfp in invitations? or not ?
+	$getidinv = "SELECT id  FROM #__rfp_invitations  WHERE rfpid=".$rfpid." and vendorid=".$listprps[$i]->id." ";
+	$db->setQuery( $getidinv);
+	$invitevendorid = $db->loadResult();
+	
+	if($invitevendorid && ($listprps[$i]->bidfrom == 'admin')) { ?>
+	<a href="javascript:blankpopup();" title="Awaiting Vendor's response"><img alt="" src="templates/camassistant_left/images/empty-icon.png"></a>
+	
+	<?php } else {
+	$companyname_acc = str_replace(',','_',$listprps[$i]->company_name);
+	?>
+	<a href="javascript:void(0);" onclick="getcheckmarkpopup('<?php echo $companyname_acc ; ?>','<?php echo $listprps[$i]->proposeddate;?>');"><img alt="" src="templates/camassistant_left/images/Checkmark.png"> </a>
+	<?php } } ?></td>
+	
+	
+     
+	 
+	 
+<?php 
+if($listprps[$i]->Alt_bid == 'yes')
+$alt = 'yes';
+else
+$alt = '';	
+	 ?>
+	 <?php if($publish->bidding != 'seal'){ ?>
+	 <?php //&& $listprps[$i]->publish ==1  echo '<pre>'; print_r($listprps[$i]); ?>
+    <td valign="middle" width="20%" align="center"><strong><?php if($listprps[$i]->proposaltype == 'submit' || $listprps[$i]->proposaltype == 'Submit' || $listprps[$i]->proposaltype == 'resubmit')   { 
+	 ?>
+	<a href="index.php?option=com_camassistant&controller=rfpcenter&task=vendor_proposal_preview_tomanager&Alt_Prp=<?php echo $alt; ?>&Proposal_id=<?php echo $listprps[$i]->proposalid; ?>&vendor_id=<?php echo $listprps[$i]->id; ?>&rfp_id=<?php echo $rfpid; ?>&job=<?php echo $job_type; ?>" target="_blank"><?php echo "$". number_format($listprps[$i]->proposal_total_price,2); ?></a>
+	<?php
+	} 
+	else if( $listprps[$i]->proposaltype == 'uninvited' ){
+		echo "<a class='uninitetext_vendor' onclick='getshowmessage(".$rfpid.",".$listprps[$i]->id.");' href='javascript:void(0);'>UN-INVITED</font>";
+	}
+	else { echo "PENDING"; }?></strong><?php if($listprps[$i]->Alt_bid == 'yes'){
+	echo " (alt)";
+	} ?></td> <?php } else { ?>
+
+	<td valign="middle" width="20%" align="center"><strong><?php 
+	if( $listprps[$i]->proposaltype == 'uninvited' ){
+	echo "<a class='uninitetext_vendor' onclick='getshowmessage(".$rfpid.",".$listprps[$i]->id.");' href='javascript:void(0);'>UN-INVITED</font>";	
+	}
+	else if($listprps[$i]->proposaltype == 'submit' || $listprps[$i]->proposaltype == 'Submit' || $listprps[$i]->proposaltype == 'resubmit' || $listprps[$i]->proposaltype == 'review'  )  { echo "<font color='gray'>SEALED</font><br><a class='breakseal' href='javascript:reopenrfp(".$rfpid.");'><span class='hasTip2' title='Info: Breaking the seal converts a RFP from Sealed Bidding to open bidding, and allows you to see pricing BEFORE you end the bidding.'>BREAK SEAL?</span></a>"; } else { echo "PENDING"; }?></strong></td> <?php } ?>
+
+
+  </tr>
+ 
+  <?php }  } else {?>
+  <tr class="table_blue_rowdotsextend"><td colspan="4"><p style="font-size: 13px; margin-bottom: 10px; text-align: center;">You have NOT invited any Vendors to participate in this project, please click on "INVITE A VENDOR" above</p></td></tr>
+  <?php } 
+  
+  // To get the rfp invitation for this JOB
+	$getinvitevendors = "SELECT vendorid from #__rfp_invitations where rfpid=".$rfpid."";
+	$db->setQuery( $getinvitevendors);
+	$invitevendors = $db->loadObjectList();
+	for($n=0; $n<count($invitevendors); $n++){
+	$not = "SELECT not_interested from #__cam_vendor_availablejobs where rfp_id=".$rfpid." and user_id=".$invitevendors[$n]->vendorid." "; 
+	$db->setQuery( $not);
+	$dec = $db->loadResult();
+	
+		if($dec == '2'){ 
+	$getpropsinv = "SELECT U.id, U.name, U.email, U.ccemail, U.lastname, V.company_phone,V.company_name, V.phone_ext FROM jos_users as U
+	LEFT JOIN jos_cam_vendor_company  as V on U.id=V.user_id
+	where U.id=".$invitevendors[$n]->vendorid." ";
+	$db->setQuery( $getpropsinv);
+	$decdata = $db->loadObject();	
+		?>
+		<tr class="table_blue_rowdotsextend">
+		<td width="40%" style="text-align:left"><strong><?php echo $decdata->company_name; ?></strong>
+<p style="padding:0px 0px;"><?php echo $decdata->name.' '.$decdata->lastname; ?> <?php if($decdata->company_phone){ echo ":".$decdata->company_phone ; } ?> <?php if($decdata->phone_ext){ echo "- (".$decdata->phone_ext.')'  ; } ?></p>
+<a style="color:gray;" class="miniemails" href="mailto:<?php echo $decdata->email. '?cc=' .$decdata->ccemail; ?>">Email</a><p style="height:5px"></p></td>
+
+<?php
+	$totalprefers_new_w9	=	$this->checknewspecialrequirements_w9($decdata->id,$rfpid);
+	$totalprefers_new_gli	=	$this->checknewspecialrequirements_gli($decdata->id,$rfpid);
+	$totalprefers_new_aip	=	$this->checknewspecialrequirements_aip($decdata->id,$rfpid);
+	$totalprefers_new_wci	=	$this->checknewspecialrequirements_wci($decdata->id,$rfpid);
+	$totalprefers_new_umb	=	$this->checknewspecialrequirements_umb($decdata->id,$rfpid);
+	$totalprefers_new_pln	=	$this->checknewspecialrequirements_pln($decdata->id,$rfpid);
+	$totalprefers_new_occ	=	$this->checknewspecialrequirements_occ($decdata->id,$rfpid);
+	$totalprefers_new_omi	=	$this->checknewspecialrequirements_omi($decdata->id,$rfpid);
+	
+	$existed_standards	=	$this->getallstandardsrfp($rfpid);
+	if($existed_standards == 'yes') {
+	if($totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success' && $totalprefers_new_omi == 'success'){
+			$result_final = 'success' ;
+			$masteraccount = $this->getmasterfirmaccount();
+			$sql_terms = "SELECT termsconditions FROM #__cam_vendor_aboutus WHERE vendorid=".$masteraccount." "; 
+			$db->setQuery($sql_terms);
+			$terms_exist = $db->loadResult();
+			if($terms_exist == '1'){
+
+			$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$decdata->id." and masterid=".$masteraccount." "; 
+			$db->setQuery($sql);
+			$terms = $db->loadResult();
+				if($terms == '1'){
+				$result_final = 'success' ;
+				}
+				else{
+				$result_final = 'fail' ;
+				}
+			}
+			else{
+			
+			}
+			
+		}
+		else{
+			$result_final = 'fail' ;
+		}
+	}
+	else{
+		$result_final = 'notset' ;
+	}	
+		
+		// Compliance status in case of basic request
+	if( $publish->jobtype == 'yes' ){
+	$model = $this->getModel('rfpcenter');
+	$c_status =	$model->checkcompliancestatus($decdata->id);
+	$result_final = $c_status ;
+	}
+	// Completed
+	
+	 ?>
+<td valign="middle" width="22%" style="padding-left:30px;" align="center">
+<?php 
+	if($result_final == 'success' ){ 
+			$id_cccbasic = 'checkmarkbox_small';
+			$title = 'Compliant';
+		}
+		else if($result_final == 'fail'){
+			$id_cccbasic = 'redmarkbox_small';
+			$title = 'Non-Compliant';
+		}
+		else{
+			$id_cccbasic = 'bothicons_small';
+			$title = 'Compliant & Non-Compliant';
+		}
+		
+if( $publish->jobtype == 'yes' ){
+	if($result_final == 'nostandards'){
+	 ?>
+	 <a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $decdata->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
+	 <?php
+	 } else { ?>
+	 <a href="javascript:void(0);" title="<?php echo $title; ?>" onclick="getbasiccompliance('<?php echo $decdata->id; ?>','<?php echo $title; ?>');" class="<?php echo $id_cccbasic; ?>"></a>
+	 <?php }
+}
+	 
+else {	
+	if($result_final == 'notset'){ ?>
+		 <a id="nostandards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>);" title="No Standards">N/A</a>&nbsp;&nbsp;
+		<?php } 
+	else if($result_final == 'success' ){ ?>
+		 <a class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');"></a>
+	 	<?php }  
+	else if($result_final == 'fail'){ ?>
+	     <a class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');"></a>	
+		<?php } ?>
+<?php } ?>	
+
+<?php
+if( $decdata->subscribe_type == 'free' ) { ?>
+<div class="unverifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $decdata->id; ?>,'unverified');" title="Click for more info">UNVERIFIED</a></div>
+<?php } else {  ?>
+<div class="verifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $decdata->id; ?>,'verified');" title="Click for more info">VERIFIED</a></div>
+<?php } ?>
+	
+</td>
+
+<td valign="middle" width="17%" align="center"><a id="declinedbuttons" href="javascript:void(0);" onclick="getdeclinedreason(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>);"></a> </td>
+
+
+ <td valign="middle" width="20%" align="center"><strong><span style="color:red;">DECLINED</font></strong></td>
+		</tr>
+		<?php }
+	}
+	//Completed
+  ?>
+  
+  
+</tbody></table>
+
+    </td>
+  </tr>
+  <tr valign="middle" height="20">
+    <td><p style="padding-top:3px; padding-left:5px; padding-right:5px; color:#333335; display:none"><strong>CURRENT PROJECT STATUS: </strong><span style="color:#487be7;">
+	<?php
+	if($publish->rfp_adminstatus == ''){
+	echo "Currently being reviewed by qualified, pre-screened Vendors";
+	} else{
+	echo $publish->rfp_adminstatus;
+	}
+	 ?>
+	</span></p></td>
+  </tr>
+
+ <?php
+  //code for permission need for rfp submission 
+  $user=JFactory::getUser();
+  $rfpper = $model->getrequstper($rfpid);
+  $managername = "SELECT name,lastname FROM #__users  WHERE id=".$rfpper->cust_id.""; 
+  $db->setQuery( $managername );
+  $managername = $db->loadObject();
+  if($publish->jobtype == 'yes')
+  $type = 1;
+  else
+  $type = 0;
+  
+  if( $user->user_type == 16 && $rfpper->rfpapproval == '1'){ ?>
+ <tr valign="middle" height="55">
+  <td align="center"><strong><?php echo $managername->name.'&nbsp;'.$managername->lastname ; ?></strong> needs you to approve this project before it is submitted</td>
+  </tr>
+ <tr valign="middle" height="55">
+  <td align="center">
+   <a class='rfpdecline_button' onclick='getrfdecline(<?php echo $rfpid ?>,<?php echo $type; ?>);' href='javascript:void(0);'></a>
+  <a class='rfpapproval_button' onclick='getrfpapproval(<?php echo $rfpid ?>,<?php echo $type ?>);' href='javascript:void(0);'></a>
+ </td>
+    </tr>
+ <?php } ?>
+ 
+</tbody></table>
+	<?php  exit;
+	 } 
+	
 	function getproposals(){
 	$rfpid = $_REQUEST['rfpid'];
 	$rfpname = $_REQUEST['rfpname'];
@@ -2031,495 +2522,8 @@ if( $user->user_type == '16' )
 	<?php  exit;
 	 }
 	 
-	function getcancelproposals(){
 	
-	
-	$rfpid = $_REQUEST['rfpid'];
-	$rfpname = $_REQUEST['rfpname'];
-	$db = & JFactory::getDBO();
-	$getprops = "SELECT U.id, U.name, U.email, U.ccemail, U.lastname, V.company_phone,P.contact_name, V.company_name, V.phone_ext, P.proposaltype, P.proposal_total_price,P.Alt_bid, P.publish, P.bidfrom, P.id as proposalid, U.subscribe_type, P.proposeddate  FROM jos_users as U
-LEFT JOIN jos_cam_vendor_company  as V on U.id=V.user_id
-LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno=".$rfpid." ";
-	$db->setQuery( $getprops);
-	$listprps = $db->loadObjectList();
-	?>
-	<table width="100%" border="0" style="margin:0px 0px; border:1px solid #A3A3A3; background:#F7F7F7">
-    <tbody>
-    
-<tr><td align="center">
-<?php
-$model = $this->getModel('rfpcenter');
-$draftprops = $model->alldraftproposals_count($rfpid);
-
-$exp_count = explode('---',$draftprops);
-if( $exp_count[0] == $exp_count[1] )
-	$count_drafts = 'no';
-else
-	$count_drafts = 'yes';
-
-?>
-<ul class="addednum" style="padding-top:0px;">
-<?php
-$getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, bidding, rfp_type, maxProposals, cust_id, jobtype, property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
-	$db->setQuery( $getpublish);
-	$publish = $db->loadObject();
-	?>
- </ul>
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:0px 0px; border:">
-  <tbody> <tr>
-    <td width="42%" height="10" bgcolor="#707070" style="color:#fff; padding-left:15px;"><strong>VENDOR</strong>
-    </td>
-	<td width="25%" height="20" bgcolor="#707070" style="padding-left:25px; color:#FFF;">
-   <strong>COMPLIANCE STATUS</strong></td>
-	<td width="21%" height="10" bgcolor="#707070" style="color:#FFF;" align="center">
-    <strong>INVITATION STATUS</strong></td>
-     <td width="15%" height="10" bgcolor="#707070" align="center" style="padding-left:0px; color:#FFF;">
-  <strong>PRICE</strong></td>
-  </tr>
-
-  </tr>
-  <?php if(count($listprps) > 0){ ?>
-  <?php for($i=0; $i<count($listprps); $i++){ ?>
-  
- <?php if($listprps[$i]->contact_name){ 
-  $listprps[$i]->contact_name = $listprps[$i]->contact_name;
-	} else { 
-  $listprps[$i]->contact_name = $listprps[$i]->name. ' '. $listprps[$i]->lastname ;
-	} 
-	
-	//To get the contact name of alternative proposals
-	if($listprps[$i]->Alt_bid == 'yes') {
-		$getconame = "SELECT contact_name  FROM #__cam_vendor_proposals WHERE rfpno=".$rfpid." and proposedvendorid=".$listprps[$i]->id." and Alt_bid='' ";
-		$db->setQuery( $getconame);
-		$getcname = $db->loadResult();
-		if($getcname){ 
-		$listprps[$i]->contact_name = $getcname ;
-		}
-		else{
-		$listprps[$i]->contact_name = $listprps[$i]->name. ' '. $listprps[$i]->lastname ;
-		}
-	}
-	//Completed
-	
-	//To avoid declined vendors
-	$dec_users = "SELECT not_interested from #__cam_vendor_availablejobs where rfp_id=".$rfpid." and user_id=".$listprps[$i]->id." "; 
-	$db->setQuery( $dec_users);
-	$declinedrfp = $db->loadResult();
-	if($declinedrfp == '2')
-	$style='none';
-	else
-	$style='';
-	
-	if( $listprps[$i]->Alt_bid == 'yes' && ( $listprps[$i]->proposaltype =='ITB' || $listprps[$i]->proposaltype =='Draft' || $listprps[$i]->proposaltype =='review'  || $listprps[$i]->proposaltype =='uninvited' ) )
-		$display_alt_draft = 'none';
-	else
-		$display_alt_draft = '';	
-		
-	if( $style == 'none' || $display_alt_draft == 'none' )	
-	$final_display = 'none' ;
-	else
-	$final_display = '' ;
-	
-		//Completed
-	?>
-	
-	<tr class="table_blue_rowdotsextend" style="display:<?php echo $final_display;?>">
-    <td width="40%" style="text-align:left"><strong><a href="index.php?option=com_camassistant&controller=vendors&task=vendordetailslayout&id=<?php echo $listprps[$i]->id; ?>" target="_blank"><?php echo $listprps[$i]->company_name ; ?></a></strong>
-<p style="padding:0px 0px;"><?php echo $listprps[$i]->contact_name.': ' .$listprps[$i]->company_phone;  if($listprps[$i]->phone_ext) { echo "&nbsp;-&nbsp;(" . $listprps[$i]->phone_ext . '&nbsp;)' ; }?></p>
-<a style="color:gray;" class="miniemails" href="mailto:<?php echo $listprps[$i]->email. '?cc=' .$listprps[$i]->ccemail; ?>" style="color:gray;" >Email</a>
-
-<?php 
-	$reminder_sql = "SELECT reminder_type, managerid, send_reminder_date, proposal_type from #__cam_rfp_reminders where rfpid=".$rfpid." and vendorid=".$listprps[$i]->id." and proposalid=".$listprps[$i]->proposalid." order by id DESC "; 
-	$db->setQuery( $reminder_sql);
-	$last_reminder = $db->loadObject();
-	if( $last_reminder ){
-		if( $last_reminder->reminder_type != 'm' ){
-		$type_reminder = 'MyVendorCenter'; 
-		}
-		else{
-		$reminder_name = "select name, lastname from #__users where id=".$last_reminder->managerid." "; 
-		$db->setQuery( $reminder_name );
-		$reminder_sent_name = $db->loadObject();
-		$type_reminder = $reminder_sent_name->name.'&nbsp;'.$reminder_sent_name->lastname; 
-		}
-		$datesenmt = explode(' ',$last_reminder->send_reminder_date);
-		
-		$property_sql = "select timezone from #__cam_property where id=".$publish->property_id." "; 
-		$db->setQuery( $property_sql );
-		$timezone_prop = $db->loadResult();
-		
-			if( $timezone_prop == '' || $timezone_prop == 'est' ) $timezone = 'EST';
-			else if( $timezone_prop == 'cen' ) $timezone = 'CEN';
-			else if( $timezone_prop == 'mou' ) $timezone = 'MOU';
-			else if( $timezone_prop == 'pac' ) $timezone = 'PAC';
-			else if( $timezone_prop == 'ala' ) $timezone = 'ALA';
-			else if( $timezone_prop == 'haw' ) $timezone = 'HAW';
-			else if( $row->timezone == 'eni' ) $timezone = 'ENI';
-			else if( $row->timezone == 'midw' ) $timezone = 'MIDW';
-			else if( $row->timezone == 'car' ) $timezone = 'CAR';
-			else if( $row->timezone == 'atl' ) $timezone = 'ATL';
-			else if( $row->timezone == 'new' ) $timezone = 'NEW';
-			else if( $row->timezone == 'bra' ) $timezone = 'BRA';
-			else if( $row->timezone == 'mid' ) $timezone = 'MID';
-			else if( $row->timezone == 'azo' ) $timezone = 'AZO';
-			else if( $row->timezone == 'wes' ) $timezone = 'WES';
-			else if( $row->timezone == 'bru' ) $timezone = 'BRU';
-			else if( $row->timezone == 'kal' ) $timezone = 'KAL';
-			else if( $row->timezone == 'bag' ) $timezone = 'BAG';
-			else if( $row->timezone == 'teh' ) $timezone = 'TEH';
-			else if( $row->timezone == 'abu' ) $timezone = 'ABU';
-			else if( $row->timezone == 'kab' ) $timezone = 'KAB';
-			else if( $row->timezone == 'eka' ) $timezone = 'EKA';
-			else if( $row->timezone == 'mum' ) $timezone = 'MUM';
-			else if( $row->timezone == 'kath' ) $timezone = 'KATH';
-			else if( $row->timezone == 'alm' ) $timezone = 'ALM';
-			else if( $row->timezone == 'yan' ) $timezone = 'YAN';
-			else if( $row->timezone == 'ban' ) $timezone = 'BAN';
-			else if( $row->timezone == 'bei' ) $timezone = 'BEI';
-			else if( $row->timezone == 'tok' ) $timezone = 'TOK';
-			else if( $row->timezone == 'ade' ) $timezone = 'ADE';
-			else if( $row->timezone == 'eas' ) $timezone = 'EAS';
-			else if( $row->timezone == 'mag' ) $timezone = 'MAG';
-			else if( $row->timezone == 'auk' ) $timezone = 'AUK';
-		
-		if( $last_reminder->proposal_type == '1' )	
-		$reminder_for = 'Invitation';
-		else
-		$reminder_for = 'Proposal';
-      echo "<br /><p class='invitation_reminder'>".$reminder_for." reminder sent by ".$type_reminder." </p>
-	  <span>on ".$datesenmt[0]." at ".date("h:i A", strtotime($datesenmt[1]))." ".$timezone."</span>";
-	 }
-?>
-<p style="height:5px"></p></td>
-
-	<?php /*?><td valign="middle" width="17%" align="center"><?php if($listprps[$i]->proposaltype)  { ?><img alt="" src="templates/camassistant_left/images/right-icon_new.png"> <?php } ?></td><?php */?>
-	<td valign="middle" width="22%" style="padding-left:30px;" align="center">
-	 <?php
-	$totalprefers_new_w9	=	$this->checknewspecialrequirements_w9($listprps[$i]->id,$rfpid);  
-	$totalprefers_new_gli	=	$this->checknewspecialrequirements_gli($listprps[$i]->id,$rfpid);
-	$totalprefers_new_aip	=	$this->checknewspecialrequirements_aip($listprps[$i]->id,$rfpid);
-	$totalprefers_new_wci	=	$this->checknewspecialrequirements_wci($listprps[$i]->id,$rfpid);
-	$totalprefers_new_umb	=	$this->checknewspecialrequirements_umb($listprps[$i]->id,$rfpid);
-	$totalprefers_new_pln	=	$this->checknewspecialrequirements_pln($listprps[$i]->id,$rfpid);
-	$totalprefers_new_occ	=	$this->checknewspecialrequirements_occ($listprps[$i]->id,$rfpid);
-	$totalprefers_new_omi	=	$this->checknewspecialrequirements_omi($listprps[$i]->id,$rfpid);
-	
-	// Check even rfp have some standards or not
-	$existed_standards	=	$this->getallstandardsrfp($rfpid);
-	if($existed_standards == 'yes') {
-	//Completed
-	
-	if( $totalprefers_new_w9 == 'success' && $totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success'  && $totalprefers_new_omi == 'success'){
-			$result_final = 'success' ;
-			$masteraccount = $this->getmasterfirmaccount();
-			$sql_terms = "SELECT termsconditions FROM #__cam_vendor_aboutus WHERE vendorid=".$masteraccount." "; 
-			$db->setQuery($sql_terms);
-			$terms_exist = $db->loadResult();
-			if($terms_exist == '1'){
-			$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$listprps[$i]->id." and masterid=".$masteraccount." "; 
-			$db->setQuery($sql);
-			$terms = $db->loadResult();
-				if($terms == '1'){
-				$result_final = 'success' ;
-				}
-				else{
-				$result_final = 'fail' ;
-				}
-			}
-			else{
-			$result_final = 'success' ;
-			}
-			
-		}
-		else{
-			$result_final = 'fail' ;
-		}
-	}
-	else{
-		$result_final = 'notset' ;
-	}
-	// Compliance status in case of basic request
-	if( $publish->jobtype == 'yes' ){
-	$model = $this->getModel('rfpcenter');
-	$c_status =	$model->checkcompliancestatus($listprps[$i]->id);
-	$result_final = $c_status ;
-	
-	}
-	// Completed
-		
-	 ?>
-	 <?php 
-		if($result_final == 'success' ){ 
-			$id_cccbasic = 'checkmarkbox_small';
-			$title = 'Compliant';
-		}
-		else if($result_final == 'fail'){
-			$id_cccbasic = 'redmarkbox_small';
-			$title = 'Non-Compliant';
-		}
-		else{
-			$id_cccbasic = 'bothicons_small';
-			$title = 'Compliant & Non-Compliant';
-		}
-			
-	 if( $publish->jobtype == 'yes' ){
-	 	if($result_final == 'nostandards'){ ?>
-		<a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $listprps[$i]->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
-		<?php } else { 
-	 	?>
-	 	<a href="javascript:void(0);" title="<?php echo $title; ?>" onclick="getbasiccompliance('<?php echo $listprps[$i]->id; ?>','<?php echo $title; ?>');" class="<?php echo $id_cccbasic; ?>"></a>
-	 	<?php
-	 	}
-	 }
-	 else {
-	 	if($result_final == 'notset'){ ?>
-		<a id="nostandards" title="No Standards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>);">N/A</a>&nbsp;&nbsp;
-		<?php } 
-		else if($result_final == 'success' ){ ?>
-	<a class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');">	</a>
-			<?php }  else if($result_final == 'fail'){ ?>
-	<a class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');">	</a>	
-			<?php } ?>
-		<?php } ?>
-<?php
-if( $listprps[$i]->subscribe_type == 'free' ) { ?>
-<div class="unverifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'unverified');" title="Click for more info">UNVERIFIED</a></div>
-<?php } else {  ?>
-<div class="verifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'verified');" title="Click for more info">VERIFIED</a></div>
-<?php } ?>				
-	 </td>
 	 
-	<td valign="middle" width="17%" align="center">
-	<?php if($listprps[$i]->proposaltype)  { 
-	//To check this rfp in invitations? or not ?
-	$getidinv = "SELECT id  FROM #__rfp_invitations  WHERE rfpid=".$rfpid." and vendorid=".$listprps[$i]->id." ";
-	$db->setQuery( $getidinv);
-	$invitevendorid = $db->loadResult();
-	
-	if($invitevendorid && ($listprps[$i]->bidfrom == 'admin')) { ?>
-	<a href="javascript:blankpopup();" title="Awaiting Vendor's response"><img alt="" src="templates/camassistant_left/images/empty-icon.png"></a>
-	
-	<?php } else {
-	$companyname_acc = str_replace(',','_',$listprps[$i]->company_name);
-	?>
-	<a href="javascript:void(0);" onclick="getcheckmarkpopup('<?php echo $companyname_acc ; ?>','<?php echo $listprps[$i]->proposeddate;?>');"><img alt="" src="templates/camassistant_left/images/Checkmark.png"> </a>
-	<?php } } ?></td>
-	
-	
-     
-	 
-	 
-<?php 
-if($listprps[$i]->Alt_bid == 'yes')
-$alt = 'yes';
-else
-$alt = '';	
-	 ?>
-	 <?php if($publish->bidding != 'seal'){ ?>
-	 <?php //&& $listprps[$i]->publish ==1  echo '<pre>'; print_r($listprps[$i]); ?>
-    <td valign="middle" width="20%" align="center"><strong><?php if($listprps[$i]->proposaltype == 'submit' || $listprps[$i]->proposaltype == 'Submit' || $listprps[$i]->proposaltype == 'resubmit')   { 
-	 ?>
-	<a href="index.php?option=com_camassistant&controller=rfpcenter&task=vendor_proposal_preview_tomanager&Alt_Prp=<?php echo $alt; ?>&Proposal_id=<?php echo $listprps[$i]->proposalid; ?>&vendor_id=<?php echo $listprps[$i]->id; ?>&rfp_id=<?php echo $rfpid; ?>&job=<?php echo $job_type; ?>" target="_blank"><?php echo "$". number_format($listprps[$i]->proposal_total_price,2); ?></a>
-	<?php
-	} 
-	else if( $listprps[$i]->proposaltype == 'uninvited' ){
-		echo "<a class='uninitetext_vendor' onclick='getshowmessage(".$rfpid.",".$listprps[$i]->id.");' href='javascript:void(0);'>UN-INVITED</font>";
-	}
-	else { echo "PENDING"; }?></strong><?php if($listprps[$i]->Alt_bid == 'yes'){
-	echo " (alt)";
-	} ?></td> <?php } else { ?>
-
-	<td valign="middle" width="20%" align="center"><strong><?php 
-	if( $listprps[$i]->proposaltype == 'uninvited' ){
-	echo "<a class='uninitetext_vendor' onclick='getshowmessage(".$rfpid.",".$listprps[$i]->id.");' href='javascript:void(0);'>UN-INVITED</font>";	
-	}
-	else if($listprps[$i]->proposaltype == 'submit' || $listprps[$i]->proposaltype == 'Submit' || $listprps[$i]->proposaltype == 'resubmit' || $listprps[$i]->proposaltype == 'review'  )  { echo "<font color='gray'>SEALED</font><br><a class='breakseal' href='javascript:reopenrfp(".$rfpid.");'><span class='hasTip2' title='Info: Breaking the seal converts a RFP from Sealed Bidding to open bidding, and allows you to see pricing BEFORE you end the bidding.'>BREAK SEAL?</span></a>"; } else { echo "PENDING"; }?></strong></td> <?php } ?>
-
-
-  </tr>
- 
-  <?php }  } else {?>
-  <tr class="table_blue_rowdotsextend"><td colspan="4"><p style="font-size: 13px; margin-bottom: 10px; text-align: center;">You have NOT invited any Vendors to participate in this project, please click on "INVITE A VENDOR" above</p></td></tr>
-  <?php } 
-  
-  // To get the rfp invitation for this JOB
-	$getinvitevendors = "SELECT vendorid from #__rfp_invitations where rfpid=".$rfpid."";
-	$db->setQuery( $getinvitevendors);
-	$invitevendors = $db->loadObjectList();
-	for($n=0; $n<count($invitevendors); $n++){
-	$not = "SELECT not_interested from #__cam_vendor_availablejobs where rfp_id=".$rfpid." and user_id=".$invitevendors[$n]->vendorid." "; 
-	$db->setQuery( $not);
-	$dec = $db->loadResult();
-	
-		if($dec == '2'){ 
-	$getpropsinv = "SELECT U.id, U.name, U.email, U.ccemail, U.lastname, V.company_phone,V.company_name, V.phone_ext FROM jos_users as U
-	LEFT JOIN jos_cam_vendor_company  as V on U.id=V.user_id
-	where U.id=".$invitevendors[$n]->vendorid." ";
-	$db->setQuery( $getpropsinv);
-	$decdata = $db->loadObject();	
-		?>
-		<tr class="table_blue_rowdotsextend">
-		<td width="40%" style="text-align:left"><strong><?php echo $decdata->company_name; ?></strong>
-<p style="padding:0px 0px;"><?php echo $decdata->name.' '.$decdata->lastname; ?> <?php if($decdata->company_phone){ echo ":".$decdata->company_phone ; } ?> <?php if($decdata->phone_ext){ echo "- (".$decdata->phone_ext.')'  ; } ?></p>
-<a style="color:gray;" class="miniemails" href="mailto:<?php echo $decdata->email. '?cc=' .$decdata->ccemail; ?>">Email</a><p style="height:5px"></p></td>
-
-<?php
-	$totalprefers_new_w9	=	$this->checknewspecialrequirements_w9($decdata->id,$rfpid);
-	$totalprefers_new_gli	=	$this->checknewspecialrequirements_gli($decdata->id,$rfpid);
-	$totalprefers_new_aip	=	$this->checknewspecialrequirements_aip($decdata->id,$rfpid);
-	$totalprefers_new_wci	=	$this->checknewspecialrequirements_wci($decdata->id,$rfpid);
-	$totalprefers_new_umb	=	$this->checknewspecialrequirements_umb($decdata->id,$rfpid);
-	$totalprefers_new_pln	=	$this->checknewspecialrequirements_pln($decdata->id,$rfpid);
-	$totalprefers_new_occ	=	$this->checknewspecialrequirements_occ($decdata->id,$rfpid);
-	$totalprefers_new_omi	=	$this->checknewspecialrequirements_omi($decdata->id,$rfpid);
-	
-	$existed_standards	=	$this->getallstandardsrfp($rfpid);
-	if($existed_standards == 'yes') {
-	if($totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success' && $totalprefers_new_omi == 'success'){
-			$result_final = 'success' ;
-			$masteraccount = $this->getmasterfirmaccount();
-			$sql_terms = "SELECT termsconditions FROM #__cam_vendor_aboutus WHERE vendorid=".$masteraccount." "; 
-			$db->setQuery($sql_terms);
-			$terms_exist = $db->loadResult();
-			if($terms_exist == '1'){
-
-			$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$decdata->id." and masterid=".$masteraccount." "; 
-			$db->setQuery($sql);
-			$terms = $db->loadResult();
-				if($terms == '1'){
-				$result_final = 'success' ;
-				}
-				else{
-				$result_final = 'fail' ;
-				}
-			}
-			else{
-			
-			}
-			
-		}
-		else{
-			$result_final = 'fail' ;
-		}
-	}
-	else{
-		$result_final = 'notset' ;
-	}	
-		
-		// Compliance status in case of basic request
-	if( $publish->jobtype == 'yes' ){
-	$model = $this->getModel('rfpcenter');
-	$c_status =	$model->checkcompliancestatus($decdata->id);
-	$result_final = $c_status ;
-	}
-	// Completed
-	
-	 ?>
-<td valign="middle" width="22%" style="padding-left:30px;" align="center">
-<?php 
-	if($result_final == 'success' ){ 
-			$id_cccbasic = 'checkmarkbox_small';
-			$title = 'Compliant';
-		}
-		else if($result_final == 'fail'){
-			$id_cccbasic = 'redmarkbox_small';
-			$title = 'Non-Compliant';
-		}
-		else{
-			$id_cccbasic = 'bothicons_small';
-			$title = 'Compliant & Non-Compliant';
-		}
-		
-if( $publish->jobtype == 'yes' ){
-	if($result_final == 'nostandards'){
-	 ?>
-	 <a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $decdata->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
-	 <?php
-	 } else { ?>
-	 <a href="javascript:void(0);" title="<?php echo $title; ?>" onclick="getbasiccompliance('<?php echo $decdata->id; ?>','<?php echo $title; ?>');" class="<?php echo $id_cccbasic; ?>"></a>
-	 <?php }
-}
-	 
-else {	
-	if($result_final == 'notset'){ ?>
-		 <a id="nostandards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>);" title="No Standards">N/A</a>&nbsp;&nbsp;
-		<?php } 
-	else if($result_final == 'success' ){ ?>
-		 <a class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');"></a>
-	 	<?php }  
-	else if($result_final == 'fail'){ ?>
-	     <a class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');"></a>	
-		<?php } ?>
-<?php } ?>	
-
-<?php
-if( $decdata->subscribe_type == 'free' ) { ?>
-<div class="unverifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $decdata->id; ?>,'unverified');" title="Click for more info">UNVERIFIED</a></div>
-<?php } else {  ?>
-<div class="verifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $decdata->id; ?>,'verified');" title="Click for more info">VERIFIED</a></div>
-<?php } ?>
-	
-</td>
-
-<td valign="middle" width="17%" align="center"><a id="declinedbuttons" href="javascript:void(0);" onclick="getdeclinedreason(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>);"></a> </td>
-
-
- <td valign="middle" width="20%" align="center"><strong><span style="color:red;">DECLINED</font></strong></td>
-		</tr>
-		<?php }
-	}
-	//Completed
-  ?>
-  
-  
-</tbody></table>
-
-    </td>
-  </tr>
-  <tr valign="middle" height="20">
-    <td><p style="padding-top:3px; padding-left:5px; padding-right:5px; color:#333335; display:none"><strong>CURRENT PROJECT STATUS: </strong><span style="color:#487be7;">
-	<?php
-	if($publish->rfp_adminstatus == ''){
-	echo "Currently being reviewed by qualified, pre-screened Vendors";
-	} else{
-	echo $publish->rfp_adminstatus;
-	}
-	 ?>
-	</span></p></td>
-  </tr>
-
- <?php
-  //code for permission need for rfp submission 
-  $user=JFactory::getUser();
-  $rfpper = $model->getrequstper($rfpid);
-  $managername = "SELECT name,lastname FROM #__users  WHERE id=".$rfpper->cust_id.""; 
-  $db->setQuery( $managername );
-  $managername = $db->loadObject();
-  if($publish->jobtype == 'yes')
-  $type = 1;
-  else
-  $type = 0;
-  
-  if( $user->user_type == 16 && $rfpper->rfpapproval == '1'){ ?>
- <tr valign="middle" height="55">
-  <td align="center"><strong><?php echo $managername->name.'&nbsp;'.$managername->lastname ; ?></strong> needs you to approve this project before it is submitted</td>
-  </tr>
- <tr valign="middle" height="55">
-  <td align="center">
-   <a class='rfpdecline_button' onclick='getrfdecline(<?php echo $rfpid ?>,<?php echo $type; ?>);' href='javascript:void(0);'></a>
-  <a class='rfpapproval_button' onclick='getrfpapproval(<?php echo $rfpid ?>,<?php echo $type ?>);' href='javascript:void(0);'></a>
- </td>
-    </tr>
- <?php } ?>
- 
-</tbody></table>
-	<?php  exit;
-	 } 
 
 	function sendrequest(){
 	$body = JRequest::getVar('supportbody','');
@@ -4187,13 +4191,13 @@ You have not uploaded a sample certificate for your Vendors
 		<td><ul class="generaloptions">
 		<?php if($generaldata->occur){ $selected_occur = 'checked="checked"'; }?>
 		<li><input type="checkbox" value="yes" name="occur" <?php echo $selected_occur; ?> />&nbsp;<label>Occur</label></li>
-		<li>Each Occurrence: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_occurrence" value="<?php echo number_format($generaldata->each_occurrence,2); ?>" name="each_occurrence" /></li>
-		<li>Damage to Rented Premises: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="damage_retend" value="<?php echo number_format($generaldata->damage_retend,2); ?>" name="damage_retend" /></li>
-		<li>Med Expenses: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="med_expenses" value="<?php echo number_format($generaldata->med_expenses,2); ?>" name="med_expenses" /></li>
-		<li>Personal & Adv injury: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';"  onChange="javascript: add_commas(this,this.value);" id="personal_inj" value="<?php echo number_format($generaldata->personal_inj,2); ?>" name="personal_inj" /></li>
+		<li>Each Occurrence: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_occurrence" value="<?php echo number_format($generaldata->each_occurrence,2); ?>" name="each_occurrence" /></li>
+		<li>Damage to Rented Premises: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="damage_retend" value="<?php echo number_format($generaldata->damage_retend,2); ?>" name="damage_retend" /></li>
+		<li>Med Expenses: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="med_expenses" value="<?php echo number_format($generaldata->med_expenses,2); ?>" name="med_expenses" /></li>
+		<li>Personal & Adv injury: <input type="text" onClick="if(this.value == '0.00') this.value='';"  onChange="javascript: add_commas(this,this.value);" id="personal_inj" value="<?php echo number_format($generaldata->personal_inj,2); ?>" name="personal_inj" /></li>
 		
 		<li>
-		<table cellpadding="0" cellspacing="0"><tr><td>General Aggregate: </td><td><input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="general_aggr" value="<?php echo number_format($generaldata->general_aggr,2); ?>" name="general_aggr" /></td> 
+		<table cellpadding="0" cellspacing="0"><tr><td>General Aggregate: </td><td><input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="general_aggr" value="<?php echo number_format($generaldata->general_aggr,2); ?>" name="general_aggr" /></td> 
 		<?php if($generaldata->applies_to == 'pol') 
 			  $pols = 'checked="checked"';
 		      else if($generaldata->applies_to == 'proj')
@@ -4207,7 +4211,7 @@ You have not uploaded a sample certificate for your Vendors
 		<input type="radio" name="applies_to" value="loc" <?php echo $loc; ?>   style="vertical-align:top;  margin-top:1px;" /></td><td> <label>Loc</label></td></tr></table>
 		</li>
 		
-		<li>Products - COMP/OP Aggregate: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="products_aggr" value="<?php echo number_format($generaldata->products_aggr,2); ?>" name="products_aggr" /></li>
+		<li>Products - COMP/OP Aggregate: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="products_aggr" value="<?php echo number_format($generaldata->products_aggr,2); ?>" name="products_aggr" /></li>
 		<?php if($generaldata->waiver_sub == 'yes'){ $waiv = 'checked="checked"'; }?>
 		<li><input type="checkbox" value="yes" name="waiver_sub" <?php echo $waiv; ?> /> <label>Waiver of Subrogation</label></li>
 		<?php if($generaldata->primary_noncontr == 'yes'){ $prim = 'checked="checked"'; } ?>
@@ -4259,10 +4263,10 @@ You have not uploaded a sample certificate for your Vendors
 		<input type="checkbox" name="applies_to_hired" value="hired" <?php echo $hired; ?> /> <label>Hired</label>&nbsp;&nbsp;
 		<input type="checkbox" name="applies_to_scheduled" value="scheduled" <?php echo $scheduled; ?> /> <label>Scheduled</label>
 		</li>
-		<li>Combined Single Limit: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="combined_single" value="<?php echo number_format($autodata->combined_single,2); ?>" name="combined_single" /></li>
-		<li>Bodily Injury - Per Person: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="bodily_injusy_person" value="<?php echo number_format($autodata->bodily_injusy_person,2); ?>" name="bodily_injusy_person" /></li>
-		<li>Bodily Injury - Per Accident: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="bodily_injusy_accident" value="<?php echo number_format($autodata->bodily_injusy_accident,2); ?>" name="bodily_injusy_accident" /></li>
-		<li>Property Damage - Per Accident: <input type="text" onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="property_damage"  value="<?php echo number_format($autodata->property_damage,2); ?>" name="property_damage" /></li>
+		<li>Combined Single Limit: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="combined_single" value="<?php echo number_format($autodata->combined_single,2); ?>" name="combined_single" /></li>
+		<li>Bodily Injury - Per Person: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="bodily_injusy_person" value="<?php echo number_format($autodata->bodily_injusy_person,2); ?>" name="bodily_injusy_person" /></li>
+		<li>Bodily Injury - Per Accident: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="bodily_injusy_accident" value="<?php echo number_format($autodata->bodily_injusy_accident,2); ?>" name="bodily_injusy_accident" /></li>
+		<li>Property Damage - Per Accident: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="property_damage"  value="<?php echo number_format($autodata->property_damage,2); ?>" name="property_damage" /></li>
 		<?php if($autodata->waiver == 'yes'){ $waiv = 'checked="checked"'; }?>
 		<li><input type="checkbox" value="yes" name="waiver" <?php echo $waiv; ?> /> <label>Waiver of Subrogation</label></li>
 		<?php if($autodata->primary == 'yes'){ $prim = 'checked="checked"'; } ?>
@@ -4306,9 +4310,9 @@ You have not uploaded a sample certificate for your Vendors
 		?>
 		<li><input type="radio" id="workers_not" name="workers_not" value="not" <?php echo $not; ?> style="vertical-align:top;" /> Worker's Comp Exemptions NOT accepted</li>
 		<li><ul class="workers_sub" style="display:<?php echo $display; ?>; list-style-type:none;">
-		<li>Each Accident: <input type="text"   onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_accident" value="<?php echo number_format($workdata->each_accident,2); ?>" name="each_accident" /></li>
-		<li>Disease - Policy Limit: <input type="text"  onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="disease_policy" value="<?php echo number_format($workdata->disease_policy,2); ?>" name="disease_policy" /></li>
-		<li>Disease - Each Employee: <input type="text"  onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="disease_eachemp" value="<?php echo number_format($workdata->disease_eachemp,2); ?>" name="disease_eachemp" /></li>
+		<li>Each Accident: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_accident" value="<?php echo number_format($workdata->each_accident,2); ?>" name="each_accident" /></li>
+		<li>Disease - Policy Limit: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="disease_policy" value="<?php echo number_format($workdata->disease_policy,2); ?>" name="disease_policy" /></li>
+		<li>Disease - Each Employee: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="disease_eachemp" value="<?php echo number_format($workdata->disease_eachemp,2); ?>" name="disease_eachemp" /></li>
 		<?php if($workdata->waiver_work == 'yes'){ $waiver_work = 'checked="checked"'; }?>
 		<li><input type="checkbox" value="yes" name="waiver_work" <?php echo $waiver_work; ?> /> <label>Waiver of Subrogation</label></li>
 		<?php if($workdata->certholder_work == 'yes'){ $certholder_work = 'checked="checked"'; } ?>
@@ -4347,9 +4351,9 @@ You have not uploaded a sample certificate for your Vendors
 		<?php 
 		
 		?>
-		<li>Each Occurrence: <input type="text"  onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_occur" value="<?php echo number_format($umbrelladata->each_occur,2); ?>" name="each_occur" /></li>
+		<li>Each Occurrence: <input type="text"  onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_occur" value="<?php echo number_format($umbrelladata->each_occur,2); ?>" name="each_occur" /></li>
 		
-		<li>Aggregate: <input type="text"   onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="aggregate" value="<?php echo number_format($umbrelladata->aggregate,2); ?>" name="aggregate" /></li>
+		<li>Aggregate: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="aggregate" value="<?php echo number_format($umbrelladata->aggregate,2); ?>" name="aggregate" /></li>
 		<?php if($umbrelladata->certholder_umbrella == 'yes'){ $waiver_umbrella = 'checked="checked"'; }?>
 		<li><input type="checkbox" value="yes" name="certholder_umbrella" <?php echo $waiver_umbrella; ?> /> <label>MyVendorCenter listed as Cert. Holder</label></li>
 		</ul></td>
@@ -4402,9 +4406,9 @@ You have not uploaded a sample certificate for your Vendors
 		<?php echo $exist; ?><td></td>
 		<td><ul class="generaloptions">
 		
-		<li>Each Claim: <input type="text"  onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_claim" value="<?php echo number_format($omidata->each_claim,2); ?>" name="each_claim" /></li>
+		<li>Each Claim: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_claim" value="<?php echo number_format($omidata->each_claim,2); ?>" name="each_claim" /></li>
 
-		<li>Aggregate: <input type="text"   onKeyup="if(isNaN(parseInt(this.value))) { alert('Please enter valid number'); this.value=''; }" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="aggregate_omi" value="<?php echo number_format($omidata->aggregate_omi,2); ?>" name="aggregate_omi" /></li>
+		<li>Aggregate: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="aggregate_omi" value="<?php echo number_format($omidata->aggregate_omi,2); ?>" name="aggregate_omi" /></li>
 		<?php if($omidata->certholder_omi == 'yes'){ $waiver_omi = 'checked="checked"'; }?>
 		<li><input type="checkbox" value="yes" name="certholder_omi" <?php echo $waiver_omi; ?> /> <label>MyVendorCenter listed as Cert. Holder</label></li>
 		
@@ -6478,72 +6482,6 @@ You have not uploaded a sample certificate for your Vendors
 		$res=$db->query();
 		exit;
 	}
-	
-	function updatemail(){
-		$db=&JFactory::getDBO();
-		$user=JFactory::getUser();
-		$email = JRequest::getVar('email','');
-		$query5 ="INSERT INTO #__cam_master_compliancereport_emails (`id`, `user_id`, `email`,`checkval`) VALUES ( '','".$user->id."','".$email."','1')";
-	    $db->setQuery( $query5 );
-	    $res5=$db->query();
-		if($res5){
-		echo "1";
-		}
-		else{
-		echo "0";
-		}
-		exit;
-	}
-	
-	function updateuncheck(){
-		$db=&JFactory::getDBO();
-		$user=JFactory::getUser();
-		$uncheck = JRequest::getVar('check','');
-		$query5 = "UPDATE #__cam_master_compliancereport_emails SET checkval='".$uncheck."' WHERE user_id=".$user->id;
-	    $db->setQuery( $query5 );
-	    $res5=$db->query();
-		if($res5){
-		echo "1";
-		}
-		else{
-		echo "0";
-		}
-		exit;
-	}
-	
-	function checkexectingmanageremail(){
-		$db=&JFactory::getDBO();
-		$user=JFactory::getUser();
-		$email = JRequest::getVar('email','');
-		$query5 = "SELECT id from #__cam_master_compliancereport_emails WHERE email ='".$email."' and user_id=".$user->id;
-	    $db->setQuery( $query5 );
-	    $res5=$db->loadResult();
-		if($res5){
-		echo "1";
-		}
-		else{
-		echo "0";
-		}
-		exit;
-	}
-	
-	function deletepreemail(){
-		$db=&JFactory::getDBO();
-		$user=JFactory::getUser();
-		$email = JRequest::getVar('email','');
-		$query5 ="DELETE FROM #__cam_master_compliancereport_emails WHERE email ='".$email."'";
-	    $db->setQuery( $query5 );
-	    $res5=$db->query();
-		if($res5){
-		echo "1";
-		}
-		else{
-		echo "0";
-		}
-		exit;
-	}
-	
-	
 	function updatedocuments_second(){
 		$db=&JFactory::getDBO();
 		$user=JFactory::getUser();

@@ -161,10 +161,6 @@ function resendinvitation(emailid,id){
 		}
 	});
 }	
-function sortusers(){
-	document.forms["newsortform"].submit();
-}
-
 
 
 	
@@ -379,97 +375,10 @@ generate_wysiwyg('awardjob_mail');
 	
 	
 <div class="clear"></div>
-<div style="margin-top:20px;" id="topborder_row"></div>
-<div id="add-vendor-new">
-<div class="new-searchfilerts">
-<div align="center" class="optional_filters">OPTIONAL FILTERS</div>
-<form name="newsortform" id="newsortform" method="post">
-<select onchange="javascript:sortusers();" style="width:330px;" name="usertype">
-<option value="">All Clients</option>
-<option value="uv" <?php if( $usertype == 'uv' ) echo 'selected="selected"';?> >Unregistered Clients</option>
-<option value="rv" <?php if( $usertype == 'rv' ) echo 'selected="selected"';?>>Registered Clients</option>
-</select>
-<input type="hidden" name="option" value="com_camassistant" />
-<input type="hidden" name="controller" value="vendorscenter" />
-</form>
-</div>
-</div>
-<div class="clear"></div>
-	<div id="i_bar_gray">
-<div id="i_bar_terms_rfp">
-<div id="i_bar_txt_terms_rfp">
-<span> <font style="font-weight:bold; color:#FFF; font-size:14px;">INVITED CLIENTS</font></span>
-</div></div>
 
-    
-</div>
-
-	<?php
-	$sort = JRequest::getVar('sort','');
-	if($sort == 'asc' || $sort == ''){
-	$sort = 'desc';
-	$id = 'compliant_desc';
-	}
-	else{
-	$sort = 'asc';
-	$id = 'compliant_asc';
-	}
-	?>
 	
-<div class="table_pannel">
-<div class="table_panneldiv">
-<table width="100%" cellspacing="4" cellpadding="0" class="titleheadings">
-  <tbody><tr class="table_green_row" style="text-transform:none;">
-<td width="222" valign="middle" align="left">
-<a id="<?php echo $id; ?>" href="index.php?option=com_camassistant&controller=vendorscenter&Itemid=216&sort=<?php echo $sort ; ?>&usertype=<?php echo $usertype; ?>">EMAIL ADDRESS</a>
-</td>
-<td width="91" valign="middle" align="center">SENT ON</td>
-<td width="110" valign="middle" align="center">STATUS</td>
-<td width="57" valign="middle" align="right">HIDE</td>
-  </tr>
-</tbody></table>
-<table width="99%" cellspacing="4" cellpadding="0" style="margin:0px 4px">
-<?php
-$vendors = $this->vendors ;
-//print_r($vendors);exit;
- for($i=0; $i<count($vendors); $i++){ 
- 	if( $usertype == 'uv' ){
-		if( $vendors[$i]->status == 'accepted' )
-		$display = 'none';
-		else
-		$display = '';
-	}
-	if( $usertype == 'rv' ){
-		if( $vendors[$i]->status != 'accepted' )
-		$display = 'none';
-		else
-		$display = '';
-	}
- ?>
-<tr id="table_blue_rowdots345406" class="table_blue_rowdots" style="height:45px; display:<?php echo $display; ?>">
-<td width="222" valign="middle" align="left" style="padding-top:1px;"><?php echo $vendors[$i]->email; ?></td>
-<td width="91" valign="middle" align="center" style="padding-top:3px;"><?php 
-$date_sent = explode(' ',$vendors[$i]->date);
-$expdate = explode('-',$date_sent[0]);
-echo $expdate[1].'/'.$expdate[2].'/'.$expdate[0]; ?></td>
-<td width="110" valign="middle" align="center" style="padding-top:3px;">
-<?php 
-if($vendors[$i]->status == 'accepted'){
-echo "Registered";
-}
-else{ ?>
-Unregistered<br /><a class="resending_<?php echo $vendors[$i]->id; ?>" href="javascript:void(0);" onclick="resendinvitation('<?php echo $vendors[$i]->email; ?>',<?php echo $vendors[$i]->id; ?>);">(Resend Invite)</a>
-<?php }
-?></td>
-<td width="57" valign="middle" align="right" style="padding-top:3px;">
-<a title="Hide from list" class="hidevendor" href="javascript:void(0);" rel="<?php echo $vendors[$i]->id; ?>-<?php echo $vendors[$i]->email; ?>"><img src="templates/camassistant_left/images/Hide.png" alt="delete" style="margin-right:6px;"></a>
-</td>
-</tr>
-<?php } ?>
+	
 
-</table>
-</div>
-</div>
 </div>
 	<?php
 	//echo "<pre>"; print_r($this->vendors);

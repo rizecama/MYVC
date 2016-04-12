@@ -598,7 +598,9 @@ N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=vendorinsst
 		N('#'+id).val(data);
 	}
 	else{
+		alert("Please enter a valid number");
 		N('#'+id).val('');
+		N('#'+id).focus();
 	}
 });
 }
