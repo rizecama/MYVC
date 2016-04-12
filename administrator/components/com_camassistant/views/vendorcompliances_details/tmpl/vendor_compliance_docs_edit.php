@@ -1557,8 +1557,8 @@ else{
             <img src="<?php echo Juri::root(); ?>components/com_camassistant/assets/images/right-icon.gif" alt="" />
       <?php  } ?><?php */?> WORKERS COMPENSATION / EMPLOYER`S LIABILITY POLICY - 1</h2>
     <div class="clear"></div>
-    <div class="lic-pan-left">
-    <?php if($WCI_data[0]->WCI_upld_cert!='') { ?>
+	<div class="lic-pan-left">
+     <?php if($WCI_data[0]->WCI_upld_cert!='') { ?>
         <?php $ext = end(explode('.', $WCI_data[0]->WCI_upld_cert)); ?>
       <div class="imag-display" id="imagdisplayWCI1"><a href="index.php?option=com_camassistant&controller=vendorcompliances_details&task=view_upld_cert&user_id=<?PHP echo $userid; ?>&doc=WCI_<?PHP echo $WCI_data[0]->WCI_folder_id; ?>&filename=<?PHP echo $WCI_data[0]->WCI_upld_cert; ?>"><img src="<?php echo Juri::root(); ?>templates/camassistant_inner/images/doc_images/images_<?php echo $ext; ?>.png" alt="" /></a></div>
       <?php } else { ?>
@@ -1571,7 +1571,7 @@ else{
          <!--<a href="javascript:del_upld_cert('WCI_upld_cert1','<?PHP echo $WCI_data[0]->WCI_upld_cert; ?>','workers_companies_insurance','WCI','<?PHP echo $WCI_data[0]->id; ?>')" >
        <img id="line_task_WCI<?php echo $WCI_data[0]->id;?>" title="This will delete the current compliance document." src="<?php echo Juri::root(); ?>components/com_camassistant/assets/images/remove.jpg" alt="Delete file" style="left:-6px;"/></a>-->
       <?php  } else { ?>
-          <span class="uploadWCI1"  id="uploadWCI1" style="width:160px; left:-6px;"><a class="WCI<?PHP echo $m+1; ?>" style="display:none;" href="javascript:doc_upload(<?PHP echo $m+1; ?>,'WCI','<?PHP echo $WCI_data[$m]->id; ?>');" id="adminupdate_compliance"></a></span>
+          <span class="uploadWCI1"  id="uploadWCI1" style="width:160px; left:-6px;"><a class="WCI1" style="display:none;" href="javascript:doc_upload('1','WCI','<?PHP echo $WCI_data[0]->id; ?>');" id="adminupdate_compliance"></a></span>
        <span class="remove1"  style="width:160px; left:-6px;"><a href="javascript:del_upld_cert('WCI_upld_cert1','<?PHP echo $WCI_data[0]->WCI_upld_cert; ?>','workers_companies_insurance','WCI','<?PHP echo $WCI_data[0]->id; ?>','1')" >
        <img id="removeWCI1" class="remove1"  title="This will delete the current compliance document." src="<?php echo Juri::root(); ?>components/com_camassistant/assets/images/remove.jpg" alt="Delete file" style="left:1px; display: none;" /></a></span>
 
