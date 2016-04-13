@@ -292,7 +292,9 @@ class rfpcenterViewrfpcenter extends Jview
 			$this->assignRef('reportsmsg', $reportsmsg);
 			$allotheremails = $model->allotheremails();
 			$this->assignRef('otheremails', $allotheremails);
-			
+			$items  =& $this->get('inhouse');
+			//echo '<pre>';print_r($items);exit;
+			$this->assignRef('items',$items);
 			$this->setLayout('compliancereport');
 			parent::display($tpl);
 		}
@@ -469,9 +471,13 @@ class rfpcenterViewrfpcenter extends Jview
 			$this->assignRef('message', $message);
 			$count_enable = $model->countenableddocs();  
 			$this->assignRef('count_enable', $count_enable);
-			$this->setLayout('compliance_status_report_pdf');
+			$items  =& $this->get('inhouse');
+			$this->assignRef('items',$items);
+			$this->setLayout('compliance_status_report_webpage');
 			parent::display($tpl);
 		}
+		
+		
 		
 		else if( $task == 'getcompliance_null' ){
 			$this->setLayout('no_standards');
