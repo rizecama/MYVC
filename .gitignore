@@ -9,26 +9,26 @@ configuration.php
 # Ignore user documents in repo
 #======================================
 # Property Folders with Proposal Reports (copies of RFPs and the collected vendor attachments and compliance doc snapshot):
-# var/www/vhosts/myvendorcenter.com/httpdocs/PropertyDocuments
+# var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/PropertyDocuments
 PropertyDocuments
 
-# Manager “Cloud Storage” that we call “Document Center” (company files):
-# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/doc
+# Manager â€œCloud Storageâ€ that we call â€œDocument Centerâ€ (company files):
+# var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/components/com_camassistant/doc
 components/com_camassistant/doc
 
 # assets :
-# Includes a “resized” subfolder and a “pdf_resized” subfolder.
-# var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets
+# Includes a â€œresizedâ€ subfolder and a â€œpdf_resizedâ€ subfolder.
+# var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/components/com_camassistant/assets
 components/com_camassistant/assets
 
 # components:
-# Includes a “resized” subfolder and a “pdf_resized” subfolder.
-# var/www/vhosts/myvendorcenter.com/httpdocs/components
+# Includes a â€œresizedâ€ subfolder and a â€œpdf_resizedâ€ subfolder.
+# var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/components
 components
 
 # includes
-# Includes a “resized” subfolder and a “pdf_resized” subfolder.
-# var/www/vhosts/myvendorcenter.com/httpdocs/includes
+# Includes a â€œresizedâ€ subfolder and a â€œpdf_resizedâ€ subfolder.
+# var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/includes
 includes
 
 
