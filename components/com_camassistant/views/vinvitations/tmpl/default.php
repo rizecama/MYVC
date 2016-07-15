@@ -1,84 +1,133 @@
 <script type="text/javascript" src="components/com_camassistant/skin/js/jquery-1.4.4.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="components/com_camassistant/assets/wysiwyg_terms.js"></script>
 <script type="text/javascript">
   //Functio to verify taxid by sateesh on 03-08-11
 H = jQuery.noConflict();
 var site='<?php echo JURI::root();?>';
 var path='<?php echo addslashes(JPATH_SITE);?>';
 var countyCount = 0;
-H(document).ready(function(){
-H("#semdInvitation").click(function(){
+	H(document).ready(function(){
+	H(".continue_invitation").click(function(){
 		var form = document.inviteform;
-		var email=H("#email").val();
-		var ccemail=H("#ccemail").val();
-		var ccemail = (ccemail).split('.com');	
-		
+		var ccemail=H("#email").val();
+		var subject = H("#subject").val();
+			if(!ccemail)
+				{
+					alert("Please enter email");
+					form.email.focus();
+					return false;
+				}
+		var mail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+			if(mail.test(ccemail)==false)
+			{
+				alert("Please enter a proper email address.");
+				form.email.focus();
+				return false;
+			}
+			if(!subject){
+				alert("Please enter subject");
+				form.subject.focus();
+				return false;
+			}
+		var ccemail = (ccemail).split(';');	
 		var s = ccemail;
 		var re = /,/g;
-		for( var c = 0; re.exec(s); ++c );
-		var mail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-		if(!email){
-		alert("Please enter email");
+//		for( var c = 0; re.exec(s); ++c );
+			if(ccemail != '')
+				{
+					for (var i =0; i < ccemail.length; i++)
+						{		
+//							
+							var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+							if(re.test(trim(ccemail[i]))==false)
+							{
+								alert("please enter a valid email addresses");
+								return false;  
+							}
+							H.post("index2.php?option=com_camassistant&controller=vinvitations&task=checktoallemails", {mailid: ""+ccemail[i]+""}, function(data){
+		if(data == 1){
+		alert("Already manager exists with this email");
 		return false;
 		}
-		if(mail.test(email)==false)
-		 {
-		 alert("Please enter a proper email address.");
-		 form.email.focus();
-		 return false;
-		 }
-		 
-		 if(ccemail != '' && c>1){
-			for (var i =1; i < ccemail.length-1; i++)
-			 {		
-			   if(ccemail[i].charAt(0) != ";"){
-				 alert('Please separate the CC Emails with Semi colon(;)');
-				 form.ccemail.focus();
-				 return false;  
-				}
-				else{
-				form.submit();
-				}	
-			 }	
-			}
-		else{
+		else
 		form.submit();
+		});
+							
+			}
 		}	
-				 
-	});
 	
-H('.hidevendor').click(function(){
-	vendorid = H(this).attr('rel');
-		H.post("index2.php?option=com_camassistant&controller=vinvitations&task=hideinvitation", {hideid: ""+vendorid+""}, function(data){
-		if(data){		
-		window.location.reload();
+		//form.submit();
+		
+				
+	});
+		
+H('.cancel_invitation').click(function()
+{
+window.location = 'index.php?option=com_camassistant&controller=rfpcenter&task=dashboard&Itemid=125';
+});	
+	
+
+	
+H('#editoption').live('click',function(){
+		H('#aboutform').show();
+		H('.vendorinvitationmailedit').hide();
+		H('.mainformbuttons').hide();
+		
+		N(".termsandconditions").css("height","250px"); 
+		});	
+});
+H('#saveoption').live('click',function(){
+      H('#editable').val('');
+		H('textarea[rel="editor"]').each(function(){
+		var n=H(this).attr('id');
+		document.getElementById(n).value = document.getElementById("wysiwyg" + n).contentWindow.document.body.innerHTML;
+		notesstrings = document.getElementById(n).value ;
+		notesstrings = notesstrings.replace("’", "'");
+		notesstrings = notesstrings.replace(/[^\u000A\u0020-\u007E]/g, ' ');
+		document.getElementById(n).value = notesstrings ;
+		});
+		if (notesstrings.indexOf("{winning Bid}") < 0)
+		{
+			//pricepopupbox();
+			//alert("Please don't remove the text {winning Bid} from the notification");
+            
+			message = H('#ctl00_CPHContent_txtComments').val();
+			email_new = H('#email').val();
+			subject_new = H('#subject').val();
+		H.post("index2.php?option=com_camassistant&controller=vinvitations&task=saveinvitationmail", {mailtext: ""+message+"",email_new: ""+email_new+"",subject_new: ""+subject_new+""}, function(data){
+		
+	window.location = 'index.php?option=com_camassistant&controller=vinvitations&task=invitation_change&Itemid=216';
+		
+		});
+			//H( "#vendorinvitation" ).submit();
+		}
+		else{
+		H( "#vendorinvitation" ).submit();
 		}
 	});
-	});
-
+	
+H('#cancellink').live('click',function(){
+location.reload();
+});	
+	</script>
+<script type="text/javascript">
+H = jQuery.noConflict();
+H(document).ready(function(){
 H('#email').keyup(function(){
 		if( H(this).val() == '' )
 		H( this ).prev().removeClass( 'active' );
 		else
 		H( this ).prev().addClass( 'active' );
 	});
-	
-});
-
-function resendinvitation(emailid,id){
-	H('.resending_'+id).html('<img src="templates/camassistant_left/images/loading_icon.gif" />');
-	H.post("index2.php?option=com_camassistant&controller=vinvitations&task=resendinvitation", {email: ""+emailid+""}, function(data){
-		if(data){	
-		alert("Your invitation has been sent successfully.");			
-		window.location.reload();
-		}
+	H('#subject').keyup(function(){
+		if( H(this).val() == '' )
+		H( this ).prev().removeClass( 'active' );
+		else
+		H( this ).prev().addClass( 'active' );
 	});
-}	
-function sortusers(){
-	document.forms["newsortform"].submit();
-}
-	</script>
 	
-	
+	});
+</script>	
 <link href="<?php JPATH_SITE ?>templates/camassistant/css/popup.css" rel="stylesheet" type="text/css"/>
 <style>
 #semdInvitation:hover{
@@ -104,7 +153,9 @@ JHTML::_('behavior.modal');
 $usertype = JRequest::getVar('usertype','');
 	?>
     <?php 
-$user =& JFactory::getUser(); 
+$user =& JFactory::getUser();
+$user_info = $this->userinfo;
+//echo '<pre>';print_r($user_info);exit; 
 if($user->user_type == 11)
 { ?>
 <div align="center" style="color:#0066FF; font-size:15px"> You are not authorized to view this page.</div>
@@ -118,6 +169,7 @@ if($user->user_type == 11)
 </ul>
 </div>
 <p style="height:20px;"></p>
+<div style="margin-top:-20px;">
 <div id="i_bar">
 <div style="width:600px; color:#fff; text-align:center; padding-left:37px; font-size:14px;" id="i_bar_txt"><strong>INVITE A VENDOR</strong>
 </div>
@@ -125,64 +177,46 @@ if($user->user_type == 11)
 <a href="index2.php?option=com_content&amp;view=article&amp;id=289&amp;Itemid=113" rel="{handler: 'iframe', size: {x: 680, y: 530}}" class="modal" title="Click here" style="text-decoration: none;"><img src="templates/camassistant_left/images/info_icon2.png"> </a>
 </div>
 </div>
+</div>
 
 <form name="inviteform" id="inviteform" method="post" >
-<div id="invite-popup" style="margin-top:20px; margin-left:17px;">
 
-<!--<div class="invite-popup-main" style="width:695px;">
-<div class="invite-popup">
-<label>Email Address:</label><br />
-<img width="10" height="20" src="templates/camassistant_left/images/red-arrow.jpg" alt=""><input type="text" value="" name="email" id="email" style="width:600px; margin-left:25px; color:gra
-y;" />
+<div id="invite-vendor" style="margin-top:42px;>
+<div class="newvendor_invitation">
+<label class="smallimage"></label>
+<div class="invite-newvenodor">
+<label><span style="padding-right: 20px;">EMAIL</span></label>
+<div class="smallimage">&nbsp;</div>
+<input type="text" value="" name="email" id="email">
 </div>
-</div>-->
-
-<div class="invite-popup-main">
-<div class="invite-popup-left">
-
-<label>Email Address:</label>
-<label class="emailchangeicon"></label>
-<input type="text" style="width: 643px; padding-left:4px; padding-right:4px;" value="" id="email" name="email">
-</div>
+<div class="vendormailinfo">
+<strong>TIP:</strong> You can invite multiple Vendors at once by separating different email addresses with a semi-colon (;). Each Vendor will be sent a seperate invite and will not see the email addresses associated with other Vendors. 
 </div>
 
-
-
-<div class="invite-popup-main" style="width:695px;">
-<div class="invite-popup">
-<label>CC (separate multiple addresses with a semi-colon):</label><br>
-<input type="text" value="" id="ccemail" name="ccemail" style="width:643px; color:gray; padding-left:4px; padding-right:4px;">
+<div>
+<div class="invite-newvenodor">
+<label><span style="padding-left: 10px;">SUBJECT</span></label>
+<div class="smallimage">&nbsp;</div>
+<input  type="text"  id="subject" name="subject">
+</div>
+  
 </div>
 </div>
+<div class="vendorinvitationmailedit"><?php  echo html_entity_decode($this->mailbody); ?> 
+<p id="topborder_row_awarded"></p>
+<table cellpadding="0" cellspacing="0" width="100%" class="awardjob_table">
+<tr>
+<td align="right">
+<a id="editoption" href="javascript:void(0);" class="editoption_award"><strong><img src="templates/camassistant_left/images/EditMini.png" /></strong></a></td>
+</tr>
 
-<div class="invite-popup-main" style="width:695px; color:gray;">
-<div class="invite-popup">
-<label>Subject:</label><br>
-<input readonly="readonly" type="text" value="<?php echo $user->name.' '. $user->lastname; ?> would like you to join MyVendorCenter"  id="subject" name="subject" style="width:643px; color:gray; padding-left:4px; padding-right:4px;">
+</table>
 </div>
-</div>
-<div class="invite-popup-main">
-<label>Body:</label><br />
-<?php
-$tags = array("<p>","</p>","<br>","<br />");
-$rtags = array("","\n","\n","\n");
-$data = str_replace($tags, $rtags, $this->mailbody);
-
-?>
-<?php /*?><textarea id="notes" name="notes" readonly="readonly" style="width:643px; color:gray; height:300px; padding-left:4px; padding-right:4px;" ><?php echo $data ; ?></textarea><?php */?>
-<div style="border:1px solid #F0F0F0; outline:1px solid #6D6D6D; width:642px; padding:4px;"><?php echo $this->mailbody ; ?></div>
-</div>
-
 <div class="clear"></div>
 
-<div style="width:643px; margin-left:12px;" align="center">
-<table align="center"><tr><td>
-<a href="index.php?option=com_camassistant&controller=rfpcenter&task=dashboard&Itemid=125"><img vspace="10" border="0" align="" src="templates/camassistant_left/images/CancelButton.gif" style="cursor:pointer;" alt="Submit Text" ></a>
-</td>
-<td>
-<img vspace="10" border="0" align="right" src="templates/camassistant_left/images/Invite.gif" style="cursor:pointer;" alt="Submit Text" id="semdInvitation">
-</td>
-</tr></table>
+<div class="mainformbuttons">
+<a href="javascript:void(0);" class="cancel_invitation"></a>
+<a href="javascript:void(0);" class="continue_invitation"></a>
 </div>
 
 </div>
@@ -190,100 +224,38 @@ $data = str_replace($tags, $rtags, $this->mailbody);
 <input type="hidden" value="vinvitations" name="controller">
 <input type="hidden" value="sendinvitation" name="task">
 </form>
-	<?php } ?>
-	
-	
-	<div class="clear"></div>
-<div style="margin-top:20px;" id="topborder_row"></div>
-<div id="add-vendor-new">
-<div class="new-searchfilerts">
-<div align="center" class="optional_filters">OPTIONAL FILTERS</div>
-<form name="newsortform" id="newsortform" method="post">
-<select onchange="javascript:sortusers();" style="width:330px;" name="usertype">
-<option value="">All Vendors</option>
-<option value="uv" <?php if( $usertype == 'uv' ) echo 'selected="selected"';?> >Unregistered Vendors</option>
-<option value="rv" <?php if( $usertype == 'rv' ) echo 'selected="selected"';?>>Registered Vendors</option>
-</select>
-<input type="hidden" name="option" value="com_camassistant" />
-<input type="hidden" name="controller" value="vinvitations" />
+
+<div id="aboutform" style="display:none;" >
+<form action="" method="post" id="vendorinvitation">
+<table cellpadding="0" cellspacing="0">
+<tr><td colspan="3">
+ <textarea rel="editor" name="mailtext" id="ctl00_CPHContent_txtComments" style="height:250px; margin-left:1px; width:667px;"><?php echo ($this->mailbody); ?></textarea>
+ <script language="javascript1.2">
+generate_wysiwyg('ctl00_CPHContent_txtComments');
+
+</script>
+
+ </td></tr>
+ <tr height="5"></tr>
+ <tr>
+ <td align="right"><a href="javascript:void(0);" id="cancellink"><img src="templates/camassistant_left/images/CancelMini.png" /></a> <a id="saveoption" href="javascript:void(0);" style="font-weight:bold; color: #7ab800;"><img src="templates/camassistant_left/images/SaveMini.png" /></a></td></tr>
+<tr height="10"></tr>
+<tr><td style="color: #808080; font-size: 13px; padding-left: 9px; text-align: left;">
+<span id="charcount">
+</td></tr>
+</table>
+
+<input type="hidden" value="com_camassistant" name="option">
+<input type="hidden" value="vinvitations" name="controller">
+<input type="hidden" value="saveinvitationmail" name="task">
+<input type="hidden" value="" id="editable" />
 </form>
 </div>
-</div>
-<div class="clear"></div>
-	<div id="i_bar_gray">
-<div id="i_bar_terms_rfp">
-<div id="i_bar_txt_terms_rfp">
-<span> <font style="font-weight:bold; color:#FFF; font-size:14px;">INVITED VENDORS </font></span>
-</div></div>
 
-    
-</div>
-
-	<?php
-	$sort = JRequest::getVar('sort','');
-	if($sort == 'asc' || $sort == ''){
-	$sort = 'desc';
-	$id = 'compliant_desc';
-	}
-	else{
-	$sort = 'asc';
-	$id = 'compliant_asc';
-	}
-	?>
+	<?php } ?>
 	
-<div class="table_pannel">
-<div class="table_panneldiv">
-<table width="100%" cellspacing="4" cellpadding="0" class="titleheadings">
-  <tbody><tr class="table_green_row" style="text-transform:none;">
-<td width="222" valign="middle" align="left">
-<a id="<?php echo $id; ?>" href="index.php?option=com_camassistant&controller=vinvitations&Itemid=216&sort=<?php echo $sort ; ?>&usertype=<?php echo $usertype; ?>">EMAIL ADDRESS</a>
-</td>
-<td width="91" valign="middle" align="center">SENT ON</td>
-<td width="110" valign="middle" align="center">STATUS</td>
-<td width="57" valign="middle" align="right">HIDE</td>
-  </tr>
-</tbody></table>
-<table width="99%" cellspacing="4" cellpadding="0" style="margin:0px 4px">
-<?php
-$vendors = $this->vendors ;
- for($i=0; $i<count($vendors); $i++){ 
- 	if( $usertype == 'uv' ){
-		if( $vendors[$i]->status == 'accepted' )
-		$display = 'none';
-		else
-		$display = '';
-	}
-	if( $usertype == 'rv' ){
-		if( $vendors[$i]->status != 'accepted' )
-		$display = 'none';
-		else
-		$display = '';
-	}
- ?>
-<tr id="table_blue_rowdots345406" class="table_blue_rowdots" style="height:45px; display:<?php echo $display; ?>">
-<td width="222" valign="middle" align="left" style="padding-top:1px;"><?php echo $vendors[$i]->vendoremailid; ?></td>
-<td width="91" valign="middle" align="center" style="padding-top:3px;"><?php 
-$date_sent = explode(' ',$vendors[$i]->date);
-$expdate = explode('-',$date_sent[0]);
-echo $expdate[1].'/'.$expdate[2].'/'.$expdate[0]; ?></td>
-<td width="110" valign="middle" align="center" style="padding-top:3px;">
-<?php 
-if($vendors[$i]->status == 'accepted'){
-echo "Registered";
-}
-else{ ?>
-Unregistered<br /><a class="resending_<?php echo $vendors[$i]->id; ?>" href="javascript:void(0);" onclick="resendinvitation('<?php echo $vendors[$i]->vendoremailid; ?>',<?php echo $vendors[$i]->id; ?>);">(Resend Invite)</a>
-<?php }
-?></td>
-<td width="57" valign="middle" align="right" style="padding-top:3px;">
-<a title="Hide from list" class="hidevendor" href="javascript:void(0);" rel="<?php echo $vendors[$i]->id; ?>-<?php echo $vendors[$i]->vendoremailid; ?>"><img src="templates/camassistant_left/images/Hide.png" alt="delete" style="margin-right:6px;"></a>
-</td>
-</tr>
-<?php } ?>
 
-</table>
-</div>
-</div>
+	<div class="clear"></div>
 	<?php
 	//echo "<pre>"; print_r($this->vendors);
 	?>

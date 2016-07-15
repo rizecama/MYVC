@@ -38,6 +38,19 @@ $count_proposals = count($this->proposals) + count($this->alt_proposals);
 		
 	<script language="javascript" type="text/javascript">
 		G = jQuery.noConflict();
+	G(document).ready(function() {		
+	G('.other_tfield').click(function(){
+	var amnt = G("#v_price").val();
+	var proposalid = G('input[name=radioid[]]:checked').val();
+	G.post("index.php?option=com_camassistant&controller=rfpcenter&task=updateawardamount", {price: ""+amnt+"",proposalid: ""+proposalid+""}, function(data){
+	});
+	});
+	});	
+		
+	</script>
+	<script language="javascript" type="text/javascript">
+		G = jQuery.noConflict();
+		
 	function getprice(inputString){
 	//	G('').prop('checked', false);	
 		G('.proposal_other').removeAttr('checked');

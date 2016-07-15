@@ -109,15 +109,11 @@ if($user->user_type == '11')
 <link href="<?php echo $this->baseurl ?>/templates/camassistant_left/css/menu.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $this->baseurl ?>/templates/camassistant_left/css/style.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo $this->baseurl ?>/templates/camassistant_left/css/stylesheet.css" rel="stylesheet" type="text/css"/>
-<link rel="stylesheet" href="<?php echo $this->baseurl ?>/assets/css/style.css" type="text/css" />
 <link rel="shortcut icon" href="<?php echo $this->baseurl ?>/templates/camassistant_left/images/favicon.ico"/>
-<link href="/cms/templates/camassistant_left/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link rel="stylesheet" href="<?php echo $this->baseurl ?>/media/system/css/modal.css" type="text/css" />
-<script src="<?php echo $this->baseurl ?>/templates/camassistant_inner/js/jquery-latest.js" type="text/javascript"></script>
-<script src="<?php echo $this->baseurl ?>/templates/camassistant_inner/js/jquery.js" type="text/javascript" /></script>
-<script type="text/javascript" src="<?php echo $this->baseurl ?>/media/system/js/modal.js"></script>
-<script type="text/javascript" src="<?php echo $this->baseurl ?>/assets/js/app.js"></script>
-<script type="text/javascript" src="<?php echo $this->baseurl ?>/assets/js/main.js"></script>
+ <link href="/cms/templates/camassistant_left/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <link rel="stylesheet" href="<?php echo $this->baseurl ?>/media/system/css/modal.css" type="text/css" />
+  <script type="text/javascript" src="<?php echo $this->baseurl ?>/media/system/js/modal.js"></script>
+  <script type='text/javascript' src="<?php echo $this->baseurl ?>/templates/camassistant_center/js/main.js"></script>
 </head>
 <body class="Body_rfp">
 <p>

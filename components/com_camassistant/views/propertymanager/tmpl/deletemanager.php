@@ -1,4 +1,4 @@
-<?php  
+<?php 
 $deleteid = JRequest::getVar('id','');
 ?>
 <link rel="stylesheet" href="<?php echo juri::base(); ?>templates/camassistant_left/css/style.css" type="text/css" />
@@ -16,7 +16,7 @@ H('.assign_mgr').click(function(){
 		alert("Please select manager");
 	}
 	else{
-		H('#assignedform').submit(); 
+		H('#assignedform').submit();
 	}
 	});
 

@@ -414,6 +414,10 @@ countyLen = countyLen-1;
 G('#'+county).remove();
  countyLen++;
 }
+
+G("#uploadfile_size").change(function(e) {
+alert('can');
+});
   </script>
   <script type="text/javascript">
   function change(){
@@ -484,6 +488,10 @@ function verifytaxid(){
 		}
 		});
 	}
+	
+
+
+
 	</script>
 	<script language="javascript" type="text/javascript">
 	<?php   if(!$idcnt)

@@ -19,12 +19,89 @@ jimport( 'joomla.application.component.view' );
 class vinvitationsViewVinvitations extends Jview
 {
 	function display($tpl = null){
+	      global $mainframe;
+	      $db = JFactory::getDBO();
+	      $task = JRequest::getVar("task",'');
 			$model  =$this->getModel('vinvitations');
 			$mailbody = $model->getbody(); 
 			$this->assignRef('mailbody',$mailbody);
+			$userinfo = $model->getuserinfo(); 
+			$this->assignRef('userinfo',$userinfo);
 			$vendors = $model->getprevious(); 
 			$this->assignRef('vendors',$vendors);
+			
+		if($task=='invitedvendors')
+		{
+		    $db = JFactory::getDBO();
+	        $model  =$this->getModel('vinvitations');
+			$mailbody = $model->getbody(); 
+			$this->assignRef('mailbody',$mailbody);
+			$vendors = $model->getprevious();
+			$this->assignRef('vendors',$vendors);
+			$allmanagers = $model->managemanagers();
+			$this->assignRef('managers_all',$allmanagers);
+			$this->setLayout('invitedvendors');
+			
 			parent::display($tpl);
+		}
+		else if($task == 'invitedvendors_date')
+		 {
+		     $db = JFactory::getDBO();
+	        $model  =$this->getModel('vinvitations');
+			$vendors = $model->getvendorinfobydate();
+			$mailbody = $model->getbody(); 
+			$this->assignRef('mailbody',$mailbody);
+			$this->assignRef('vendors',$vendors); 
+			$allmanagers = $model->managemanagers();
+			$this->assignRef('managers_all',$allmanagers);
+			$this->setLayout('invitedvendors');
+			parent::display($tpl);
+		 }
+		
+		else if($task == 'specific')
+		 {
+		     $db = JFactory::getDBO();
+	        $model  =$this->getModel('vinvitations');
+			$mailbody = $model->getbody(); 
+			$this->assignRef('mailbody',$mailbody);
+			$vendors = $model->getprevious();
+			$this->assignRef('vendors',$vendors);
+			$allmanagers = $model->managemanagers();
+			$this->assignRef('managers_all',$allmanagers);
+			$this->setLayout('invitedvendors');
+			
+			parent::display($tpl);
+		 }
+		 
+		 else if($task == 'invitevendorcode')
+		 {
+		    $db = JFactory::getDBO();
+	        $model  =$this->getModel('vinvitations');
+			$managerinvitecode = $model->managerdefaultinvitecode();
+			$this->assignRef('defaultcode',$managerinvitecode);
+			$this->setLayout('invitevendorcode');
+			parent::display($tpl);
+		 }
+		 
+		 else if($task == 'invitation_change')
+		 {
+		    $db = JFactory::getDBO();
+	     	$model  =$this->getModel('vinvitations');
+			$mailbody = $model->getbody_new(); 
+			$this->assignRef('mailbody',$mailbody);
+			$userinfo = $model->getuserinfo(); 
+			$this->assignRef('userinfo',$userinfo);
+			$vendors = $model->getprevious(); 
+			$this->assignRef('vendors',$vendors);
+			$this->setLayout('invitation_change');
+			parent::display($tpl);
+		 }
+		 
+		 
+		else
+		
+		parent::display($tpl);
+	
 		}
 		
 

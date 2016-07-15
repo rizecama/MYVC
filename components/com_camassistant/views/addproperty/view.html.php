@@ -77,6 +77,7 @@ class addpropertyViewaddproperty extends Jview
 		$user_type = $user->get('user_type');
 		
 			$custmers = & $this->get( 'custmers' );
+			
 			$this->assignRef('custmers',$custmers);
 		
 		
@@ -163,8 +164,6 @@ class addpropertyViewaddproperty extends Jview
 		 $this->assignRef('states',	$states);
 		 $county = $model->county1( $pid );
          $this->assignRef('county',	$county);
-		 $db = Jfactory::getDBO();
-		 $pid = JRequest::getVar("pid",'');
 		$this->setLayout('editpropertymanager');
 			}
 			

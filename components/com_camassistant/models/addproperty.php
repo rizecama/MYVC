@@ -534,7 +534,7 @@ function getpdetails(){
 	function getproperty_delete($cid = array())
 	{
 		$db = & JFactory::getDBO();
-		$update_rfpinfo="DELETE FROM  #__cam_property where id=".$_REQUEST['pid']."";
+		$update_rfpinfo="UPDATE #__cam_property SET publish='1' where id=".$_REQUEST['pid']."";
 		$db->setQuery($update_rfpinfo);
 		$res=$db->query();
 		if(!$res) {

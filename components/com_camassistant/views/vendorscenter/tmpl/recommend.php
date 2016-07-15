@@ -12,10 +12,10 @@ G = jQuery.noConflict();
 	var matchesr = [];
 	var countpr = 0 ;
 	G(document).ready(function(){
-		G('#cancelpopup').click(function(){
+		G('#vendor_cancelpopup').click(function(){
 			window.parent.document.getElementById( 'sbox-window' ).close();
 		});
-		G('#assignvendor').click(function(){
+		G('#vendor_assignvendor').click(function(){
 			invites = G('#invitedvendors_hide').val();
 			G(".totalmanagers:checked").each(function() {
 			matchesr.push(this.value);
@@ -76,10 +76,10 @@ if($managers) { ?>
 <table width="100%">
 <tr>
 <td align="right">
-<a id="cancelpopup" href="javascript:void(0)"><img src="templates/camassistant_left/images/cancel.jpg"></a>&nbsp;
+<a id="vendor_cancelpopup" href="javascript:void(0)"></a>&nbsp;
 </td>
 <td>
-&nbsp;<a id="assignvendor" href="javascript:void(0)"><img src="templates/camassistant_left/images/submit.jpg"></a>
+&nbsp;<a id="vendor_assignvendor" href="javascript:void(0)"></a>
 </td>
 </tr>
 </table>

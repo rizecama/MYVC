@@ -273,6 +273,28 @@ class propertymanagerViewpropertymanager extends Jview
 		}
 		}
 
+	  
+	  //save manager_code
+	  
+	 
+			$len = 1;
+			$min = 10000; // minimum
+			$max = 99999; // maximum
+			$range[] ='';
+			foreach (range(0, $len - 1) as $i) {
+			
+			while(in_array($num = mt_rand($min, $max), $range));
+			$range[] = $num;
+			}
+			$lastname = $lname;
+			$manager_invitecode = $lastname.$range[1];
+			
+	       $sql1 = "UPDATE #__users SET manager_invitecode='".$manager_invitecode."' where id='".$user->id."'";
+			$db->Setquery($sql1);
+			$db->query();
+	  //completed
+	  
+	  
 	  //image upload code
 		jimport('joomla.filesystem.file');
 		 $files = JRequest::getVar( 'hidden_image', '', 'files', 'array' );

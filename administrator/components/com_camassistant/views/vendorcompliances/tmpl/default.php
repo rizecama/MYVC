@@ -45,7 +45,7 @@ var form = document.adminForm;
 	 else
 	 {
 	   form.controller.value="vendorcompliances";
-	   form.submit();
+	    form.submit();
 	 }
 	 //alert(form.task.value);
 	 //form.submit();

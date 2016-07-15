@@ -26,6 +26,7 @@ class Tablevendor_rfp_proposals_info extends JTable
 	var $Alt_bid = null;
 	var $contact_name = null;
 	var $publish = null;
+	var $req_type = null;
 	
 	function __construct(& $db) {
 		parent::__construct('#__cam_vendor_proposals', 'id', $db);

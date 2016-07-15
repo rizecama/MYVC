@@ -36,7 +36,7 @@ $delid = $compliance;
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-        <input type="text" size="10" name="aip_end_date[]" id="aip_end_date<?PHP echo $AIP_title; ?>" value="" /><span style="color:red; font-size: 20px;">*</span><script type="text/javascript">G('#aip_end_date<?PHP echo $AIP_title; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+        <input type="text" size="10" name="aip_end_date[]" id="aip_end_date<?PHP echo $AIP_title; ?>" placeholder = "mm-dd-yyyy" value="" /><span style="color:red; font-size: 20px;">*</span><script type="text/javascript">G('#aip_end_date<?PHP echo $AIP_title; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
       </div>
 	  <div class="in-pan1">
 		 <label>Bodily Injury - Per Person:</label>

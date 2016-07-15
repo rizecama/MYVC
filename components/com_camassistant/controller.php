@@ -68,7 +68,7 @@ function inhousevendors()
 	$body = $post['inhousetext'];
 	//code to send mail to admin
 	$admin = 'support@camassistant.com';
-		$siteURL		= "http://vps54914.vps.ovh.ca/";
+		$siteURL		= JURI::base();
 	$link = '<a href= "'.$siteURL.'index.php?option=com_camassistant&controller=vendors">CAMassistant.com</a>'; 
 	//$link = "<a href='camassistant.com/cms/index.php?option=com_camassistant&controller=vendors'>CAMassistant.com</a>"; 
 	$body = str_replace('{CAMassistant.com}',$link,$body) ;

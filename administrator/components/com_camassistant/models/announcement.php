@@ -67,12 +67,18 @@ class announcementModelannouncement extends JModel
 		//initialize class property
 	  $this->_table_prefix = '#__cam_announcement';	
 	  
+	   $db =& JFactory::getDBO();
+	   $total = ' SELECT count(id) FROM '.$this->_table_prefix.'';
+	   $db->setQuery( $total );
+	   $default_all=$db->loadResult();
+	 
+	  
 		//DEVNOTE: Get the pagination request variables
 		//$limit			= $mainframe->getUserStateFromRequest( $context.'limit', 'limit', $mainframe->getCfg('list_limit'), 0);
 		//$limitstart = $mainframe->getUserStateFromRequest( $context.'limitstart', 'limitstart', 0 );
         if($_REQUEST['limit'] == '' && $_REQUEST['limitstart'] == '')
 		{
-		 $limit = 20;
+		 $limit = $default_all;
 		 $limitstart = 0;
 		}
 		else

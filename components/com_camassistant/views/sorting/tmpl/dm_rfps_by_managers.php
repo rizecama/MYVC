@@ -79,10 +79,11 @@ K(document).ready(function() {
 
 });
 
-function getcompliancestate(rfpid,vendorid,custid){
-el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=rfp&task=getcompliance_active&from=active&rfpid='+rfpid+'&custid='+custid+'&vendorid='+vendorid+'';
+function getcompliancestate(rfpid,vendorid,custid,status){
+el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=rfp&task=getcompliance_active&from=active&rfpid='+rfpid+'&custid='+custid+'&vendorid='+vendorid+'&status='+status+'';
 var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:700}}"))
 SqueezeBox.fromElement(el,options);
+G("#sbox-window").addClass("newclasssate");	
 }
 
 </script>
@@ -899,7 +900,7 @@ if ($user->user_type=='12') { ?>
 		if(count($this->RFP_list_by_Prp)==0) {
 	?>
 	<tr class="table_blue_rowdots">
-   <td align="center" valign="middle" colspan="5">No Results Found</td>
+  <td align="center" valign="middle" style="margin-top:10px; font-weight:bold;" colspan="5">You don't have any requests</td>
  </tr>
  <?PHP } ?>
 </table>

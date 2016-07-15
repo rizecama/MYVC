@@ -349,16 +349,14 @@ function getStates(){
 	function getpropertyowner_logo($bid)
 	{
 		 $db =& JFactory::getDBO();
-		 $query_1 = "SELECT propertyowner_id FROM #__cam_propertyowner_link WHERE boardmem_id = ".$bid;
+		  $query_1 = "SELECT U.id FROM #__users as U , #__cam_board_mem V WHERE V.id = ".$bid." AND U.username=V.email";
 		 $db->setQuery( $query_1 );
 		 $id = $db->loadResult();
-		 if($id)
-		   {
-			$query_2 = "select propertyowner_image from #__cam_propertyowner_image where user_id='".$id."'";
-			$db->setQuery($query_2);
-			$logo = $db->loadResult();
-			return $logo;
-			}
+		 $query_2 = "select propertyowner_image from #__cam_propertyowner_image where user_id='".$id."'";
+		 $db->setQuery($query_2);
+		 $logo = $db->loadResult();
+		return $logo;
+			
 	}
 	function property_user($pid)
 	{
@@ -378,8 +376,11 @@ function getStates(){
          {
 
 			$db =& JFactory::getDBO();
-			$getclientid = "SELECT propertyowner_id from #__cam_propertyowner_link where boardmem_id ='".$bid."'";
+			$getclientid = "SELECT email from #__cam_board_mem where id ='".$bid."'";
 			$db->setQuery($getclientid);
+			$user = $db->loadResult();
+			$query1 = "SELECT id FROM #__users WHERE username ='".$user."'";
+			$db->setQuery($query1);
 			$user = $db->loadResult();
 			$query = "SELECT U.name,U.lastname,S.state,S.steetaddress,S.zipcode,U.email,S.altemail,S.city,S.altphone_ext,U.phone,U.extension,U.cellphone,S.fax from #__cam_propertyowner_info as S,#__users as U where S.user_id='".$user."' AND U.id='".$user."'";
 			$db->setQuery($query);
@@ -466,6 +467,52 @@ function getStates(){
 		$checklink = $db->loadResult();
 		return $checklink;
 	
+	}
+	
+function getprevious()
+	{
+	$db =& JFactory::getDBO();
+	$user=JFactory::getUser();
+	
+		$sort = JRequest::getVar('sort','');
+		if($sort == 'asc')
+			$sorting = 'order by email ASC';
+		else if($sort == 'desc' )
+			$sorting = 'order by email DESC';
+		else
+			$sorting = 'order by date DESC';
+		
+	 $query  = "SELECT id, email, date FROM  #__cam_board_mem  where user_id = ". $user->id ." and  published='0' and accept='yes' GROUP BY email ".$sorting." " ; 
+	$db->setQuery($query);
+	$invitations = $db->loadObjectList();
+
+		for( $i=0; $i<count($invitations); $i++ ){
+			$querys  = "SELECT id FROM  #__users  where email = '". $invitations[$i]->email ."' or ccemail LIKE '%".$invitations[$i]->email."%' " ;
+				$db->setQuery($querys);
+				$exid = $db->loadResult();
+				//print_r($exid);exit; 
+				if($exid){
+				$invitations[$i]->status = 'accepted';
+				}
+				else{
+					$invitations[$i]->status = 'notaccepted';
+					/*$query_cc  = "SELECT ccemail FROM  #__users  where user_type='11' " ; 
+					$db->setQuery($query_cc);
+					$ccmails = $db->loadObjectList(); 
+					for( $d=0; $d<count($ccmails); $d++ ){
+					$cclist = explode(';',$ccmails[$d]->ccemail);
+					for($c=0; $c<=count($cclist); $c++){
+						$listcc = $cclist[$c];
+							if($listcc){
+								if( $listcc ==  $invitations[$i]->vendoremailid )
+									$invitations[$i]->status = 'accepted';
+							}
+						}
+					}*/	
+				}
+		}
+		
+	return $invitations;
 	}
 		 
 }

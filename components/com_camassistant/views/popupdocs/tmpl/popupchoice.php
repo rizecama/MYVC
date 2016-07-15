@@ -32,16 +32,22 @@ $_SESSION['taskid']= $_REQUEST['taskid']; ?>
 $db = JFactory::getDBO();
 $user =& JFactory::getUser();
 $user_id = $user->get('id');
-$pid=$_REQUEST['pid'];	
-	
-$from = JRequest::getVar('from','');	
+$from = JRequest::getVar('from','');
 $db->setQuery('Select property_name,tax_id FROM #__cam_property where id="'.$pid.'"');
 $db->query();
 $propert_name = $db->loadObjectList();
 
+if($user->user_type =='16' )
+{
+          $sql1 = "SELECT property_name from #__cam_property where propertyowner_manage=".$user->id." ";
+			$db->Setquery($sql1);
+			$property = $db->loadObjectlist();
+			}
+
+
 if($from == 'master'){
 	
-		$sql1 = "SELECT firmid from #__cam_masteraccounts where masterid=".$user->id." ";
+		 $sql1 = "SELECT firmid from #__cam_masteraccounts where masterid=".$user->id." ";
 			$db->Setquery($sql1);
 			$subfirms = $db->loadObjectlist();
 			//echo "<pre>"; print_r($subfirms); echo "</pre>";
@@ -115,7 +121,29 @@ if($from == 'master'){
 <!-- sof table pan -->
 <div class="table_pannel">
 <div class="table_panneldiv">
-<?php if($from != 'master'){ ?>
+<?php if($user->user_type == '16'){?>
+<table width="100%" cellpadding="0" cellspacing="4">
+  <tr class="newtable_green_row">
+    <td width="62" align="center" valign="top">SELECT</td>
+    <td width="426" align="left" valign="top">Name</td>
+    <td width="141" align="center" valign="top">options</td>
+    </tr>
+  
+<tr class="table_blue_rowdots2">
+    
+<td>
+
+<a href="index2.php?option=com_camassistant&controller=popupdocs&task=pfiles&propertyname=<?php echo str_replace('"','',$property[0]->property_name); ?>&taskid=<?php print_r($_SESSION['taskid']); ?>&pid=<?php echo $pid; ?>&mid=<?php echo $user_id; ?>&taxid=<?php echo $propert_name[0]->tax_id; ?>"><img src="images/folder_icon.png"  alt="folder" /></a></td>
+
+<td><a href="index2.php?option=com_camassistant&controller=popupdocs&task=pfiles&propertyname=<?php echo str_replace('"','',$property[0]->property_name); ?>&taskid=<?php print_r($_SESSION['taskid']); ?>&pid=<?php echo $pid; ?>&mid=<?php echo $user_id; ?>&taxid=<?php echo $property[0]->tax_id; ?>"><?php echo $property[0]->property_name; ?></a></td>
+
+<td><a href="index2.php?option=com_camassistant&controller=popupdocs&task=pfiles&propertyname=<?php echo str_replace('"','',$property[0]->property_name); ?>&taskid=<?php print_r($_SESSION['taskid']); ?>&pid=<?php echo $pid; ?>&mid=<?php echo $user_id; ?>&taxid=<?php echo $property[0]->tax_id; ?>">OPEN</a></td>
+
+
+</tr>
+</table>
+<?php }  
+else if($from != 'master'){ ?>
 <table width="100%" cellpadding="0" cellspacing="4">
   <tr class="newtable_green_row">
     <td width="62" align="center" valign="top">SELECT</td>

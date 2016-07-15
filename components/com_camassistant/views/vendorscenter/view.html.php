@@ -20,8 +20,9 @@ class vendorscenterViewvendorscenter extends Jview
 {
 	function display($tpl = null){
 
-		// global $mainframe;
+		  global $mainframe;
 		 $task = JRequest::getVar("task",'');
+		 $pathway  =& $mainframe->getPathway();
 		 if($task == 'specific' || $task == 'alphabet' ){
 		$model  =$this->getModel('vendorscenter');
 		$items  =& $this->get('inhouse');
@@ -77,13 +78,14 @@ class vendorscenterViewvendorscenter extends Jview
 			$permission = $model->getpermissionstandards();
 			$this->assignRef('permission',$permission);
 			//Completed
-			
 			$recommends = $model->getallrecommendations();
 			$this->assignRef('recommends',$recommends);
-			
 			$managers_recs = $model->getallmanagersrecommend();
 			$this->assignRef('managers_recs',$managers_recs);
-			
+			$blockedvendors = $model->getblockedvendors();
+			$this->assignRef('blockedvendors',$blockedvendors);
+			$corporatevendors_star = $model->corporatevendors_star();
+			$this->assignRef('corporatevendors_star',		$corporatevendors_star); 
 			$filter_vendorslist		= JRequest::getWord('filter_vendorslist');
 			$this->assignRef('user',		JFactory::getUser());	
 			$this->assignRef('lists',		$lists);    
@@ -97,7 +99,6 @@ class vendorscenterViewvendorscenter extends Jview
 			$this->assignRef('filter_vendorslist',	$filter_vendorslist);
 			if( $task == 'basicrfp' )
 			$this->setLayout('basic_request');
-			
 			else if( $user->user_type == '16' )
 			$this->setLayout('propertyomnervendors'); 
 			else
@@ -202,7 +203,7 @@ class vendorscenterViewvendorscenter extends Jview
 		if($task == 'newsearch')
 		{
 		$model  =$this->getModel('vendorscenter');
-		$states = $model->getstatelist(); 
+		$states = $model->getstatelist();
 		$this->assignRef('statelist',$states);
 		$indus = $model->getallindustries(); 
 		$this->assignRef('indus',$indus);
@@ -211,9 +212,14 @@ class vendorscenterViewvendorscenter extends Jview
 		$this->assignRef('properties',$properties);
 		$managers_recs = $model->getallmanagersrecommend();
 		$this->assignRef('managers_recs',$managers_recs);
-		//Completed
+		$total_vendors = $model->total_vendors();
+		$this->assignRef('total_vendors',$total_vendors);
+		if( $total_vendors >= 5 )
+		$this->setLayout('newsearch');
+		else
 		$this->setLayout('newsearch');
 		}
+		
 		else if($task == 'preferredcompliance'){
 		$model  =$this->getModel('vendorscenter');
 		$vendorid = JRequest::getVar("vendorid",'');
@@ -294,7 +300,8 @@ class vendorscenterViewvendorscenter extends Jview
 		}
 		//sreenu
 		else if($task == 'promanagerinvitation'){
-		    $model  =$this->getModel('vendorscenter');
+		    $pathway->addItem( JText::_( 'test' ));
+			$model  =$this->getModel('vendorscenter');
 			$mailtext = $model->getmanagermailtext();
 			$vendors = $model->getprevious(); 
 			$rows=$model->getProperties();
@@ -324,31 +331,38 @@ class vendorscenterViewvendorscenter extends Jview
 			$this->setLayout('invitationtoregister');
 		}
 		else if($task == 'editpropertyowner'){
-	    
-		 $model  =$this->getModel('vendorscenter');
+	     $model  =$this->getModel('vendorscenter');
 		 $details = $model->getpropertyowner_details();
 		 $this->assignRef('details',$details);
 		$client_permissions = $model->client_permissions();
 		$this->assignRef('client_permissions',$client_permissions);
 	    $states = $model->getstates();
-	    
-		$this->assignRef('states',$states);
+	   $this->assignRef('states',$states);
 		$this->setLayout('propertyowner_edit');
-			 
 		}
 		else if($task == 'editboardmem'){
+		$model  =$this->getModel('vendorscenter');
+		$rows = $model->getProperties();
+		//echo '<pre>';print_r($rows);exit;
+		$editpropertymanager = $model->getpropertyowner_details();
+		$this->assignRef('propertyList',$rows);
+		$this->assignRef('managerproperty', $editpropertymanager);
+	    $states = $model->getstates();
+	   // print_r($states);exit;
+	    $this->assignRef('states',$states);
+		$this->setLayout('editboardmem');
+		}
+		
+		else if($task == 'editunlinkboard'){
 		$model  =$this->getModel('vendorscenter');
 		$rows = $model->getProperties();
 		//echo '<pre>';print_r($rows);exit;
 		$editpropertymanager = $model->editpropertymanager_info();
 		$this->assignRef('propertyList',$rows);
 		$this->assignRef('managerproperty', $editpropertymanager);
-	    
 	    $states = $model->getstates();
-	   // print_r($states);exit;
 	    $this->assignRef('states',$states);
-		$this->setLayout('editboardmem');
-			 
+		$this->setLayout('editunlinkboard');
 		}
 		
 		else if($task == 'getacountclients')
@@ -379,7 +393,7 @@ class vendorscenterViewvendorscenter extends Jview
 			$vendors = $model->getprevious(); 
 			$rows=$model->getProperties();
 			$row1[0] = new stdClass();
-			$row1[0]->value = "";
+			$row1[0]->value = "0";
 			$row1[0]->text = "Select Property";
 			$rows=array_merge($row1,$rows);
 			$this->assignRef('propertyList',$rows);
@@ -387,6 +401,78 @@ class vendorscenterViewvendorscenter extends Jview
 			$this->assignRef('mailtext',$mailtext); 
 		 $this->setLayout('sendnewproownerinvitation'); 
 		}
+		
+		else if($task == 'mastermyvendors' )
+		{
+			// Update recommendation information
+			$db = JFactory::getDBO();
+			$user = JFactory::getUser();
+			$sql = "UPDATE #__cam_manager_recommends SET view='1' where managerid='".$user->id."'"; 
+			$db->Setquery($sql);
+			$db->query();
+			//Completed
+			$document = & JFactory::getDocument();
+			$document->setTitle( JText::_('Vendor Center') );
+			$model = $this->getModel('vendorscenter');
+			$uri			=& JFactory::getURI();
+			$model			=& $this->getModel();
+			$items			=& $this->get('inhouse');
+			$prefer			=& $this->get('preferred');
+			$excluded		=& $this->get('excluded');
+			$total			=& $this->get( 'Total');
+			$pagination 	=& $this->get( 'Pagination' );
+			$orderby		= ' ORDER BY '. $filter_order .' '. $filter_order_Dir .',published';
+			$search 		= JRequest::getWord('search');
+			$lists['vendorslist'] =& $this->get( 'vendorslist' ) ;
+			$indus = $model->getallindustries(); 
+			$this->assignRef('industries',$indus);
+			$statelist = $model->getstatelist();
+			$this->assignRef('statelist',$statelist);
+			$owns = $model->ownpreferredvendors();
+			$this->assignRef('own',$owns);
+			$pertyownermanagers = $model->getpropertyownermanagers();
+			$this->assignRef('pertyownermanagers',$pertyownermanagers);	
+			
+			$corporate = $model->corporatevendors();
+			$this->assignRef('corporate',$corporate);	
+			$firmids = $model->getcompanywidevendors();
+			$this->assignRef('firmids',$firmids);
+			//To get all properties
+			$properties = $model->getallproperties();
+			$this->assignRef('properties',$properties);
+			//Completed
+			// Get master global standards
+			$global = $model->getmasterglobals();
+			$this->assignRef('global',$global);
+			//Completed
+			$basisjobs = $model->getallbasicjobs();
+			$this->assignRef('basisjobs',$basisjobs);
+			//Get permission
+			$permission = $model->getpermissionstandards();
+			$this->assignRef('permission',$permission);
+			//Completed
+			$recommends = $model->getallrecommendations();
+			$this->assignRef('recommends',$recommends);
+			$managers_recs = $model->getallmanagersrecommend();
+			$this->assignRef('managers_recs',$managers_recs);
+			$blockedvendors = $model->getblockedvendors();
+			$corporatevendors_star = $model->corporatevendors_star();
+			$this->assignRef('corporatevendors_star',		$corporatevendors_star); 
+			$this->assignRef('blockedvendors',$blockedvendors);
+			$filter_vendorslist		= JRequest::getWord('filter_vendorslist');
+			$this->assignRef('user',		JFactory::getUser());	
+			$this->assignRef('lists',		$lists);    
+			$this->assignRef('items',		$items); 
+			$this->assignRef('prefer',		$prefer); 
+			$this->assignRef('excluded',		$excluded); 
+			$this->assignRef('search',		$search);		
+			$this->assignRef('pagination',	$pagination);
+			$this->assignRef('request_url',	$uri->toString());
+			$this->assignRef('orderby',		$orderby);
+			$this->assignRef('filter_vendorslist',	$filter_vendorslist);
+			$this->setLayout('mastermyvendors'); 
+		}
+		
 		
 	    else //signup process 1
 		{

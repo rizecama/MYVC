@@ -119,8 +119,7 @@ class MailtoController extends JController
 		$from 				= JRequest::getString('from', '', 'post');
 		$subject_default 	= JText::sprintf('Item sent by', $sender);
 		$subject 			= JRequest::getString('subject', $subject_default, 'post');
-		$from_name    = JApplication::getCfg('fromname');
-      	$mail_from   = JApplication::getCfg('mailfrom');
+
 		// Check for a valid to address
 		$error	= false;
 		if ( ! $email  || ! JMailHelper::isEmailAddress($email) )
@@ -151,8 +150,7 @@ class MailtoController extends JController
 		$sender	 = JMailHelper::cleanAddress($sender);
 
 		// Send the email
-		//if ( JUtility::sendMail($from, $sender, $email, $subject, $body) !== true )
-		if ( JUtility::sendMail($from_name, $mail_from, $email, $subject, $body) !== true )
+		if ( JUtility::sendMail($from, $sender, $email, $subject, $body) !== true )
 		{
 			JError::raiseNotice( 500, JText:: _ ('EMAIL_NOT_SENT' ));
 			return $this->mailto();

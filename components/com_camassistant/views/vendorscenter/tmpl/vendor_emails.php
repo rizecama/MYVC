@@ -33,7 +33,7 @@ G = jQuery.noConflict();
 <form id="vendormailform" method="post">
 <div id="i_bar_terms" style="margin:20px 20px 0px 20px; font-size:15px;">
 <div id="i_bar_txt_terms" style="padding-top:7px;">
-<span> <font style="font-weight:bold; color:#FFF;">EMAIL VENDOR(S)</font></span>
+<span> <font style="font-weight:bold; color:#FFF;">EMAIL VENDOR<span class="vendorspace">S</span></font></span>
 </div></div>
 <p class="recommendedtext">Please write your message below and then click "<strong>SUBMIT</strong>". Once submitted, your message will be separately emailed to all selected Vendors.</p>
 

@@ -262,7 +262,7 @@ class rfpcenterController extends JController
 		$winningamt = $db->loadResult();*/
 
 		//Completed
-		$query = "SELECT DISTINCT U.id,U.email,U.name,U.lastname,C.rfpno FROM  #__cam_vendor_proposals as C LEFT JOIN #__users as U ON U.id=C.proposedvendorid WHERE C.id!=".$radioid[0]." and C.proposedvendorid!=".$award_data[0]->id." and C.rfpno=".$rfpno." and (C.proposaltype='Submit' or C.proposaltype='resubmit' or C.proposaltype='submit' or C.proposaltype='resubmit') ";
+		$query = "SELECT DISTINCT U.id,U.email,U.name,U.lastname,C.rfpno,C.contact_name FROM  #__cam_vendor_proposals as C LEFT JOIN #__users as U ON U.id=C.proposedvendorid WHERE C.id!=".$radioid[0]." and C.proposedvendorid!=".$award_data[0]->id." and C.rfpno=".$rfpno." and (C.proposaltype='Submit' or C.proposaltype='resubmit' or C.proposaltype='submit' or C.proposaltype='resubmit') ";
 		//$query = "UPDATE #__cam_vendor_proposals SET proposaltype='Awarded' WHERE id=".$id;
 		$db->setQuery( $query );
 		$data1 = $db->loadObjectlist();
@@ -325,6 +325,7 @@ class rfpcenterController extends JController
 		$name = $data1[$i]->name;
 		$lname = $data1[$i]->lastname;
 		$rfpno = $data1[$i]->rfpno;
+		$contact_name = $data1[$i]->contact_name;
 		//echo "<pre>"; print_r($data1[$i]);
 		$mailfrom = 'support@myvendorcenter.com';
 		$fromname = 'MyVendorCenter.com';
@@ -376,7 +377,7 @@ class rfpcenterController extends JController
 		$Max_Bid = "$".number_format($Max_Bid,2);
 
 		//completd
-		$body = str_replace('{Vendor Name}',$username,$body) ;
+		$body = str_replace('{Vendor Name}',$contact_name,$body) ;
 		$body = str_replace('{RFP NUMBER}',$rfpno,$body) ;
 		$body = str_replace('{Property Name}',$propertyname,$body);
 		$body = str_replace('{CAM Firm}',$companyname,$body);
@@ -1439,7 +1440,7 @@ else
 ?>
 <ul class="addednum" style="padding-top:0px;">
 <?php
-$getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, bidding, rfp_type, maxProposals, cust_id, jobtype, property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
+$getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, create_rfptype,bidding, rfp_type, maxProposals, cust_id, jobtype, property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
 	$db->setQuery( $getpublish);
 	$publish = $db->loadObject();
 	?>
@@ -1624,7 +1625,7 @@ $getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, bidding, rfp_ty
 		$result_final = 'notset' ;
 	}
 	// Compliance status in case of basic request
-	if( $publish->jobtype == 'yes' ){
+	if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $publish->createdDate <= '2016-07-01' ) ){
 	$model = $this->getModel('rfpcenter');
 	$c_status =	$model->checkcompliancestatus($listprps[$i]->id);
 	$result_final = $c_status ;
@@ -1647,7 +1648,7 @@ $getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, bidding, rfp_ty
 			$title = 'Compliant & Non-Compliant';
 		}
 			
-	 if( $publish->jobtype == 'yes' ){
+	if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $publish->createdDate <= '2016-07-01' ) ){
 	 	if($result_final == 'nostandards'){ ?>
 		<a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $listprps[$i]->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
 		<?php } else { 
@@ -1792,7 +1793,7 @@ $alt = '';
 	}	
 		
 		// Compliance status in case of basic request
-	if( $publish->jobtype == 'yes' ){
+	if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $publish->createdDate <= '2016-07-01' ) ){
 	$model = $this->getModel('rfpcenter');
 	$c_status =	$model->checkcompliancestatus($decdata->id);
 	$result_final = $c_status ;
@@ -1815,7 +1816,7 @@ $alt = '';
 			$title = 'Compliant & Non-Compliant';
 		}
 		
-if( $publish->jobtype == 'yes' ){
+if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $publish->createdDate <= '2016-07-01' ) ){
 	if($result_final == 'nostandards'){
 	 ?>
 	 <a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $decdata->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
@@ -1905,11 +1906,22 @@ if( $decdata->subscribe_type == 'free' ) { ?>
 	$rfpid = $_REQUEST['rfpid'];
 	$rfpname = $_REQUEST['rfpname'];
 	$db = & JFactory::getDBO();
-	$getprops = "SELECT U.id, U.name, U.email, U.ccemail, U.lastname, V.company_phone,P.contact_name, V.company_name, V.phone_ext, P.proposaltype, P.proposal_total_price,P.Alt_bid, P.publish, P.bidfrom, P.id as proposalid, U.subscribe_type, P.proposeddate  FROM jos_users as U
+	$getprops = "SELECT DISTINCT(V.user_id) as id, U.name,U.email, U.ccemail, U.lastname, V.company_phone,P.contact_name, V.company_name, V.phone_ext, P.proposaltype, P.proposal_total_price,P.Alt_bid, P.publish, P.bidfrom, P.id as proposalid, U.subscribe_type, P.proposeddate  FROM jos_users as U
 LEFT JOIN jos_cam_vendor_company  as V on U.id=V.user_id
-LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno=".$rfpid." ";
+LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno=".$rfpid." Group By  U.id";
 	$db->setQuery( $getprops);
 	$listprps = $db->loadObjectList();
+	//echo '<pre>';print_r($listprps);exit;
+	$query_in = "SELECT DISTINCT(vendorid),date FROM #__invitations_personal where rfpid=".$rfpid." ";
+	$db->setQuery($query_in);
+	$totalprefers = $db->loadObjectList();
+	foreach ($totalprefers as $type )
+	{
+	$total_vendors[] = $type->vendorid;
+	
+	}
+
+	 
 	?>
 	<table width="100%" border="0" style="margin:0px 0px; border:1px solid #A3A3A3; background:#F7F7F7">
     <tbody>
@@ -1917,7 +1929,7 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno
     <td align="center">
     <ul class="addednum" style="padding-bottom:5px;">
 	<?php
-	$getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, bidding, rfp_type, maxProposals, cust_id, jobtype, property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
+	$getpublish = "SELECT publish,createdDate, proposalDueDate, create_rfptype, rfp_adminstatus, bidding,rfp_type, maxProposals, cust_id, jobtype, property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
 	$db->setQuery( $getpublish);
 	$publish = $db->loadObject();
 	
@@ -1927,6 +1939,10 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno
 	$date2 = date("Y-m-d");
 	$diff = abs(strtotime($pdate) - strtotime($date2));
 	$days = floor($diff/(60*60*24));
+	
+	$previous_date = $publish->createdDate;
+	$previous_date = explode('-',$previous_date); 
+	$previous_date = $previous_date[2].'-'.$previous_date[0].'-'.$previous_date[1];
 	?>
 	
 	<?php 
@@ -1940,6 +1956,8 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno
 		}
 		
 	 ?>
+	
+	 
 <li><a href="index.php?option=com_camassistant&controller=rfp&task=reviewrfp&rfpid=<?php echo $rfpid;  ?>&var=view&job=<?php echo $job_type; ?>&Itemid=87">VIEW</a></li>
 <?php 
 $user = & JFactory::getUser();
@@ -1982,10 +2000,10 @@ if( $publish->cust_id == $user->id )
 {
 ?>
 <li><a style="color:red;" href="javascript:void(0);" onclick="uninvitevendor(<?php echo $rfpid; ?>,'<?php echo $count_drafts; ?>');" title="Un-Invite Vendor">UN-INVITE VENDOR</a></li>
-<li><a style="color:red;" class="" href="javascript:cancelrequest('<?php echo $rfpid; ?>');">CANCEL REQUEST</a></li>
+<li><a style="color:red;" class="" href="javascript:cancelrequest('<?php echo $rfpid; ?>');">CANCEL</a></li>
 <?php } }  else { ?>
 <li><a style="color:red;" href="javascript:void(0);" onclick="uninvitevendor(<?php echo $rfpid; ?>,'<?php echo $count_drafts; ?>');" title="Un-Invite Vendor">UN-INVITE VENDOR</a></li>
-<li><a style="color:red;" class="" href="javascript:cancelrequest('<?php echo $rfpid; ?>');">CANCEL REQUEST</a></li>
+<li><a style="color:red;" class="" href="javascript:cancelrequest('<?php echo $rfpid; ?>');">CANCEL</a></li>
 <?php } ?>
  </ul>
     </td>
@@ -2007,8 +2025,9 @@ if( $publish->cust_id == $user->id )
 
   </tr>
   <?php if(count($listprps) > 0){ ?>
-  <?php for($i=0; $i<count($listprps); $i++){ ?>
-  
+  <?php for($i=0; $i<count($listprps); $i++){ 
+  if(in_array($listprps[$i]->id,$total_vendors)  || $previous_date < ('2016-05-25') || $listprps[$i]->proposaltype == 'Submit' || $listprps[$i]->bidfrom == '' )
+  { ?>
  <?php if($listprps[$i]->contact_name){ 
   $listprps[$i]->contact_name = $listprps[$i]->contact_name;
 	} else { 
@@ -2131,9 +2150,10 @@ if( $publish->cust_id == $user->id )
 	$totalprefers_new_pln	=	$this->checknewspecialrequirements_pln($listprps[$i]->id,$rfpid);
 	$totalprefers_new_occ	=	$this->checknewspecialrequirements_occ($listprps[$i]->id,$rfpid);
 	$totalprefers_new_omi	=	$this->checknewspecialrequirements_omi($listprps[$i]->id,$rfpid);
-	
+	/*echo $totalprefers_new_w9.$totalprefers_new_gli.$totalprefers_new_aip.$totalprefers_new_wci.$totalprefers_new_umb.$totalprefers_new_pln.$totalprefers_new_occ.$totalprefers_new_omi; exit;*/
 	// Check even rfp have some standards or not
 	$existed_standards	=	$this->getallstandardsrfp($rfpid);
+	
 	if($existed_standards == 'yes') {
 	//Completed
 	
@@ -2166,22 +2186,44 @@ if( $publish->cust_id == $user->id )
 	else{
 		$result_final = 'notset' ;
 	}
+	
 	// Compliance status in case of basic request
-	if( $publish->jobtype == 'yes' ){
+	if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
 	$model = $this->getModel('rfpcenter');
 	$c_status =	$model->checkcompliancestatus($listprps[$i]->id);
 	$result_final = $c_status ;
 	
 	}
 	// Completed
+	
+	    $user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		if( $act_type == '1' ){
+		 $subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$listprps[$i]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		
+		 if ( $subscribe_type == 'free' || $subscribe_type == '' ) {
+			$acount_type = 'show' ;
+			}
+		else {	
+			$acount_type = 'hide';
+			}
+		}
+		else {
+		$acount_type = 'hide';
+		 }
 		
 	 ?>
 	 <?php 
-		if($result_final == 'success' ){ 
+		if($result_final == 'success' && $acount_type == 'hide' ){ 
 			$id_cccbasic = 'checkmarkbox_small';
 			$title = 'Compliant';
 		}
-		else if($result_final == 'fail'){
+		else if($result_final == 'fail' || $acount_type == 'show' ){
 			$id_cccbasic = 'redmarkbox_small';
 			$title = 'Non-Compliant';
 		}
@@ -2189,8 +2231,9 @@ if( $publish->cust_id == $user->id )
 			$id_cccbasic = 'bothicons_small';
 			$title = 'Compliant & Non-Compliant';
 		}
+		
 			
-	 if( $publish->jobtype == 'yes' ){
+	 if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' )  || ( $publish->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
 	 	if($result_final == 'nostandards'){ ?>
 		<a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $listprps[$i]->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
 		<?php } else { 
@@ -2203,9 +2246,9 @@ if( $publish->cust_id == $user->id )
 	 	if($result_final == 'notset'){ ?>
 		<a id="nostandards" title="No Standards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>);">N/A</a>&nbsp;&nbsp;
 		<?php } 
-		else if($result_final == 'success' ){ ?>
+		else if($result_final == 'success'  && $acount_type == 'hide' ){ ?>
 	<a class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');">	</a>
-			<?php }  else if($result_final == 'fail'){ ?>
+			<?php }  else if($result_final == 'fail' || $acount_type == 'show' ){ ?>
 	<a class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');">	</a>	
 			<?php } ?>
 		<?php } ?>
@@ -2266,7 +2309,7 @@ $alt = '';
 
   </tr>
  
-  <?php }  } else {?>
+  <?php }}  } else {?>
   <tr class="table_blue_rowdotsextend"><td colspan="4"><p style="font-size: 13px; margin-bottom: 10px; text-align: center;">You have NOT invited any Vendors to participate in this project, please click on "INVITE A VENDOR" above</p></td></tr>
   <?php } 
   
@@ -2274,7 +2317,9 @@ $alt = '';
 	$getinvitevendors = "SELECT vendorid from #__rfp_invitations where rfpid=".$rfpid."";
 	$db->setQuery( $getinvitevendors);
 	$invitevendors = $db->loadObjectList();
+	
 	for($n=0; $n<count($invitevendors); $n++){
+	
 	$not = "SELECT not_interested from #__cam_vendor_availablejobs where rfp_id=".$rfpid." and user_id=".$invitevendors[$n]->vendorid." "; 
 	$db->setQuery( $not);
 	$dec = $db->loadResult();
@@ -2334,21 +2379,44 @@ $alt = '';
 	}	
 		
 		// Compliance status in case of basic request
-	if( $publish->jobtype == 'yes' ){
+	if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
 	$model = $this->getModel('rfpcenter');
 	$c_status =	$model->checkcompliancestatus($decdata->id);
 	$result_final = $c_status ;
 	}
 	// Completed
 	
+	  $user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		if( $act_type == '1' ){
+		 $subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$listprps[$i]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		
+		 if ( $subscribe_type == 'free' || $subscribe_type == '' ) {
+			$acount_type = 'show' ;
+			}
+		else {	
+			$acount_type = 'hide';
+			}
+		}
+		else {
+		$acount_type = 'hide';
+		 }
+	 
+	 
+	 
 	 ?>
 <td valign="middle" width="22%" style="padding-left:30px;" align="center">
 <?php 
-	if($result_final == 'success' ){ 
+	if($result_final == 'success' && $acount_type == 'hide' ){ 
 			$id_cccbasic = 'checkmarkbox_small';
 			$title = 'Compliant';
 		}
-		else if($result_final == 'fail'){
+		else if($result_final == 'fail' || $acount_type == 'show'){
 			$id_cccbasic = 'redmarkbox_small';
 			$title = 'Non-Compliant';
 		}
@@ -2357,7 +2425,7 @@ $alt = '';
 			$title = 'Compliant & Non-Compliant';
 		}
 		
-if( $publish->jobtype == 'yes' ){
+if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
 	if($result_final == 'nostandards'){
 	 ?>
 	 <a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $decdata->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
@@ -2371,10 +2439,10 @@ else {
 	if($result_final == 'notset'){ ?>
 		 <a id="nostandards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>);" title="No Standards">N/A</a>&nbsp;&nbsp;
 		<?php } 
-	else if($result_final == 'success' ){ ?>
+	else if($result_final == 'success' && $acount_type == 'hide'  ){ ?>
 		 <a class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');"></a>
 	 	<?php }  
-	else if($result_final == 'fail'){ ?>
+	else if($result_final == 'fail' || $acount_type == 'show'){ ?>
 	     <a class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');"></a>	
 		<?php } ?>
 <?php } ?>	
@@ -2522,8 +2590,554 @@ if( $user->user_type == '16' )
 	<?php  exit;
 	 }
 	 
+  function getawatingapproval()
+   	{
+
+	$rfpid = $_REQUEST['rfpid'];
+	$rfpname = $_REQUEST['rfpname'];
+	$db = & JFactory::getDBO();
+	$getprops = "SELECT U.id, U.name, U.email, U.ccemail, U.lastname, V.company_phone,P.contact_name, V.company_name, V.phone_ext, P.proposaltype, P.proposal_total_price,P.Alt_bid, P.publish, P.bidfrom, P.id as proposalid, U.subscribe_type, P.proposeddate  FROM jos_users as U
+LEFT JOIN jos_cam_vendor_company  as V on U.id=V.user_id
+LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno=".$rfpid." ";
+	$db->setQuery( $getprops);
+	$listprps = $db->loadObjectList();
+	?>
+	<table width="100%" border="0" style="margin:0px 0px; border:1px solid #A3A3A3; background:#F7F7F7">
+    <tbody>
+    <tr>
+    <td align="center">
+    <ul class="addednum" style="padding-bottom:5px;">
+	<?php
+	$getpublish = "SELECT publish, proposalDueDate,create_rfptype,rfp_adminstatus, bidding,rfp_type, maxProposals, cust_id, jobtype, property_id,createdDate FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
+	$db->setQuery( $getpublish);
+	$publish = $db->loadObject();
+	
+	$date1 = $publish->proposalDueDate;
+	$date = explode("-", $date1);
+	$pdate = $date[2].'-'.$date[0].'-'.$date[1];
+	$date2 = date("Y-m-d");
+	$diff = abs(strtotime($pdate) - strtotime($date2));
+	$days = floor($diff/(60*60*24));
+	
+	$previous_date = $publish->createdDate;
+	$previous_date = explode('-',$previous_date); 
+	$previous_date = $previous_date[2].'-'.$previous_date[0].'-'.$previous_date[1];
+	?>
+	
+	
+	
+	<?php 
+	if($publish->jobtype == 'yes'){
+		$extra_info = '_basic' ;
+		$job_type = 'basic';
+		} 
+	else{
+		$extra_info = '' ;			
+		$job_type = '';
+		}
+		
+	 ?>
 	
 	 
+<li><a href="index.php?option=com_camassistant&controller=rfp&task=reviewrfp&rfpid=<?php echo $rfpid;  ?>&var=view&job=<?php echo $job_type; ?>&Itemid=87">VIEW</a></li>
+<?php 
+$user = & JFactory::getUser();
+$model = $this->getModel('rfpcenter');
+
+ ?>
+
+<li> <a href="#" onclick="javascript:addendum<?php echo $extra_info; ?>(<?php echo $rfpid;  ?>,'basic');">MODIFY</a></li>
+
+<li><a style="color:red;" class="" href="javascript:cancelrequest('<?php echo $rfpid; ?>');">CANCEL</a></li>
+</ul>
+</td></tr>
+<tr><td align="center">
+<?php
+$model = $this->getModel('rfpcenter');
+$draftprops = $model->alldraftproposals_count($rfpid);
+
+$exp_count = explode('---',$draftprops);
+if( $exp_count[0] == $exp_count[1] )
+	$count_drafts = 'no';
+else
+	$count_drafts = 'yes';
+
+?>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:0px 0px; border:">
+  <tbody> <tr>
+    <td width="42%" height="10" bgcolor="#707070" style="color:#fff; padding-left:15px;"><strong>VENDOR</strong>
+    </td>
+	<td width="25%" height="20" bgcolor="#707070" style="padding-left:25px; color:#FFF;">
+   <strong>COMPLIANCE STATUS</strong></td>
+	<td width="21%" height="10" bgcolor="#707070" style="color:#FFF;" align="center">
+    <strong>INVITATION STATUS</strong></td>
+     <td width="15%" height="10" bgcolor="#707070" align="center" style="padding-left:0px; color:#FFF;">
+  <strong>PRICE</strong></td>
+  </tr>
+
+  </tr>
+  <?php if(count($listprps) > 0){ ?>
+  <?php for($i=0; $i<count($listprps); $i++){ ?>
+  
+ <?php if($listprps[$i]->contact_name){ 
+  $listprps[$i]->contact_name = $listprps[$i]->contact_name;
+	} else { 
+  $listprps[$i]->contact_name = $listprps[$i]->name. ' '. $listprps[$i]->lastname ;
+	} 
+	
+	//To get the contact name of alternative proposals
+	if($listprps[$i]->Alt_bid == 'yes') {
+		$getconame = "SELECT contact_name  FROM #__cam_vendor_proposals WHERE rfpno=".$rfpid." and proposedvendorid=".$listprps[$i]->id." and Alt_bid='' ";
+		$db->setQuery( $getconame);
+		$getcname = $db->loadResult();
+		if($getcname){ 
+		$listprps[$i]->contact_name = $getcname ;
+		}
+		else{
+		$listprps[$i]->contact_name = $listprps[$i]->name. ' '. $listprps[$i]->lastname ;
+		}
+	}
+	//Completed
+	
+	//To avoid declined vendors
+	$dec_users = "SELECT not_interested from #__cam_vendor_availablejobs where rfp_id=".$rfpid." and user_id=".$listprps[$i]->id." "; 
+	$db->setQuery( $dec_users);
+	$declinedrfp = $db->loadResult();
+	if($declinedrfp == '2')
+	$style='none';
+	else
+	$style='';
+	
+	if( $listprps[$i]->Alt_bid == 'yes' && ( $listprps[$i]->proposaltype =='ITB' || $listprps[$i]->proposaltype =='Draft' || $listprps[$i]->proposaltype =='review'  || $listprps[$i]->proposaltype =='uninvited' ) )
+		$display_alt_draft = 'none';
+	else
+		$display_alt_draft = '';	
+		
+	if( $style == 'none' || $display_alt_draft == 'none' )	
+	$final_display = 'none' ;
+	else
+	$final_display = '' ;
+	
+		//Completed
+	?>
+	
+	<tr class="table_blue_rowdotsextend" style="display:<?php echo $final_display;?>">
+    <td width="40%" style="text-align:left"><strong><a href="index.php?option=com_camassistant&controller=vendors&task=vendordetailslayout&id=<?php echo $listprps[$i]->id; ?>" target="_blank"><?php echo $listprps[$i]->company_name ; ?></a></strong>
+<p style="padding:0px 0px;"><?php echo $listprps[$i]->contact_name.': ' .$listprps[$i]->company_phone;  if($listprps[$i]->phone_ext) { echo "&nbsp;-&nbsp;(" . $listprps[$i]->phone_ext . '&nbsp;)' ; }?></p>
+<a style="color:gray;" class="miniemails" href="mailto:<?php echo $listprps[$i]->email. '?cc=' .$listprps[$i]->ccemail; ?>" style="color:gray;" >Email</a>
+
+<?php 
+	$reminder_sql = "SELECT reminder_type, managerid, send_reminder_date, proposal_type from #__cam_rfp_reminders where rfpid=".$rfpid." and vendorid=".$listprps[$i]->id." and proposalid=".$listprps[$i]->proposalid." order by id DESC "; 
+	$db->setQuery( $reminder_sql);
+	$last_reminder = $db->loadObject();
+	if( $last_reminder ){
+		if( $last_reminder->reminder_type != 'm' ){
+		$type_reminder = 'MyVendorCenter'; 
+		}
+		else{
+		$reminder_name = "select name, lastname from #__users where id=".$last_reminder->managerid." "; 
+		$db->setQuery( $reminder_name );
+		$reminder_sent_name = $db->loadObject();
+		$type_reminder = $reminder_sent_name->name.'&nbsp;'.$reminder_sent_name->lastname; 
+		}
+		$datesenmt = explode(' ',$last_reminder->send_reminder_date);
+		
+		$property_sql = "select timezone from #__cam_property where id=".$publish->property_id." "; 
+		$db->setQuery( $property_sql );
+		$timezone_prop = $db->loadResult();
+		
+			if( $timezone_prop == '' || $timezone_prop == 'est' ) $timezone = 'EST';
+			else if( $timezone_prop == 'cen' ) $timezone = 'CEN';
+			else if( $timezone_prop == 'mou' ) $timezone = 'MOU';
+			else if( $timezone_prop == 'pac' ) $timezone = 'PAC';
+			else if( $timezone_prop == 'ala' ) $timezone = 'ALA';
+			else if( $timezone_prop == 'haw' ) $timezone = 'HAW';
+			else if( $row->timezone == 'eni' ) $timezone = 'ENI';
+
+			else if( $row->timezone == 'midw' ) $timezone = 'MIDW';
+			else if( $row->timezone == 'car' ) $timezone = 'CAR';
+			else if( $row->timezone == 'atl' ) $timezone = 'ATL';
+			else if( $row->timezone == 'new' ) $timezone = 'NEW';
+			else if( $row->timezone == 'bra' ) $timezone = 'BRA';
+			else if( $row->timezone == 'mid' ) $timezone = 'MID';
+			else if( $row->timezone == 'azo' ) $timezone = 'AZO';
+			else if( $row->timezone == 'wes' ) $timezone = 'WES';
+			else if( $row->timezone == 'bru' ) $timezone = 'BRU';
+			else if( $row->timezone == 'kal' ) $timezone = 'KAL';
+			else if( $row->timezone == 'bag' ) $timezone = 'BAG';
+			else if( $row->timezone == 'teh' ) $timezone = 'TEH';
+			else if( $row->timezone == 'abu' ) $timezone = 'ABU';
+			else if( $row->timezone == 'kab' ) $timezone = 'KAB';
+			else if( $row->timezone == 'eka' ) $timezone = 'EKA';
+			else if( $row->timezone == 'mum' ) $timezone = 'MUM';
+			else if( $row->timezone == 'kath' ) $timezone = 'KATH';
+			else if( $row->timezone == 'alm' ) $timezone = 'ALM';
+			else if( $row->timezone == 'yan' ) $timezone = 'YAN';
+			else if( $row->timezone == 'ban' ) $timezone = 'BAN';
+			else if( $row->timezone == 'bei' ) $timezone = 'BEI';
+			else if( $row->timezone == 'tok' ) $timezone = 'TOK';
+			else if( $row->timezone == 'ade' ) $timezone = 'ADE';
+			else if( $row->timezone == 'eas' ) $timezone = 'EAS';
+			else if( $row->timezone == 'mag' ) $timezone = 'MAG';
+			else if( $row->timezone == 'auk' ) $timezone = 'AUK';
+		
+		if( $last_reminder->proposal_type == '1' )	
+		$reminder_for = 'Invitation';
+		else
+		$reminder_for = 'Proposal';
+      echo "<br /><p class='invitation_reminder'>".$reminder_for." reminder sent by ".$type_reminder." </p>
+	  <span>on ".$datesenmt[0]." at ".date("h:i A", strtotime($datesenmt[1]))." ".$timezone."</span>";
+	 }
+?>
+<p style="height:5px"></p></td>
+
+	<?php /*?><td valign="middle" width="17%" align="center"><?php if($listprps[$i]->proposaltype)  { ?><img alt="" src="templates/camassistant_left/images/right-icon_new.png"> <?php } ?></td><?php */?>
+	<td valign="middle" width="22%" style="padding-left:30px;" align="center">
+	 <?php
+	$totalprefers_new_w9	=	$this->checknewspecialrequirements_w9($listprps[$i]->id,$rfpid);  
+	$totalprefers_new_gli	=	$this->checknewspecialrequirements_gli($listprps[$i]->id,$rfpid);
+	$totalprefers_new_aip	=	$this->checknewspecialrequirements_aip($listprps[$i]->id,$rfpid);
+	$totalprefers_new_wci	=	$this->checknewspecialrequirements_wci($listprps[$i]->id,$rfpid);
+	$totalprefers_new_umb	=	$this->checknewspecialrequirements_umb($listprps[$i]->id,$rfpid);
+	$totalprefers_new_pln	=	$this->checknewspecialrequirements_pln($listprps[$i]->id,$rfpid);
+	$totalprefers_new_occ	=	$this->checknewspecialrequirements_occ($listprps[$i]->id,$rfpid);
+	$totalprefers_new_omi	=	$this->checknewspecialrequirements_omi($listprps[$i]->id,$rfpid);
+	
+	// Check even rfp have some standards or not
+	$existed_standards	=	$this->getallstandardsrfp($rfpid);
+	if($existed_standards == 'yes') {
+	//Completed
+	
+	if( $totalprefers_new_w9 == 'success' && $totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success'  && $totalprefers_new_omi == 'success'){
+			$result_final = 'success' ;
+			$masteraccount = $this->getmasterfirmaccount();
+			$sql_terms = "SELECT termsconditions FROM #__cam_vendor_aboutus WHERE vendorid=".$masteraccount." "; 
+			$db->setQuery($sql_terms);
+			$terms_exist = $db->loadResult();
+			if($terms_exist == '1'){
+			$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$listprps[$i]->id." and masterid=".$masteraccount." "; 
+			$db->setQuery($sql);
+			$terms = $db->loadResult();
+				if($terms == '1'){
+				$result_final = 'success' ;
+				}
+				else{
+				$result_final = 'fail' ;
+				}
+			}
+			else{
+			$result_final = 'success' ;
+			}
+			
+		}
+		else{
+			$result_final = 'fail' ;
+		}
+	}
+	else{
+		$result_final = 'notset' ;
+	}
+	// Compliance status in case of basic request
+	if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
+	$model = $this->getModel('rfpcenter');
+	$c_status =	$model->checkcompliancestatus($listprps[$i]->id);
+	$result_final = $c_status ;
+	
+	}
+	// Completed
+		
+	  $user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		if( $act_type == '1' ){
+		 $subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$listprps[$i]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		
+		 if ( $subscribe_type == 'free' || $subscribe_type == '' ) {
+			$acount_type = 'show' ;
+			}
+		else {	
+			$acount_type = 'hide';
+			}
+		}
+		else {
+		$acount_type = 'hide';
+		 }
+	 
+	 
+	 
+	 ?>
+	 <?php 
+		if($result_final == 'success' && $acount_type == 'hide' ){ 
+			$id_cccbasic = 'checkmarkbox_small';
+			$title = 'Compliant';
+		}
+		else if($result_final == 'fail' || $acount_type == 'show' ){
+			$id_cccbasic = 'redmarkbox_small';
+			$title = 'Non-Compliant';
+		}
+		else{
+			$id_cccbasic = 'bothicons_small';
+			$title = 'Compliant & Non-Compliant';
+		}
+			
+	if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
+	 	if($result_final == 'nostandards'){ ?>
+		<a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $listprps[$i]->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
+		<?php } else { 
+	 	?>
+	 	<a href="javascript:void(0);" title="<?php echo $title; ?>" onclick="getbasiccompliance('<?php echo $listprps[$i]->id; ?>','<?php echo $title; ?>');" class="<?php echo $id_cccbasic; ?>"></a>
+	 	<?php
+	 	}
+	 }
+	 else {
+	 	if($result_final == 'notset'){ ?>
+		<a id="nostandards" title="No Standards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>);">N/A</a>&nbsp;&nbsp;
+		<?php } 
+		else if($result_final == 'success' && $acount_type == 'hide'){ ?>
+	<a class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');">	</a>
+			<?php }  else if($result_final == 'fail' || $acount_type == 'show' ){ ?>
+	<a class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');">	</a>	
+			<?php } ?>
+		<?php } ?>
+<?php
+if( $listprps[$i]->subscribe_type == 'free' ) { ?>
+<div class="unverifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'unverified');" title="Click for more info">UNVERIFIED</a></div>
+<?php } else {  ?>
+<div class="verifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'verified');" title="Click for more info">VERIFIED</a></div>
+<?php } ?>				
+	 </td>
+	 
+	<td valign="middle" width="17%" align="center">
+	<?php if($listprps[$i]->proposaltype)  { 
+	//To check this rfp in invitations? or not ?
+	$getidinv = "SELECT id  FROM #__rfp_invitations  WHERE rfpid=".$rfpid." and vendorid=".$listprps[$i]->id." ";
+	$db->setQuery( $getidinv);
+	$invitevendorid = $db->loadResult();
+	
+	if($invitevendorid && ($listprps[$i]->bidfrom == 'admin')) { ?>
+	<a href="javascript:blankpopup();" title="Awaiting Vendor's response"><img alt="" src="templates/camassistant_left/images/empty-icon.png"></a>
+	
+	<?php } else {
+	$companyname_acc = str_replace(',','_',$listprps[$i]->company_name);
+	?>
+	<a href="javascript:void(0);" onclick="getcheckmarkpopup('<?php echo $companyname_acc ; ?>','<?php echo $listprps[$i]->proposeddate;?>');"><img alt="" src="templates/camassistant_left/images/Checkmark.png"> </a>
+	<?php } } ?></td>
+	
+	
+     
+	 
+	 
+<?php 
+if($listprps[$i]->Alt_bid == 'yes')
+$alt = 'yes';
+else
+$alt = '';	
+	 ?>
+	 <?php if($publish->bidding != 'seal'){ ?>
+	 <?php //&& $listprps[$i]->publish ==1  echo '<pre>'; print_r($listprps[$i]); ?>
+    <td valign="middle" width="20%" align="center"><strong><?php if($listprps[$i]->proposaltype == 'submit' || $listprps[$i]->proposaltype == 'Submit' || $listprps[$i]->proposaltype == 'resubmit')   { 
+	 ?>
+	<a href="index.php?option=com_camassistant&controller=rfpcenter&task=vendor_proposal_preview_tomanager&Alt_Prp=<?php echo $alt; ?>&Proposal_id=<?php echo $listprps[$i]->proposalid; ?>&vendor_id=<?php echo $listprps[$i]->id; ?>&rfp_id=<?php echo $rfpid; ?>&job=<?php echo $job_type; ?>" target="_blank"><?php echo "$". number_format($listprps[$i]->proposal_total_price,2); ?></a>
+	<?php
+	} 
+	else if( $listprps[$i]->proposaltype == 'uninvited' ){
+		echo "<a class='uninitetext_vendor' onclick='getshowmessage(".$rfpid.",".$listprps[$i]->id.");' href='javascript:void(0);'>UN-INVITED</font>";
+	}
+	else { echo "PENDING"; }?></strong><?php if($listprps[$i]->Alt_bid == 'yes'){
+	echo " (alt)";
+	} ?></td> <?php } else { ?>
+
+	<td valign="middle" width="20%" align="center"><strong><?php 
+	if( $listprps[$i]->proposaltype == 'uninvited' ){
+	echo "<a class='uninitetext_vendor' onclick='getshowmessage(".$rfpid.",".$listprps[$i]->id.");' href='javascript:void(0);'>UN-INVITED</font>";	
+	}
+	else if($listprps[$i]->proposaltype == 'submit' || $listprps[$i]->proposaltype == 'Submit' || $listprps[$i]->proposaltype == 'resubmit' || $listprps[$i]->proposaltype == 'review'  )  { echo "<font color='gray'>SEALED</font><br><a class='breakseal' href='javascript:reopenrfp(".$rfpid.");'><span class='hasTip2' title='Info: Breaking the seal converts a RFP from Sealed Bidding to open bidding, and allows you to see pricing BEFORE you end the bidding.'>BREAK SEAL?</span></a>"; } else { echo "PENDING"; }?></strong></td> <?php } ?>
+
+
+  </tr>
+ 
+  <?php }  } else {?>
+  <tr class="table_blue_rowdotsextend"><td colspan="4"><p style="font-size: 13px; margin-bottom: 10px; text-align: center;">You have NOT invited any Vendors to participate in this project, please click on "INVITE A VENDOR" above</p></td></tr>
+  <?php } 
+  
+  // To get the rfp invitation for this JOB
+	$getinvitevendors = "SELECT vendorid from #__rfp_invitations where rfpid=".$rfpid."";
+	$db->setQuery( $getinvitevendors);
+	$invitevendors = $db->loadObjectList();
+	for($n=0; $n<count($invitevendors); $n++){
+	$not = "SELECT not_interested from #__cam_vendor_availablejobs where rfp_id=".$rfpid." and user_id=".$invitevendors[$n]->vendorid." "; 
+	$db->setQuery( $not);
+	$dec = $db->loadResult();
+	
+		if($dec == '2'){ 
+	$getpropsinv = "SELECT U.id, U.name, U.email, U.ccemail, U.lastname, V.company_phone,V.company_name, V.phone_ext FROM jos_users as U
+	LEFT JOIN jos_cam_vendor_company  as V on U.id=V.user_id
+	where U.id=".$invitevendors[$n]->vendorid." ";
+	$db->setQuery( $getpropsinv);
+	$decdata = $db->loadObject();	
+		?>
+		<tr class="table_blue_rowdotsextend">
+		<td width="40%" style="text-align:left"><strong><?php echo $decdata->company_name; ?></strong>
+<p style="padding:0px 0px;"><?php echo $decdata->name.' '.$decdata->lastname; ?> <?php if($decdata->company_phone){ echo ":".$decdata->company_phone ; } ?> <?php if($decdata->phone_ext){ echo "- (".$decdata->phone_ext.')'  ; } ?></p>
+<a style="color:gray;" class="miniemails" href="mailto:<?php echo $decdata->email. '?cc=' .$decdata->ccemail; ?>">Email</a><p style="height:5px"></p></td>
+
+<?php
+	$totalprefers_new_w9	=	$this->checknewspecialrequirements_w9($decdata->id,$rfpid);
+	$totalprefers_new_gli	=	$this->checknewspecialrequirements_gli($decdata->id,$rfpid);
+	$totalprefers_new_aip	=	$this->checknewspecialrequirements_aip($decdata->id,$rfpid);
+	$totalprefers_new_wci	=	$this->checknewspecialrequirements_wci($decdata->id,$rfpid);
+	$totalprefers_new_umb	=	$this->checknewspecialrequirements_umb($decdata->id,$rfpid);
+	$totalprefers_new_pln	=	$this->checknewspecialrequirements_pln($decdata->id,$rfpid);
+	$totalprefers_new_occ	=	$this->checknewspecialrequirements_occ($decdata->id,$rfpid);
+	$totalprefers_new_omi	=	$this->checknewspecialrequirements_omi($decdata->id,$rfpid);
+	
+	$existed_standards	=	$this->getallstandardsrfp($rfpid);
+	if($existed_standards == 'yes') {
+	if($totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success' && $totalprefers_new_omi == 'success'){
+			$result_final = 'success' ;
+			$masteraccount = $this->getmasterfirmaccount();
+			$sql_terms = "SELECT termsconditions FROM #__cam_vendor_aboutus WHERE vendorid=".$masteraccount." "; 
+			$db->setQuery($sql_terms);
+			$terms_exist = $db->loadResult();
+			if($terms_exist == '1'){
+			$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$decdata->id." and masterid=".$masteraccount." "; 
+			$db->setQuery($sql);
+			$terms = $db->loadResult();
+				if($terms == '1'){
+				$result_final = 'success' ;
+				}
+				else{
+				$result_final = 'fail' ;
+				}
+			}
+			else{
+			
+			}
+			
+		}
+		else{
+			$result_final = 'fail' ;
+		}
+	}
+	else{
+		$result_final = 'notset' ;
+	}	
+		
+		// Compliance status in case of basic request
+	if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
+	$model = $this->getModel('rfpcenter');
+	$c_status =	$model->checkcompliancestatus($decdata->id);
+	$result_final = $c_status ;
+	}
+	// Completed
+	    $user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		if( $act_type == '1' ){
+		 $subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$listprps[$i]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		
+		 if ( $subscribe_type == 'free' || $subscribe_type == '' ) {
+			$acount_type = 'show' ;
+			}
+		else {	
+			$acount_type = 'hide';
+			}
+		}
+		else {
+		$acount_type = 'hide';
+		 }
+	 
+	 
+	 
+	 ?>
+<td valign="middle" width="22%" style="padding-left:30px;" align="center">
+<?php 
+	if($result_final == 'success' && $acount_type == 'hide' ){ 
+			$id_cccbasic = 'checkmarkbox_small';
+			$title = 'Compliant';
+		}
+		else if($result_final == 'fail' || $acount_type == 'show'){
+			$id_cccbasic = 'redmarkbox_small';
+			$title = 'Non-Compliant';
+		}
+		else{
+			$id_cccbasic = 'bothicons_small';
+			$title = 'Compliant & Non-Compliant';
+		}
+		
+if( ( $publish->jobtype == 'yes' &&  $publish->create_rfptype == 'personal' ) || ( $publish->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
+	if($result_final == 'nostandards'){
+	 ?>
+	 <a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $decdata->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
+	 <?php
+	 } else { ?>
+	 <a href="javascript:void(0);" title="<?php echo $title; ?>" onclick="getbasiccompliance('<?php echo $decdata->id; ?>','<?php echo $title; ?>');" class="<?php echo $id_cccbasic; ?>"></a>
+	 <?php }
+}
+	 
+else {	
+	if($result_final == 'notset'){ ?>
+		 <a id="nostandards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>);" title="No Standards">N/A</a>&nbsp;&nbsp;
+		<?php } 
+	else if($result_final == 'success' && $acount_type == 'hide' ){ ?>
+		 <a class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');"></a>
+	 	<?php }  
+	else if($result_final == 'fail' || $acount_type == 'show' ){ ?>
+	     <a class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>,<?php echo $publish->cust_id; ?>,'<?php echo $title; ?>');"></a>	
+		<?php } ?>
+<?php } ?>	
+
+<?php
+if( $decdata->subscribe_type == 'free' ) { ?>
+<div class="unverifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $decdata->id; ?>,'unverified');" title="Click for more info">UNVERIFIED</a></div>
+<?php } else {  ?>
+<div class="verifiedvendor_closed"><a href="javascript:void(0);" onclick="unverified(<?php echo $decdata->id; ?>,'verified');" title="Click for more info">VERIFIED</a></div>
+<?php } ?>
+	
+</td>
+
+<td valign="middle" width="17%" align="center"><a id="declinedbuttons" href="javascript:void(0);" onclick="getdeclinedreason(<?php echo $rfpid; ?>,<?php echo $decdata->id; ?>);"></a> </td>
+
+
+ <td valign="middle" width="20%" align="center"><strong><span style="color:red;">DECLINED</font></strong></td>
+		</tr>
+		<?php }
+	}
+	//Completed
+  ?>
+  
+  
+</tbody></table>
+
+    </td>
+  </tr>
+  
+
+	<tr valign="middle" height="20">
+    <td>
+	
+	
+    </td>
+  </tr>
+ 
+ 
+</tbody></table>
+	<?php  exit;
+	 	} 
 
 	function sendrequest(){
 	$body = JRequest::getVar('supportbody','');
@@ -2668,7 +3282,7 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where (P.prop
 	$db->setQuery( $query_updatedc);
 	$update=$db->query();
 	if($update){
-		$link='index.php?option=com_camassistant&controller=rfpcenter&task=closedrfp&Itemid=89';
+		$link='index.php?option=com_camassistant&controller=rfpcenter&task=closedrfp&type=end&Itemid=89';
 		$this->setRedirect( $link,$msg );
 		}
 	}
@@ -2753,12 +3367,19 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where (P.prop
 	$db->setQuery( $getprops_alt);
 	$listunprops = $db->loadObjectList();
 	//Completed
-    $getpublish = "SELECT rfp_adminstatus, cust_id, jobtype, bidding,property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
+    $getpublish = "SELECT rfp_adminstatus, cust_id,create_rfptype, jobtype, bidding,property_id,createdDate FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
 	$db->setQuery( $getpublish);
 	$admindata = $db->loadObject();
 	$adminstatus = $admindata->rfp_adminstatus;
 	$bidding_type = $admindata->bidding;
+	
+	$previous_date = $admindata->createdDate;
+	$previous_date = explode('-',$previous_date); 
+	$previous_date = $previous_date[2].'-'.$previous_date[0].'-'.$previous_date[1];
 	?>
+	
+	
+	
 	<?php 
 		if($admindata->jobtype == 'yes')
 		$job_type = 'basic' ;
@@ -2886,17 +3507,40 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where (P.prop
 		$result_final = 'notset' ;
 	}	
 		// Compliance status in case of basic request
-	if( $admindata->jobtype == 'yes' ){
+	
+if( ( $admindata->jobtype == 'yes' &&  $admindata->create_rfptype == 'personal' ) || ( $admindata->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
 	$model = $this->getModel('rfpcenter');
 	$c_status =	$model->checkcompliancestatus($listprps[$i]->id);
 	$result_final = $c_status ;
 	}
+	
+	     $user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		if( $act_type == '1' ){
+		 $subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$listprps[$i]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		
+		 if ( $subscribe_type == 'free' || $subscribe_type == '' ) {
+			$acount_type = 'show' ;
+			}
+		else {	
+			$acount_type = 'hide';
+			}
+		}
+		else {
+		$acount_type = 'hide';
+		 }
+	
 	// Completed
-		if($result_final == 'success' ){ 
+		if($result_final == 'success' && $acount_type == 'hide' ){ 
 			$id_cccbasic = 'checkmarkbox_small';
 			$title = 'Compliant';
 		}
-		else if($result_final == 'fail'){
+		else if($result_final == 'fail' || $acount_type == 'show' ){
 			$id_cccbasic = 'redmarkbox_small';
 			$title = 'Non-Compliant';
 		}
@@ -2908,7 +3552,8 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where (P.prop
 	 ?>
 	 <td width="15%" align="center">
 	<?php 
-	 if( $admindata->jobtype == 'yes' ){
+	if( ( $admindata->jobtype == 'yes' &&  $admindata->create_rfptype == 'personal' ) || ( $admindata->jobtype == 'yes' &&  $previous_date <= '2016-07-01' )){
+
 	 	if($result_final == 'nostandards'){ ?>
 		<a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $listprps[$i]->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
 		<?php } else { 
@@ -2919,9 +3564,9 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where (P.prop
 	 }
 	 
 	 else {
-	 if($result_final == 'success' ){ ?>
+	 if($result_final == 'success' && $acount_type == 'hide'){ ?>
 <a class="checkmarkbox" href="javascript:void(0);" title="Compliant" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $admindata->cust_id; ?>,'<?php echo $title; ?>');">	</a>
-	 	<?php }  else if($result_final == 'fail'){ ?>
+	 	<?php }  else if($result_final == 'fail' || $acount_type == 'show' ){ ?>
 <a class="redmarkbox" href="javascript:void(0);" title="Non-Compliant" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $admindata->cust_id; ?>,'<?php echo $title; ?>');">	</a>	
 		<?php } else if($result_final == 'notset'){ ?>
 <a id="nostandards" href="javascript:void(0);" title="No Standards" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $admindata->cust_id; ?>);">N/A</a>&nbsp;&nbsp;			
@@ -3019,17 +3664,39 @@ $alt = '' ;
 	}	
 	
 	// Compliance status in case of basic request
-	if( $admindata->jobtype == 'yes' ){
+	if( ( $admindata->jobtype == 'yes' &&  $admindata->create_rfptype == 'personal' ) || ( $admindata->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
+
 	$model = $this->getModel('rfpcenter');
 	$c_status =	$model->checkcompliancestatus($listunprops[$i]->id);
 	$result_final = $c_status ;
 	}
+	
+	  $user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		if( $act_type == '1' ){
+		 $subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$listprps[$i]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		
+		 if ( $subscribe_type == 'free' || $subscribe_type == '' ) {
+			$acount_type = 'show' ;
+			}
+		else {	
+			$acount_type = 'hide';
+			}
+		}
+		else {
+		$acount_type = 'hide';
+		 }
 	// Completed
-		if($result_final == 'success' ){ 
+		if($result_final == 'success' && $acount_type == 'hide' ){ 
 			$id_cccbasic = 'checkmarkbox_small';
 			$title = 'Compliant';
 		}
-		else if($result_final == 'fail'){
+		else if($result_final == 'fail' || $acount_type == 'show' ){
 			$id_cccbasic = 'redmarkbox_small';
 			$title = 'Non-Compliant';
 		}
@@ -3041,7 +3708,8 @@ $alt = '' ;
 	 ?>
 	 <td width="15%" align="center">
 	 <?php 
-if( $admindata->jobtype == 'yes' ){
+if( ( $admindata->jobtype == 'yes' &&  $admindata->create_rfptype == 'personal' ) || ( $admindata->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
+
 	 	if($result_final == 'nostandards'){ ?>
 		<a href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $listunprops[$i]->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
 		<?php } else { 
@@ -3051,9 +3719,9 @@ if( $admindata->jobtype == 'yes' ){
 	 	}
  }
 else {	 
-	 if($result_final == 'success' ){ ?>
+	 if($result_final == 'success' && $acount_type == 'hide' ){ ?>
 <a class="checkmarkbox" href="javascript:void(0);" title="Compliant" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listunprops[$i]->id; ?>,<?php echo $admindata->cust_id; ?>,'<?php echo $title; ?>');">	</a>
-	 	<?php }  else if($result_final == 'fail'){ ?>
+	 	<?php }  else if($result_final == 'fail' || $acount_type == 'show' ){ ?>
 <a class="redmarkbox" href="javascript:void(0);" title="Non-Compliant" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listunprops[$i]->id; ?>,<?php echo $admindata->cust_id; ?>,'<?php echo $title; ?>');">	</a>	
 		<?php } else if($result_final == 'notset'){ ?>
 <a id="nostandards" href="javascript:void(0);" title="No Standards" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $listunprops[$i]->id; ?>,<?php echo $admindata->cust_id; ?>);">N/A</a>&nbsp;&nbsp;			
@@ -3118,19 +3786,25 @@ if($admindata->cust_id == $user->id){ ?>
 	$db = & JFactory::getDBO();
 	$user = & JFactory::getUser();
 	
-	$getprops = "SELECT U.id, U.name, U.email, U.ccemail, U.lastname, V.company_phone,P.contact_name, V.company_name, V.phone_ext,P.Alt_bid, P.proposaltype, P.proposal_total_price, P.id as proposalid  FROM jos_users as U
+	$getprops = "SELECT U.id, U.name, U.email, U.ccemail, U.subscribe_type,U.lastname, V.company_phone,P.contact_name, V.company_name, V.phone_ext,P.Alt_bid, P.proposaltype, P.proposal_total_price, P.id as proposalid  FROM jos_users as U
 LEFT JOIN jos_cam_vendor_company  as V on U.id=V.user_id
 LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where ".$condition." and P.rfpno=".$rfpid." ";
 	$db->setQuery( $getprops);
 	$listprps = $db->loadObjectList();
 
-    $getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus, bidding, rfp_type, maxProposals, cust_id, jobtype, property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
+    $getpublish = "SELECT publish, proposalDueDate, rfp_adminstatus,create_rfptype,bidding, rfp_type, maxProposals, cust_id, jobtype, property_id,createdDate FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
 	$db->setQuery( $getpublish);
 	$admindata = $db->loadObject();
 	
 	$adminstatus = $admindata->rfp_adminstatus;
 	
+	$previous_date = $admindata->createdDate;
+	$previous_date = explode('-',$previous_date); 
+	$previous_date = $previous_date[2].'-'.$previous_date[0].'-'.$previous_date[1];
+	
 	?>
+	
+	
 	<?php 
 		if($admindata->jobtype == 'yes')
 		$job_type = 'basic' ;
@@ -3274,20 +3948,40 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where ".$cond
 		$result_final = 'notset' ;
 	}
 	// Compliance status in case of basic request
-	if( $admindata->jobtype == 'yes' ){
+	if( ( $admindata->jobtype == 'yes' &&  $admindata->create_rfptype == 'personal' ) || ( $admindata->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
 	$model = $this->getModel('rfpcenter');
 	$c_status =	$model->checkcompliancestatus($listprps[$i]->id);
 	$result_final = $c_status ;
 	
 	}
+	   $user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		if( $act_type == '1' ){
+		 $subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$listprps[$i]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		
+		 if ( $subscribe_type == 'free' || $subscribe_type == '' ) {
+			$acount_type = 'show' ;
+			}
+		else {	
+			$acount_type = 'hide';
+			}
+		}
+		else {
+		$acount_type = 'hide';
+		 }
 	// Completed
 	?>
 	 <?php 
-		if($result_final == 'success' ){ 
+		if($result_final == 'success' && $acount_type == 'hide'){ 
 			$id_cccbasic = 'checkmarkbox_small';
 			$title = 'Compliant';
 		}
-		else if($result_final == 'fail'){
+		else if($result_final == 'fail' || $acount_type == 'show'){
 			$id_cccbasic = 'redmarkbox_small';
 			$title = 'Non-Compliant';
 		}
@@ -3295,7 +3989,7 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where ".$cond
 			$id_cccbasic = 'bothicons_small';
 			$title = 'Compliant & Non-Compliant';
 		}
-	if( $admindata->jobtype == 'yes' ){
+	if( ( $admindata->jobtype == 'yes' &&  $admindata->create_rfptype == 'personal' ) || ( $admindata->jobtype == 'yes' &&  $previous_date <= '2016-07-01' ) ){
 	 	if($result_final == 'nostandards'){ ?>
 		<a style="width:34px;" href="javascript:void(0);" title="No Standards" onclick="getbasiccompliance_null('<?php echo $listprps[$i]->id; ?>');" id="nostandards">N/A</a>&nbsp;&nbsp;
 		<?php } else { 
@@ -3308,15 +4002,15 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where ".$cond
 	 	if($result_final == 'notset'){ ?>
 		<a id="nostandards" title="No Standards" href="javascript:void(0);" onclick="getcompliancestate_null(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $admindata->cust_id; ?>);">N/A</a>&nbsp;&nbsp;
 		<?php } 
-		else if($result_final == 'success' ){ ?>
+		else if($result_final == 'success' && $acount_type == 'hide'){ ?>
 	<a style="width:34px;" class="checkmarkbox" title="Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $admindata->cust_id; ?>,'<?php echo $title; ?>');">	</a>
-			<?php }  else if($result_final == 'fail'){ ?>
+			<?php }  else if($result_final == 'fail' || $acount_type == 'show'){ ?>
 	<a style="width:34px;" class="redmarkbox" title="Non-Compliant" href="javascript:void(0);" onclick="getcompliancestate(<?php echo $rfpid; ?>,<?php echo $listprps[$i]->id; ?>,<?php echo $admindata->cust_id; ?>,'<?php echo $title; ?>');">	</a>	
 			<?php } ?>
 		<?php } ?>
 <?php
 if( $listprps[$i]->subscribe_type == 'free' ) { ?>
-<div class="verifiedvendor_awarded"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'unverified');" title="Click for more info">UNVERIFIED</a></div>
+<div class="unverifiedvendor_awarded"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'unverified');" title="Click for more info">UNVERIFIED</a></div>
 <?php } else {  ?>
 <div class="verifiedvendor_awarded"><a href="javascript:void(0);" onclick="unverified(<?php echo $listprps[$i]->id; ?>,'verified');" title="Click for more info">VERIFIED</a></div>
 <?php } ?>		
@@ -4180,6 +4874,9 @@ You have not uploaded a sample certificate for your Vendors
 		$model = $this->getModel('rfpcenter');
 		$industryid = JRequest::getVar('industryid','');		
 		$generaldata = $model->getgeneralinsdata($industryid);
+		
+		$acount_type = $model->getacount_type();
+		
 			if($generaldata){
 			$exist = 'exist';
 			}
@@ -4218,8 +4915,9 @@ You have not uploaded a sample certificate for your Vendors
 		<li><input type="checkbox" value="yes" name="primary_noncontr" <?php echo $prim; ?> /> <label>Primary Non-Contributory</label></li>
 		<?php if($generaldata->additional_insured == 'yes'){ $add = 'checked="checked"'; } ?>
 		<li><input type="checkbox" value="yes" name="additional_insured" <?php echo $add; ?> /> <label>List my Company as as "Additional Insured"</label></li>
-		<?php if($generaldata->cert_holder == 'yes'){ $cert = 'checked="checked"'; } ?>
-		<li><input type="checkbox" value="yes" name="cert_holder_gli" <?php echo $cert; ?>  /> <label>MyVendorCenter listed as Cert. Holder</label></li>
+		<?php if($generaldata->cert_holder == 'yes'){ $cert = 'checked="checked"'; }
+		else if($generaldata->cert_holder == '' && $acount_type == 0 ) { $check_fun = "check_gliacounttype()"; } ?>
+		<li><input type="checkbox" value="yes" id="gli" onclick="javascript:<?php echo $check_fun;?>" name="cert_holder_gli" <?php echo $cert; ?>  /> <label>MyVendorCenter listed as Cert. Holder</label></li>
 		</ul></td>
 		
 		
@@ -4235,6 +4933,7 @@ You have not uploaded a sample certificate for your Vendors
 		$model = $this->getModel('rfpcenter');
 		$industryid = JRequest::getVar('industryid','');		
 		$autodata = $model->getautoinsdata($industryid);
+		$acount_type = $model->getacount_type();
 			if($autodata){
 			$exist = 'exist';
 			}
@@ -4273,8 +4972,9 @@ You have not uploaded a sample certificate for your Vendors
 		<li><input type="checkbox" value="yes" name="primary" <?php echo $prim; ?> /> <label>Primary Non-Contributory</label></li>
 		<?php if($autodata->additional_ins == 'yes'){ $add = 'checked="checked"'; } ?>
 		<li><input type="checkbox" value="yes" name="additional_ins" <?php echo $add; ?> /> <label>List my Company as as "Additional Insured"</label></li>
-		<?php if($autodata->cert_holder == 'yes'){ $cert = 'checked="checked"'; } ?>
-		<li><input type="checkbox" value="yes" name="cert_holder" <?php echo $cert; ?>  /> <label>MyVendorCenter listed as Cert. Holder</label></li>
+		<?php if($autodata->cert_holder == 'yes'){ $cert = 'checked="checked"'; } 
+		else if($autodata->cert_holder == '' && $acount_type ==0 ) { $check_auto = "check_autoacounttype()"; } ?>
+		<li><input type="checkbox" value="yes" id="auto" onclick="javascript:<?php echo $check_auto;?>" name="cert_holder" <?php echo $cert; ?>  /> <label>MyVendorCenter listed as Cert. Holder</label></li>
 		</ul></td>
 		
 		
@@ -4290,6 +4990,7 @@ You have not uploaded a sample certificate for your Vendors
 		$model = $this->getModel('rfpcenter');
 		$industryid = JRequest::getVar('industryid','');		
 		$workdata = $model->getworkinsdata($industryid);
+		$acount_type = $model->getacount_type();
 			if($workdata){
 			$exist = 'exist';
 			}
@@ -4315,8 +5016,9 @@ You have not uploaded a sample certificate for your Vendors
 		<li>Disease - Each Employee: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="disease_eachemp" value="<?php echo number_format($workdata->disease_eachemp,2); ?>" name="disease_eachemp" /></li>
 		<?php if($workdata->waiver_work == 'yes'){ $waiver_work = 'checked="checked"'; }?>
 		<li><input type="checkbox" value="yes" name="waiver_work" <?php echo $waiver_work; ?> /> <label>Waiver of Subrogation</label></li>
-		<?php if($workdata->certholder_work == 'yes'){ $certholder_work = 'checked="checked"'; } ?>
-		<li><input type="checkbox" value="yes" name="certholder_work" <?php echo $certholder_work; ?>  /> <label>MyVendorCenter listed as Cert. Holder</label></li>
+		<?php if($workdata->certholder_work == 'yes'){ $certholder_work = 'checked="checked"'; } 
+		else if($workdata->cert_holder == '' && $acount_type ==0 ) { $check_work = "check_workacounttype()"; } ?>
+		<li><input type="checkbox" value="yes" id="wrk" onclick="javascript:<?php echo $check_work;?>" name="certholder_work" <?php echo $certholder_work; ?>  /> <label>MyVendorCenter listed as Cert. Holder</label></li>
 		</ul></li>
 		<?php 
 		if($workdata->workers_not == 'yes') 
@@ -4339,6 +5041,7 @@ You have not uploaded a sample certificate for your Vendors
 		$model = $this->getModel('rfpcenter');
 		$industryid = JRequest::getVar('industryid','');		
 		$umbrelladata = $model->getumbrellainsdata($industryid);
+		$acount_type = $model->getacount_type();
 			if($umbrelladata){
 			$exist = 'exist';
 			}
@@ -4354,8 +5057,9 @@ You have not uploaded a sample certificate for your Vendors
 		<li>Each Occurrence: <input type="text"  onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_occur" value="<?php echo number_format($umbrelladata->each_occur,2); ?>" name="each_occur" /></li>
 		
 		<li>Aggregate: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="aggregate" value="<?php echo number_format($umbrelladata->aggregate,2); ?>" name="aggregate" /></li>
-		<?php if($umbrelladata->certholder_umbrella == 'yes'){ $waiver_umbrella = 'checked="checked"'; }?>
-		<li><input type="checkbox" value="yes" name="certholder_umbrella" <?php echo $waiver_umbrella; ?> /> <label>MyVendorCenter listed as Cert. Holder</label></li>
+		<?php if($umbrelladata->certholder_umbrella == 'yes'){ $waiver_umbrella = 'checked="checked"'; }
+		else if($umbrelladata->cert_holder == '' && $acount_type ==0 ) { $check_umbrella = "check_umbacounttype()"; } ?>
+		<li><input type="checkbox" value="yes" id="umb" onclick="javascript:<?php echo $check_umbrella;?>" name="certholder_umbrella" <?php echo $waiver_umbrella; ?> /> <label>MyVendorCenter listed as Cert. Holder</label></li>
 		</ul></td>
 		<?php
 		exit;
@@ -4395,7 +5099,8 @@ You have not uploaded a sample certificate for your Vendors
 		$db=&JFactory::getDBO();
 		$model = $this->getModel('rfpcenter');
 		$industryid = JRequest::getVar('industryid','');	
-		$omidata = $model->getomiinsdata($industryid);	
+		$omidata = $model->getomiinsdata($industryid);
+		$acount_type = $model->getacount_type();	
 			if($omidata){
 			$exist = 'exist';
 			}
@@ -4409,9 +5114,9 @@ You have not uploaded a sample certificate for your Vendors
 		<li>Each Claim: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="each_claim" value="<?php echo number_format($omidata->each_claim,2); ?>" name="each_claim" /></li>
 
 		<li>Aggregate: <input type="text" onClick="if(this.value == '0.00') this.value='';" onChange="javascript: add_commas(this,this.value);" id="aggregate_omi" value="<?php echo number_format($omidata->aggregate_omi,2); ?>" name="aggregate_omi" /></li>
-		<?php if($omidata->certholder_omi == 'yes'){ $waiver_omi = 'checked="checked"'; }?>
-		<li><input type="checkbox" value="yes" name="certholder_omi" <?php echo $waiver_omi; ?> /> <label>MyVendorCenter listed as Cert. Holder</label></li>
-		
+		<?php if($omidata->certholder_omi == 'yes'){ $waiver_omi = 'checked="checked"'; }
+		else if($omidata->cert_holder == '' && $acount_type ==0 ) { $check_omi = "check_omiacounttype()"; } ?>
+		<li><input type="checkbox" value="yes" id="omi" onclick="javascript:<?php echo $check_omi;?>" name="certholder_omi" <?php echo $waiver_omi; ?> /> <label>MyVendorCenter listed as Cert. Holder</label></li>
 		</ul></td>
 		<?php
 		exit;
@@ -4961,7 +5666,7 @@ You have not uploaded a sample certificate for your Vendors
 			$db->setQuery($query_c);
 			$mid = $db->loadResult();	
 			if(!$mid) {
-			$query5 = "INSERT INTO #__cam_master_compliancereport ( id , masterid , master, admin, dm, m, unverified, verified, nonc, compliant, report_switch, include_docs, how_docs, gli, api, wc, umb, omi, pln, oln, phone_number ) VALUES (  '' , '".$user->id."', '1', '1', '1', '1', '0', '0', '0', '0','0','0','','0','0','0','0','0','0','0','0' );";
+			$query5 = "INSERT INTO #__cam_master_compliancereport ( id , masterid , master, admin, dm, m, unverified, verified, nonc, compliant, report_switch, include_docs, how_docs, gli, api, wc, umb, omi, pln, oln, phone_number,w9 ) VALUES (  '' , '".$user->id."', '1', '1', '1', '1', '0', '0', '0', '0','0','0','','0','0','0','0','0','0','0','0','0' );";
 			$db->setQuery( $query5 );
 			$res5=$db->query();
 			}		
@@ -5020,10 +5725,12 @@ You have not uploaded a sample certificate for your Vendors
 	}
 	
 	function saveaboutus(){ 
-            $db=&JFactory::getDBO();
+   $db=&JFactory::getDBO();
    $model = $this->getModel('rfpcenter');
    $user	= JFactory::getUser();
    $aboutus = JRequest::getVar('aboutus','');
+   $vendormail = JRequest::getVar('vendormail','');
+  
    	 	 $aboutus = htmlentities($_REQUEST['aboutus'], ENT_QUOTES);
 		 $aboutus = str_replace('\&quot','&quot',$aboutus);
 		 $aboutus = str_replace('\\','',$aboutus);
@@ -5041,7 +5748,10 @@ You have not uploaded a sample certificate for your Vendors
    $post['update']	= date('Y-m-d');
    $post['id'] = JRequest::getVar('id','');
    //Sending mail to vendors about terms and conditions
-   $mailto_vendor = $model->sendmailtovendor();
+   if( $vendormail == 1 )
+   {
+	   $mailto_vendor = $model->sendmailtovendor();
+   }
    $query = "Delete FROM `#__cam_vendor_terms`  WHERE masterid=".$user->id;
    $db->setQuery($query);
    $db->Query();
@@ -5409,6 +6119,7 @@ You have not uploaded a sample certificate for your Vendors
 		$aip_data ="SELECT * from #__cam_vendor_auto_insurance  WHERE vendor_id=".$vendorid; //validation to status of docs
 		$db->Setquery($aip_data);
 		$vendor_aip_data = $db->loadObjectList();
+		
 		//Get RFP data
 		$rfp_aip_data ="SELECT * from #__cam_master_autoinsurance_standards_rfps  WHERE rfpid=".$rfpid; //validation to status of docs
 		$db->Setquery($rfp_aip_data);
@@ -5423,7 +6134,7 @@ You have not uploaded a sample certificate for your Vendors
 						$occur_aip[] = 'no' ;
 					}
 				}
-
+               
 				if($rfp_aip_data->applies_to_owned == 'owned'){
 					if($rfp_aip_data->applies_to_owned == $vendor_aip_data[$ai]->aip_applies_owned){
 						$occur_aip[] = 'yes' ;
@@ -5432,7 +6143,7 @@ You have not uploaded a sample certificate for your Vendors
 						$occur_aip[] = 'no' ;
 					}
 				}
-
+               
 				if($rfp_aip_data->applies_to_nonowned == 'nonowned'){
 					if($rfp_aip_data->applies_to_nonowned == $vendor_aip_data[$ai]->aip_applies_nonowned){
 						$occur_aip[] = 'yes' ;
@@ -5441,7 +6152,7 @@ You have not uploaded a sample certificate for your Vendors
 						$occur_aip[] = 'no' ;
 					}
 				}
-
+                
 				if($rfp_aip_data->applies_to_hired == 'hired'){
 					if($rfp_aip_data->applies_to_hired == $vendor_aip_data[$ai]->aip_applies_hired){
 						$occur_aip[] = 'yes' ;
@@ -5450,7 +6161,7 @@ You have not uploaded a sample certificate for your Vendors
 						$occur_aip[] = 'no' ;
 					}
 				}
-
+                  
 				if($rfp_aip_data->applies_to_scheduled == 'scheduled'){
 					if($vendor_aip_data[$ai]->aip_applies_scheduled == 'sch'){
 						$occur_aip[] = 'yes' ;
@@ -5533,7 +6244,7 @@ You have not uploaded a sample certificate for your Vendors
 				}
 				
 				if($rfp_aip_data){
-					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' || !$vendor_aip_data[$ai]->aip_combined ) 		{
+					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' ) 		                        {
 						$occur_aip[] = 'no' ;
 						}
 					else
@@ -6436,7 +7147,7 @@ You have not uploaded a sample certificate for your Vendors
 		$user = JFactory::getUser();
 		$filetype = JRequest::getVar("v_type",'');
 		$permission = JRequest::getVar('permission','');	
-			$query_c = "SELECT id FROM #__cam_master_compliancereport WHERE masterid=".$user->id." ";
+			echo $query_c = "SELECT id FROM #__cam_master_compliancereport WHERE masterid=".$user->id." ";
 			$db->setQuery($query_c);
 			$mid = $db->loadResult();	
 				if($mid){	
@@ -6455,6 +7166,33 @@ You have not uploaded a sample certificate for your Vendors
 				}
 		echo $filetype; exit;
    }
+   
+    function industryorder(){
+   		$db =& JFactory::getDBO();
+		$user = JFactory::getUser();
+		$otype = JRequest::getVar("o_type",'');
+		$order = JRequest::getVar('order','');
+			$query_c = "SELECT id FROM #__cam_master_compliancereport WHERE masterid=".$user->id." ";
+			$db->setQuery($query_c);
+			$mid = $db->loadResult();
+				if($mid){	
+					if( $otype == 'indvaldesc' ) {
+					$query = "UPDATE #__cam_master_compliancereport SET industryorder = ".$order." WHERE masterid=".$user->id;
+					$db->setQuery( $query );
+					$res=$db->query();
+					}
+					else if( $otype == 'indvalasc' ){
+					$query = "UPDATE #__cam_master_compliancereport SET industryorder = '0' WHERE masterid=".$user->id;
+					$db->setQuery( $query );
+					$res=$db->query();
+						
+					}
+					
+				}
+		echo $otype; exit;
+   }
+   
+   
 
 	function updateswitchon(){
 		$db =& JFactory::getDBO();
@@ -6477,16 +7215,98 @@ You have not uploaded a sample certificate for your Vendors
 		if( $permission_first == '1' )
 		$query = "UPDATE #__cam_master_compliancereport SET include_docs = ".$permission_first." WHERE masterid=".$user->id;
 		else
-		$query = "UPDATE #__cam_master_compliancereport SET include_docs = ".$permission_first.", how_docs='0', gli='0', api='0', wc='0', umb='0', omi='0', pln='0', oln='0' WHERE masterid=".$user->id;
+		$query = "UPDATE #__cam_master_compliancereport SET include_docs = ".$permission_first.", how_docs='0', gli='0', api='0', wc='0', umb='0', omi='0', pln='0', oln='0',w9='0' WHERE masterid=".$user->id;
 		$db->setQuery( $query );
 		$res=$db->query();
 		exit;
 	}
+	
+	function updatemail(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$email = JRequest::getVar('email','');
+		$query5 ="INSERT INTO #__cam_master_compliancereport_emails (`id`, `user_id`, `email`,`checkval`) VALUES ( '','".$user->id."','".$email."','1')";
+	    $db->setQuery( $query5 );
+	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
+	function updateuncheck(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$uncheck = JRequest::getVar('check','');
+		$query5 = "UPDATE #__cam_master_compliancereport_emails SET checkval='".$uncheck."' WHERE user_id=".$user->id;
+	    $db->setQuery( $query5 );
+	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
+	function checkexectingmanageremail(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$email = JRequest::getVar('email','');
+		$query5 = "SELECT id from #__cam_master_compliancereport_emails WHERE email ='".$email."' and user_id=".$user->id;
+	    $db->setQuery( $query5 );
+	    $res5=$db->loadResult();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
+	function deleteemail(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$id = JRequest::getVar('id','');
+		$query5 ="DELETE FROM #__cam_master_compliancereport_emails WHERE id =".$id;
+	    $db->setQuery( $query5 );
+	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
+	
+	function deletepreemail(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$email = JRequest::getVar('email','');
+		$query5 ="DELETE FROM #__cam_master_compliancereport_emails WHERE email ='".$email."'";
+	    $db->setQuery( $query5 );
+	    $res5=$db->query();
+		if($res5){
+		echo "1";
+		}
+		else{
+		echo "0";
+		}
+		exit;
+	}
+	
 	function updatedocuments_second(){
 		$db=&JFactory::getDBO();
 		$user=JFactory::getUser();
 		$permission_second = JRequest::getVar('documents_second','');
-		$query = "UPDATE #__cam_master_compliancereport SET how_docs = '".$permission_second."', gli='0', api='0', wc='0', umb='0', omi='0', pln='0', oln='0'  WHERE masterid=".$user->id;
+		$query = "UPDATE #__cam_master_compliancereport SET how_docs = '".$permission_second."', gli='0', api='0', wc='0', umb='0', omi='0', pln='0', oln='0',w9='0'  WHERE masterid=".$user->id;
 		$db->setQuery( $query );
 		$res=$db->query();
 		exit;
@@ -6610,9 +7430,10 @@ You have not uploaded a sample certificate for your Vendors
 	    $proid = JRequest::getVar('property_id','');
 		$manager_id = JRequest::getVar('manager_id','');
 		$invitationid = JRequest::getVar('invitationid','');
-	    $decline_pro = "UPDATE #__cam_propertyowner_link SET propertydecline='1' where id='".$invitationid."'";
+	     $decline_pro = "DELETE FROM #__cam_propertyowner_link where id='".$invitationid."'";
 		$db->setQuery($decline_pro);
 		$db->Query();
+		
 	    $url ='index.php?option=com_camassistant&controller=rfpcenter&task=dashboard&Itemid=125';
 		$this->setRedirect($url);
 	}
@@ -6999,6 +7820,17 @@ You have not uploaded a sample certificate for your Vendors
         $proposalid = $db->loadResult();
 		return $proposalid;
 	}
+	function updateacount_type(){
+		$db=&JFactory::getDBO();
+		$user=JFactory::getUser();
+		$value = JRequest::getVar('value','');
+		$query = "UPDATE #__cam_master_compliancereport SET acount_type='".$value."' WHERE masterid=".$user->id;
+		$db->setQuery( $query );
+		$res=$db->query();
+		exit;		
+	}
+	
+	
 	
 }
 ?>

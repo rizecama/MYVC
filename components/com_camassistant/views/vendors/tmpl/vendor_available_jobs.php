@@ -23,6 +23,7 @@ $PLN_needed = $this->PLN_needed;
 $Jobs 		= $this->Jobs;
 $invitations 		= $this->Invitations;
 $openjobs 		= $this->openjobs;
+//echo '<pre>';print_r($openjobs);exit;
 // Your custom code here
 ?>
 <script type="text/javascript">

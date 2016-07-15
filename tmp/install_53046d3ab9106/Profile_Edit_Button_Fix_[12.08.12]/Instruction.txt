@@ -1,0 +1,17 @@
+Profile Edit Button Fix ***********************************************
+***************************************************************
+
+
+
+1. From "Copy" folder copy "user" folder and past it in "your_joomla_root_folder/components/com_kunena/template/jf_corporate/html/" folder;
+
+
+
+We will fix that in v1.2
+
+Regards,
+JoomForest TEAM.
+
+
+**************************************************************
+12.08.12

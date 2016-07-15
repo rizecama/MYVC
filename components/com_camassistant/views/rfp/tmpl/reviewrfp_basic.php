@@ -308,9 +308,40 @@ $detail="SELECT name,lastname,phone,extension,email FROM #__users where id='".$r
 $db->Setquery($detail);
 $user_detail = $db->loadObjectlist();
 
+$pdetail = "SELECT user_id FROM #__cam_propertyowner_link where propertyowner_id='".$user->id."' and property_id='".$property_id."'";
+$db->Setquery($pdetail);
+$p_detail = $db->loadResult();
+$query = "SELECT U.*, R.* FROM #__cam_customer_companyinfo  as R LEFT JOIN  #__users as U ON R.cust_id = U.id LEFT JOIN #__cam_camfirminfo as C ON C.id=R.comp_id where R.cust_id='".$p_detail."'";
+$db->setQuery($query);
+$managerinfo = $db->loadObject();
+
+$client = "SELECT cust_id FROM #__cam_rfpinfo where id='".$rfpid."'";
+$db->Setquery($client);
+$client = $db->loadResult();
+
+$client_type = "SELECT user_type FROM #__users where id='".$client."'";
+$db->Setquery($client_type);
+$client_type = $db->loadResult();
+if($user->user_type == '16')
+$style = 'none';
+else
+$style = '';
 		?>
     <div id="rpf_ifo_text">
-<?php if ( $user->user_type !=16 ) { ?>	
+<?php if ( $client_type !=16 && $managerinfo ) { ?>	
+<h1 style="line-height:20px;">Property Management Company:</h1>
+
+<span><?PHP echo $managerinfo->comp_name;  ?></span>
+<?PHP echo $managerinfo->mailaddress;  ?><br />
+<?PHP echo $managerinfo->comp_city;  ?>, <?PHP echo $state_name;  ?> <?PHP echo $managerinfo->comp_zip;  ?><br />
+P: <?PHP echo $managerinfo->comp_phno;  ?><br />
+<?php if($managerinfo->comp_alt_phno!='--')
+{?>
+Alt. Phone: <?PHP echo $managerinfo->comp_alt_phno; } ?><br />
+
+<a href="http://<?PHP echo $managerinfo->comp_website;  ?>" target="_blank"><?PHP echo $managerinfo->comp_website;  ?></a>
+<?php  } else {?>
+<div style="display:<?php echo $style;?>">
 <h1 style="line-height:20px;">Property Management Company:</h1>
 
 <span><?PHP echo $RFP->comp_name;  ?></span>
@@ -322,7 +353,8 @@ P: <?PHP echo $RFP->comp_phno;  ?><br />
 Alt. Phone: <?PHP echo $RFP->comp_alt_phno; } ?><br />
 
 <a href="http://<?PHP echo $RFP->comp_website;  ?>" target="_blank"><?PHP echo $RFP->comp_website;  ?></a>
-<?php  } ?>
+</div>
+<?php }?>
 <h1 style="line-height:20px; margin-top:10px;">Property Manager:</h1>
 <?PHP echo $user_detail[0]->name;  ?> <?PHP echo $user_detail[0]->lastname;  ?><br />
 P: <?PHP echo $user_detail[0]->phone;  ?> (x<?PHP echo $user_detail[0]->extension;  ?>)<br />
@@ -628,7 +660,7 @@ echo "<strong>Company: </strong>".$invites->company_name.'<br />' ;
 <img src="templates/camassistant_left/images/goback.gif" alt="Cancel" style="vertical-align:middle; padding-right:0px;"/>
 </a>
 <?php } else { ?>
-<a href="javascript:history.go(-1)">
+<a href="javascript:goback();">
 <img src="templates/camassistant_left/images/goback.gif" alt="Cancel" style="vertical-align:middle; padding-right:0px;"/>
 </a></td><?php } }?></tr>
 

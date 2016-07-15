@@ -33,7 +33,7 @@ if(fileName != '')
 					{
 						window.parent.document.getElementById( 'sbox-window' ).close();
 						window.parent.parent.getalert();
-						return false;
+						
 					}
 				else{
 					document.forms["folderform"].submit();
@@ -41,12 +41,12 @@ if(fileName != '')
 			}
 			else{
 				alert("This file type cannot be uploaded");
-			return false;
+			
 			}	
 		}
 else{
 alert("This file type cannot be uploaded");
-return false;
+
 }
 
 var node = document.getElementById('image');
@@ -54,7 +54,7 @@ var check = node.files[0].fileSize;
 if (x==null || x=="")
   {
   alert("Please upload the file");
-  return false;
+
   }
 } 
 function pclose(){
@@ -109,7 +109,7 @@ echo '<div style="color:#4d4d4d; font-family: arial; font-size:13px; line-height
 echo"</br>";
 ?></td></tr><tr height="30"></tr></table>
 
-<form action="" method="post" name="folderform" enctype="multipart/form-data" onsubmit="return validate()">
+<form action="" method="post" name="folderform" enctype="multipart/form-data" >
 <table cellpadding="0" cellspacing="0" align="center">
 <tr style="text-align:right;">
 <td align="center"><!--<input type="file" name="image" value="" id="fileUpload" /><span id="file_val"> </span>-->
@@ -127,9 +127,8 @@ echo"</br>";
 <tr height="45"></tr>
 <tr>
 <td align="right">
-<a href="javascript:pclose();"><img style="cursor:pointer;" src="components/com_camassistant/assets/images/CancelButton2.gif"></a>
-<input type="image" src="components/com_camassistant/assets/images/Uplaod2.png" />
-
+<a href="javascript:pclose();" class="cancelpropertyimage_button"></a>
+<a href="javascript:validate();" class="newuploadbutton"></a>
 <input type="hidden" name="option" value="com_camassistant" />
 <input type="hidden" name="controller" value="propertymanager" />
 <input type="hidden" name="task" value="savelogofile" />

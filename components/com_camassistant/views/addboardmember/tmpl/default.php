@@ -126,7 +126,7 @@ G('#email').keyup(function(){
 	G( this ).prev().removeClass( 'active' );
 	else
 	G( this ).prev().addClass( 'active' );
-});	
+});
 
 G('#email').bind('input',function(){ 
     if( G(this).val() == '' )
@@ -146,13 +146,9 @@ G('#email').bind('input',function(){
 	else
 	G( this ).prev().addClass( 'active' );          
     });
-		
+	
 });
 </script>
-
-
-
-
 <div id="container_inner">
 <div class = "addnewboardmem" >
  <div class="ttl1">Client Information</div>
@@ -236,7 +232,6 @@ $states = $this->states[$i];
 
 <div class="signup">
 <label class="selecte_propertyadd ">Email: </label>
-
 <input name="email" type="text" id="email"  value="<?PHP echo $this->details->email ?>" onkeydown="if((this.value)!='<?php echo $this->details->email ?>'){ javascript: verifyuser('<?php echo $this->details->email ?>');}" onmousedown="if((this.value)!='<?php echo $this->details->email ?>'){ javascript: verifyuser('<?php echo $this->details->email ?>');}" onblur="if((this.value)!='<?php echo $this->details->email ?>'){ javascript: verifyuser('<?php echo $this->details->email ?>');}"/>
 <input style="color:#FF0000;display:none; background:#ffffff; border-color:#ffffff; padding-top:22px;" type="hidden" name="user_email" id="user_email" value="" readonly=""/>
 

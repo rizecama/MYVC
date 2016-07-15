@@ -385,7 +385,7 @@ H = jQuery.noConflict();
 
 
 <div class="acount_status">
-<div class="ttl1">Acount Status</div>
+<div class="ttl1">Account Status</div>
 <div class="newtopborder1"></div>
 <div class="property_linkask">
 <div class="client_linkask">

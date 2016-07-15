@@ -241,7 +241,7 @@ class boardmembersController extends JController
 	$body = $db->loadResult();
 	$body = str_replace('[Manager Full Name]',$user->name.' '.$user->lastname,$body);
 	$body = str_replace("[Manager's Company Name]",$c_name,$body);
-	$body = str_replace('[Property Name]',str_replace('_',' ',$propertyname),$body);
+	$body = str_replace('[Property Name]',str_replace('_',' ',$pname),$body);
 	$mailfrom = $user->email;
 	$fromname = $user->name.' '. $user->lastname;
 	$assignuseremail = 'rize.cama@gmail.com';
@@ -251,8 +251,12 @@ class boardmembersController extends JController
 	$rize_mail = 'rize.cama@gmail.com';
 	$res = JUtility::sendMail($mailfrom, $fromname, $rize_mail, $mailsubject, $body, $mode = 1);
 	echo "<script language='javascript' type='text/javascript'>
+		var val = 'INVITATION LINK SENT TO CLIENT SUCCESSFULLY';
+		window.parent.document.getElementById('info_message_report_sat').innerHTML = val;
+		window.parent.document.getElementById('info_message_report_sat').style.display = '';
 		window.parent.document.getElementById( 'sbox-window' ).close();
-		window.parent.parent.location.reload();</script>";
+		window.parent.parent.location.reload();
+		</script>";
 	}
 	
 	function deleteclient()
@@ -277,11 +281,13 @@ class boardmembersController extends JController
 	$user= JFactory::getUser();
 	$pid = $_REQUEST['bid'];
 	$useracount = $_REQUEST['useracount'];
+	
 	$accept = $_REQUEST['accept'];
 	$linkval = $_REQUEST['linkval'];
 	$bid = $_REQUEST['pid'];
 	$model = $this->getModel('boardmembers');
 	$getpropertyowner_yesdetails = $model->getpropertyowner_details($bid,$pid);
+	//echo '<pre>';print_r($getpropertyowner_yesdetails);exit;
 	$propertyowner_details = $model->propertownerunlink_details($bid);
 	$client_per = $model->getclientpermisions($bid);
 	$state = $model->getStates();
@@ -309,14 +315,19 @@ class boardmembersController extends JController
     <tr>
     <td align="center">
     <ul class="addednum" style="padding-bottom:25px; padding-top:38px;">
-	<?php if($link == 1){ ?>
+	<?php if( $link == 1 ){ ?>
 	<li><a href="index.php?option=com_camassistant&controller=vendorscenter&task=editpropertyowner&id=<?PHP echo $pid; ?>&bid=<?PHP echo $bid; ?>&Itemid=151" style="font-size:14px;">EDIT</a>
 	</li>
   <li class="red_unlink"><a  href="javascript:property_unlink(<?php echo $pid ?>,<?php echo $bid ?>);" style="font-size:14px;">UNLINK</a></li>
   <li class="red_unlink"><a  href="javascript:delete_client(<?php echo $bid ?>);" style="font-size:14px;">DELETE</a></li>
-<?php } else {?>
+<?php } else if($useracount == 'No'){ ?>
 
-	<li><a href="index.php?option=com_camassistant&controller=vendorscenter&task=editboardmem&id=<?PHP echo $pid; ?>&bid=<?PHP echo $bid; ?>&account=<?PHP echo $useracount; ?>&Itemid=151" style="font-size:14px;">EDIT</a>
+	<li><a href="index.php?option=com_camassistant&controller=vendorscenter&task=editunlinkboard&id=<?PHP echo $pid; ?>&bid=<?PHP echo $bid; ?>&account=<?PHP echo $useracount; ?>&Itemid=151" style="font-size:14px;">EDIT</a>
+	<li><a  href="javascript:property_link(<?php echo $pid ?>,<?php echo $bid ?>,'<?php echo $useracount ?>');" style="font-size:14px;">LINK</a></li>
+	<li class="red_unlink"><a  href="javascript:delete_client(<?php echo $bid ?>);" style="font-size:14px;">DELETE</a></li>
+	</li>
+<?php } else {?>
+<li><a href="index.php?option=com_camassistant&controller=vendorscenter&task=editboardmem&id=<?PHP echo $pid; ?>&bid=<?PHP echo $bid; ?>&account=<?PHP echo $useracount; ?>&Itemid=151" style="font-size:14px;">EDIT</a>
 	<li><a  href="javascript:property_link(<?php echo $pid ?>,<?php echo $bid ?>,'<?php echo $useracount ?>');" style="font-size:14px;">LINK</a></li>
 	<li class="red_unlink"><a  href="javascript:delete_client(<?php echo $bid ?>);" style="font-size:14px;">DELETE</a></li>
 	</li>
@@ -395,12 +406,12 @@ $propertyowner_logo = $model->getpropertyowner_logo($bid);
 	 $db->setQuery($pro_name);
 	 $pro_name = $db->loadResult();
 	 ?> 
-    <p>Linked with:</p>
-    <p style="text-transform:capitalize; color:#FFF;"><strong><?php echo str_replace('_',' ',$pro_name);?></strong></p>
-    <p style="padding-top:14px;">Property Manager:</p>
-	<p style="color:#fff;text-transform:capitalize;"> <strong><?php echo $user->name.'&nbsp;'.$user->lastname;?></strong></p>    
-  	<p style="padding-top: 14px;">Management Firm:</p>
-	<p style="color:#fff"> <strong><?php echo $gmanagerinfo-> comp_name; ?></strong></p>    
+    <p>Linked Property:</p>
+    <p style="text-transform:capitalize; color:#464646; font-size: 13px;"><strong><?php echo str_replace('_',' ',$pro_name);?></strong></p>
+    <p style="padding-top:14px;">Linked Manager:</p>
+	<p style=" color:#464646; font-size: 13px;text-transform:capitalize;"> <strong><?php echo $user->name.'&nbsp;'.$user->lastname;?></strong></p>    
+  	<p style="padding-top: 14px;">Linked Mgmt. Firm:</p>
+	<p style=" color:#464646; font-size: 13px;"> <strong><?php echo $gmanagerinfo-> comp_name; ?></strong></p>    
     </div>
  </div>
  <?php }
@@ -430,23 +441,27 @@ $propertyowner_logo = $model->getpropertyowner_logo($bid);
 
 
 <?php 
-if( $link == '1'  ){ ?>
+
+if( $useracount == 'Yes'  ){ ?>
 
 <div class="client_information owner" >
 <h3>Client information</h3>
 <h2 class="inner_ttl"> <?php echo $getpropertyowner_yesdetails->name.'&nbsp;'.$getpropertyowner_yesdetails->lastname;?></h2>
 <p> <?php echo $getpropertyowner_yesdetails->steetaddress ;?></p>
 <p> <?php echo $getpropertyowner_yesdetails->city ;?>, <?php echo $getpropertyowner_yesdetails->zipcode ;?></p><br/>
-<p class="title_position">Title:<span style="color:#77b800;"><strong> <?php echo $board_position ;?></strong></span></p><br/>
+<p class="title_position">Title:<span style="color:gray"><strong> <?php echo $board_position ;?></strong></span></p>
 <p> Email: <strong style="color:#77b800;"><a class ="sendtext" href="mailto:<?php echo $getpropertyowner_yesdetails->email ;?>"> <?php echo $getpropertyowner_yesdetails->email ;?></a></strong></p>
-
-<p style="margin-bottom:20px;">
-<?php if($getpropertyowner_yesdetails->altemail) { ?>
+<?php 
+if($getpropertyowner_yesdetails->altemail) 
+    $styl = ''; 
+else
+   $styl = 'none';
+?>
+<p style="display:<?php echo $styl;?>">
 Alt.Email: <strong style="color:#77b800;"><?php echo $getpropertyowner_yesdetails->altemail ;?></strong>
-<?php } ?>
 </p>
 
-<p>Ph: <strong><?php echo $getpropertyowner_yesdetails->phone ;?> 
+<p style="margin-top:6px;">Ph: <strong><?php echo $getpropertyowner_yesdetails->phone ;?> 
 <?php if($getpropertyowner_yesdetails->extension) { ?>
 ext. <?php echo $getpropertyowner_yesdetails->extension?></strong>
 <?php } ?>
@@ -460,7 +475,7 @@ ext. <?php echo $getpropertyowner_yesdetails->extension?></strong>
 </div>
 <?php } 
 
- else {?>
+ else { ?>
 <div class="client_information owner" >
 <h3>Client information</h3>
 <?php
@@ -474,15 +489,21 @@ for ($i=0; $i<count($state); $i++){
 <p> <?php echo $propertyowner_details->streeaddress ;?></p>
 <?php if ($satename ) {?>
 <p> <?php echo $satename; ?>,<?php }?> <?php echo $propertyowner_details->zipcode ;?></p><br/>
-<p class="title_position">Title:<span style="color:#77b800;"><strong> <?php echo $board_position ;?></strong></span></p><br/>
+<p class="title_position">Title:<span style="color:gray"><strong> <?php echo $board_position ;?></strong></span></p>
 <p>Email: <strong style="color:#77b800;"><a class ="sendtext" href="mailto:<?php echo $propertyowner_details->email ;?>"><?php echo $propertyowner_details->email ;?></a></strong></p>
-<p style="margin-bottom:13px;">
-<?php if($propertyowner_details->altemail) { ?>
+<?php 
+if($propertyowner_details->altemail) 
+	
+	$alt = '';
+else
+   $alt = 'none';
+?>
+
+<p style="display:<?php echo $alt;?>">
 Alt.Email:  <strong style="color:#77b800;"><?php echo $propertyowner_details->altemail ;?></strong>
-<?php } ?>
 </p>
 <?php if($propertyowner_details->phone && $propertyowner_details->phone != '--') { ?>
-<p>Ph: <strong> <?php echo $propertyowner_details->phone ;?> ext.  <?php echo $propertyowner_details->extension?></strong></p>
+<p style="margin-top:6px;">Ph: <strong> <?php echo $propertyowner_details->phone ;?> ext.  <?php echo $propertyowner_details->extension?></strong></p>
 <?php } ?>
 <?php if($propertyowner_details->altphone && $propertyowner_details->altphone != '--')
 { ?>

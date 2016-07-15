@@ -678,7 +678,7 @@ else{
 </div>
 
 <div class="signup" style="width:600px;">
-<input type="checkbox" name="fax_acc" <?php echo $checked_fax; ?> /> I would also like to receive Project Invitation notifications via Fax
+<input type="checkbox" style="width:0%;" name="fax_acc" <?php echo $checked_fax; ?> /> I would also like to receive Project Invitation notifications via Fax
 </div>
 
 <div class="signup">
@@ -728,8 +728,8 @@ echo $states[$i]->name."<br/>";
 management company? <span class="redstar">*</span></label>
 
 <div class="clear"></div>
-Yes<input type="radio" value="Yes" name="in_house_vendor" id="in_house_vendor" onclick="javascript:displayField('Yes');" <?php if($results[0]->in_house_vendor == 'Yes') { echo "checked=checked";  } ?> >
-No<input type="radio"  value="No"  name="in_house_vendor" id="in_house_vendor" onclick="javascript:displayField('No');"  <?php if($results[0]->in_house_vendor == 'No') { echo "checked=checked;"; } ?> >
+Yes<input type="radio" value="Yes" name="in_house_vendor" style="width:17px" id="in_house_vendor" onclick="javascript:displayField('Yes');" <?php if($results[0]->in_house_vendor == 'Yes') { echo "checked=checked";  } ?> >
+No<input type="radio"  value="No"  name="in_house_vendor" style="width:17px" id="in_house_vendor" onclick="javascript:displayField('No');"  <?php if($results[0]->in_house_vendor == 'No') { echo "checked=checked;"; } ?> >
 <div class="clear"></div>
 </div>
 

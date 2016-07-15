@@ -117,6 +117,22 @@ function genRandomPassword($length = 8)
 		$phone3 = JRequest::getVar('phone3','');
 		$phone = $phone1.'-'.$phone2.'-'.$phone3;
 		$manager_invitecode = JRequest::getVar('manager_invitecode','');
+			
+			if( $manager_invitecode )
+			$manager_invitecode = $manager_invitecode; 
+			else {
+			$len = 1;
+			$min = 10000; // minimum
+			$max = 99999; // maximum
+			foreach (range(0, $len - 1) as $i) {
+			
+			while(in_array($num = mt_rand($min, $max), $range));
+			$range[] = $num;
+			}
+			$lastname = $lname;
+			$manager_invitecode = $lastname.$range[0];
+			}
+			
 		$accounttype = JRequest::getVar('accounttype','');
 		
 		$ext = JRequest::getVar('ext','');
@@ -215,6 +231,9 @@ function genRandomPassword($length = 8)
 		}
 	}*/
 
+
+
+
 if($id==''){
 		$salt		= JUserHelper::genRandomPassword(32);
 		$crypt		= JUserHelper::getCryptedPassword($password, $salt);
@@ -235,7 +254,10 @@ if($id==''){
 		}
 		}
 
-	} else {
+	} 
+	
+
+	else {
 		if($password!= "")
 		{
            echo $password;
@@ -243,6 +265,7 @@ if($id==''){
 		$crypt		= JUserHelper::getCryptedPassword($password, $salt);
 		$updatesateesh	= $crypt.':'.$salt;
 
+	
 	  $query= 'UPDATE #__users SET password="'.$updatesateesh.'",user_type="'.$data['user_type'].'",cellphone="'.$mphone.'",extension="'.$ext.'",phone="'.$phone.'",email="'.$email.'",lastname="'.$lname.'",salutation="'.$salutation.'",username="'.$username.'",name="'.$fname.'",question="'.$question.'",answer="'.$answer.'",hear="'.$hear.'",user_notes="'.$user_notes.'",flag="'.$flag.'",suspend="'.$suspend.'",search="'.$search.'",manager_invitecode="'.$manager_invitecode.'" WHERE id='.$id;
 	} else {
 	//exit;

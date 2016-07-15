@@ -69,6 +69,17 @@ function sortusers(){
 	document.forms["newsortform"].submit();
 }
 	</script>
+	<script type="text/javascript">
+L = jQuery.noConflict();
+L(document).ready(function(){
+L('#email').keyup(function(){
+		if( L(this).val() == '' )
+		L( this ).prev().removeClass( 'active' );
+		else
+		L( this ).prev().addClass( 'active' );
+	});	
+	});
+	</script>
 <link href="<?php JPATH_SITE ?>templates/camassistant/css/popup.css" rel="stylesheet" type="text/css"/>
 <style>
 #semdInvitation:hover{
@@ -129,8 +140,9 @@ y;" />
 
 <div class="invite-popup-main">
 <div class="invite-popup-left">
-<div class="red-arrow"><img width="10" height="20" alt="" src="templates/camassistant_left/images/red-arrow.jpg"></div>
-<label>Email Address:</label>
+<div ></div>
+<label >Email Address:</label>
+<label class="emailchangeicon"></label>
 <input type="text" style="width: 643px; padding-left:4px; padding-right:4px;" value="" id="email" name="email">
 </div>
 </div>
@@ -147,7 +159,7 @@ y;" />
 <div class="invite-popup-main" style="width:695px; color:gray;">
 <div class="invite-popup">
 <label>Subject:</label><br>
-<input readonly="readonly" type="text" value="<?php echo $user->name.' '. $user->lastname; ?> would like you to join MyVendorCenter"  id="subject" name="subject" style="width:643px; color:gray; padding-left:4px; padding-right:4px;">
+<input  type="text" value=""  id="subject" name="subject" style="width:643px; color:gray; padding-left:4px; padding-right:4px;">
 </div>
 </div>
 <div class="invite-popup-main">
@@ -156,7 +168,7 @@ y;" />
 $tags = array("<p>","</p>","<br>","<br />");
 $rtags = array("","\n","\n","\n");
 $data = str_replace($tags, $rtags, $this->mailbody);
-
+//print_r($data);exit;
 ?>
 <?php /*?><textarea id="notes" name="notes" readonly="readonly" style="width:643px; color:gray; height:300px; padding-left:4px; padding-right:4px;" ><?php echo $data ; ?></textarea><?php */?>
 <div style="border:1px solid #F0F0F0; outline:1px solid #6D6D6D; width:642px; padding:4px;"><?php echo $this->mailbody ; ?></div>
@@ -183,7 +195,7 @@ $data = str_replace($tags, $rtags, $this->mailbody);
 	
 	
 	<div class="clear"></div>
-<div style="margin-top:10px;" id="topborder_row"></div>
+<div style="margin-top:20px;" id="topborder_row"></div>
 <div id="add-vendor-new">
 <div class="new-searchfilerts">
 <div align="center" class="optional_filters">OPTIONAL FILTERS</div>

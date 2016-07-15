@@ -384,7 +384,6 @@ var title = N(this).attr('rel');
 document.getElementById("managerid").value = cid;
 document.getElementById("mname").value = title;
 document.getElementById("managername2").innerHTML = title;
-
 document.getElementById("managername").innerHTML = title;
 	     e.preventDefault();
 
@@ -670,12 +669,12 @@ if($user->user_type == 11)
 	$id = 'compliant_asc';
 	}
 	?>
-    <td width="190" align="left" valign="middle" nowrap="nowrap" style="padding-left:4px;">
+    <td width="90" align="left" valign="middle" nowrap="nowrap" style="padding-left:4px;">
 	<a id="<?php echo $id; ?>" href="index.php?option=com_camassistant&controller=propertymanager&task=manage_properties&Itemid=119&sort=<?php echo $sort ; ?>">MANAGER</a></td>
     <td width="20" align="center" valign="middle">PROPERTIES</td>
-    <td width="50" valign="middle" align="center">ACCOUNT&nbsp;TYPE</td>
+    <td width="66" valign="middle" align="center">ACCOUNT&nbsp;TYPE</td>
     <td width="80" valign="middle" align="center">REPORTS TO</td>
-	<td width="40" align="center" valign="middle">DELETE</td>
+	<td width="68" align="center" valign="middle">DELETE</td>
   </tr>
 <?php //echo "<pre>"; print_r($pmanagers); echo "</pre>"; ?>
    <?php if(count($pmanagers)>0) { 
@@ -693,7 +692,7 @@ if($user->user_type == 11)
   <tr class="table_blue_rowdots">
     
         <?php if($pmanagers[$i]->dmanager == ''){ ?>
-    <td align="left" width="190" valign="middle">
+    <td align="left" width="90" valign="middle">
 	
 	 <?php
   if($pmanagers[$i]->dmanager == 'yes'){
@@ -724,7 +723,7 @@ if($user->user_type == 11)
   }
   ?>
   
-    <td align="left" width="190" valign="middle">
+    <td align="left" width="118" valign="middle">
 	
 	<a href="index.php?option=com_camassistant&controller=propertymanager&task=customer_edit_form&pmanager_id=<?php echo $pmanagers[$i]->id;?>&comp_id=<?php echo $pmanagers[$i]->comp_id;?>&mgrtype=<?php echo $mgrtype; ?>&Itemid=<?php echo $Itemid;?>"><?php echo ucwords($pmanagers[$i]->name).'&nbsp;'.ucwords($pmanagers[$i]->lastname);?></a>
 	
@@ -732,7 +731,7 @@ if($user->user_type == 11)
     </td>
         <?php } ?>
    
-    <td align="center" width="40" valign="middle"><?php 
+    <td align="center" width="66" valign="middle"><?php 
 	 if($user->user_type == 13){
 	$pmanagers[$i]->cust_id = $pmanagers[$i]->cust_id;
 	}
@@ -763,11 +762,11 @@ if($user->user_type == 11)
     			<?php }
 					  else if($pmanagers[$i]->dmanager == '')
 					  { ?>
-				      <td width="120" align="center" valign="middle">
+				      <td width="212" align="center" valign="middle">
     <a id="<?php echo $pmanagers[$i]->id; ?>" rel="<?php echo ucwords($pmanagers[$i]->name).'&nbsp;'.ucwords($pmanagers[$i]->lastname); ?>" title="Click to change" name="dmanager" class="dmanager" href="javascript:void(0);">Standard Manager</a></td>
     			<?php } 
 					  else {?>
-					  <td width="120" align="center" valign="middle">
+					  <td width="212" align="center" valign="middle">
      <a id="<?php echo $pmanagers[$i]->id; ?>" name="smanager" class="smanager" href="javascript:void(0);" rel="<?php echo ucwords($pmanagers[$i]->name).'&nbsp;'.ucwords($pmanagers[$i]->lastname); ?>" title="Click to change"><font color="#21314D">District Manager</font></a>
         </td>
 				<?php } ?>
@@ -886,7 +885,7 @@ if($user->user_type == 11)
  }
   
   ?>
-  <td width="40" align="center" valign="center">
+  <td width="80" align="center" valign="center">
   <?php if($propertycount != 0 || $pmanagers[$i]->user_type == '13'){ ?>
     <a style="display:<?php echo $display; ?>" title="Delete" id="<?php echo $pmanagers[$i]->id; ?>" rel="<?php echo $mgrtype; ?>" name="deletemanager" class="<?php echo $class_mgr; ?>" href="javascript:void(0);" title="<?php echo ucwords($pmanagers[$i]->name).'&nbsp;'.ucwords($pmanagers[$i]->lastname); ?>"><img style="cursor:pointer;" alt="delete" src="templates/camassistant_left/images/red.png"></a>
     <?php 

@@ -37,6 +37,11 @@ $PLN_count = count($PLN_data);
 $GLI_count = count($GLI_data);
 $WCI_count = count($WCI_data);
 $WC_count = count($WC_data);
+$W9_count = count($W9_data);
+
+if( $W9_count == 0 )
+$W9_count = 1;
+
 if($UMB_count == 0)
 $UMB_count = 1;
 if($OMI_count == 0)
@@ -84,6 +89,8 @@ var WCI_title='<?PHP echo $WCI_count; ?>';
 var WC_title='<?PHP echo $WC_count; ?>';
 var AIP_compliance = '<?PHP echo $AIP_count; ?>';
 var AIP_title='<?PHP echo $AIP_count; ?>';
+var W9_title='<?PHP echo $W9_count; ?>';
+
 var userid_comp='<?PHP echo $_REQUEST['userid']; ?>';
 
 	if(!OLN_compliance)
@@ -361,9 +368,16 @@ EDIT COMPLIANCE DOCUMENTS - <?PHP echo $user->name.'&nbsp;'.$user->lastname; ?>
     <input type="text" size="20" name="ein_number" style="display:none" id="ein_number" value="<?php echo $W9_data->ein_number; ?>" />
 		   <span class="datanumber"><?php echo $W9_data->ein_number; ?></span>
 		   </div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+	<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-       <input name="w9_date_verified" id="w9_date_verified" type="text" size="10" value="<?PHP if($W9_data->w9_status == '-1') echo 'Rejected'; else echo $W9_data->w9_date_verified; ?>"/>
+       <input name="w9_date_verified" id="w9_date_verified" type="text" size="10" placeholder = "mm-dd-yyyy" value="<?PHP if($W9_data->w9_status == '-1') echo 'Rejected'; else echo $W9_data->w9_date_verified; ?>"/>
 	    <a href="javascript:void(0);" class="removedateanchor"><input type="button" name="w9" class="todaydate" id ="w9" value="Insert today's date" size="10" ></a>
 	 
 	   <script type="text/javascript">G('#w9_date_verified').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+2y",changeMonth:true});</script>
@@ -375,6 +389,8 @@ EDIT COMPLIANCE DOCUMENTS - <?PHP echo $user->name.'&nbsp;'.$user->lastname; ?>
 					<td><input type="radio" name="w9_radio" onclick="javascript:rejvendor(<?php echo $userid ?>);" value="-1" <?PHP if($W9_data->w9_status == '-1') {?> checked="checked" <?PHP } ?> />&nbsp;Reject&nbsp;&nbsp;&nbsp;</td>
 					<td><!--<input type="radio" name="w9_radio" value="0" <?PHP if($W9_data->w9_status == 0) {?> checked="checked" <?PHP } ?> />&nbsp;Pending-->
 					</td></tr></table></div>
+	</div>
+					
     </div>
 	
 	<?php 
@@ -442,7 +458,7 @@ EDIT COMPLIANCE DOCUMENTS - <?PHP echo $user->name.'&nbsp;'.$user->lastname; ?>
    ?>
 <script type='text/javascript'>
 
-function add_commas(field,x,id)
+/*function add_commas(field,x,id)
 
 {
 
@@ -461,8 +477,20 @@ var val = parseFloat(x).toFixed(2)+'',
   if(val != "NaN")
  document.getElementById(field+id).value = val;
 
+}*/
+function add_commas(arg,x,id) {
+//var id = arg.getAttribute('id');
+G.post("index2.php?option=com_camassistant&controller=vendorcompliances_details&task=vendorinsstand_calc", {fieldvalue:""+x+""}, function(data){
+	if(data != '0.00'){
+		document.getElementById(arg+id).value = data;
+	}
+	else{
+		alert("Please enter a valid number");
+		document.getElementById(arg+id).value = '';
+		document.getElementById(arg+id).focus();
+	}
+});
 }
-
 </script>
     <div class="lic-pan-left">
       <?php if($GLI_data[0]->GLI_upld_cert!='') { ?>
@@ -523,7 +551,7 @@ var val = parseFloat(x).toFixed(2)+'',
 	 ?>
 
      <?PHP $GLI_end_date = explode('-',$GLI_data[0]->GLI_end_date);  ?>
-    <input name="GLI_end_date[]" style="display:none;" id="GLI_end_date1" type="text" class="t_field" size="10" value="<?PHP if($GLI_data) { echo $GLI_end_date[1].'-'.$GLI_end_date[2].'-'.$GLI_end_date[0]; } ?>" />
+    <input name="GLI_end_date[]" style="display:none;" id="GLI_end_date1" type="text" class="t_field" size="10" readonly="readonly" value="<?PHP if($GLI_data) { echo $GLI_end_date[1].'-'.$GLI_end_date[2].'-'.$GLI_end_date[0]; } ?>" />
 	<span class="GLI_1" style="color:<?php echo $color_exp; ?>"><?PHP if($GLI_data) { echo $GLI_end_date[1].'/'.$GLI_end_date[2].'/'.$GLI_end_date[0]; } ?></span>
 	<?php $color_exp = ''; ?>
 
@@ -531,12 +559,12 @@ var val = parseFloat(x).toFixed(2)+'',
 	if($GLI_data[0]->GLI_end_date < date('Y-m-d') || !$GLI_data[0]->GLI_end_date || $GLI_data[0]->GLI_end_date == '00-00-0000')
 	 { ?> <?php } ?>
 	 
-	<script type="text/javascript">G('#GLI_end_date1').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+	<script type="text/javascript">G('#GLI_end_date1').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 	 </div>
 	 <div class="in-pan1">
           <label>Med. Expenses:</label>
 		  
-		 <input type="text" style="display:none;" class="t_field" name="GLI_med[]" id="GLI_med1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_med',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[0]->GLI_med,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+		 <input type="text" style="display:none;" class="t_field" name="GLI_med[]" id="GLI_med1" onChange="javascript: add_commas('GLI_med',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[0]->GLI_med,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_1" id="greencolormoney"><?PHP  if($GLI_data[0]->GLI_med) { echo number_format($GLI_data[0]->GLI_med,2); }?></span>
         </div>
       </div>
@@ -545,13 +573,13 @@ var val = parseFloat(x).toFixed(2)+'',
         <div class="in-pan">
           <label>Each Occurrence:</label>
          
-		 <input type="text" style="display:none;" class="t_field" name="GLI_policy_occurence[]" id="GLI_policy_occurence1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_policy_occurence',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[0]->GLI_policy_occurence,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+		 <input type="text" style="display:none;" class="t_field" name="GLI_policy_occurence[]" id="GLI_policy_occurence1" onChange="javascript: add_commas('GLI_policy_occurence',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[0]->GLI_policy_occurence,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_1" id="greencolormoney"><?PHP  if($GLI_data[0]->GLI_policy_occurence) { echo number_format($GLI_data[0]->GLI_policy_occurence,2); }?></span>
 		 <?php if(!$GLI_data[0]->GLI_policy_occurence || $GLI_data[0]->GLI_policy_occurence == '0.00') { ?> <span class="redstar_GLI1" style="color:red; font-size: 20px; display:none;" >*</span><?php } ?>
         </div>
         <div class="in-pan1">
           <label>Personal & Adv Injury:</label>
-         <input type="text" class="t_field" style ="display:none;"  name="GLI_injury[]" id="GLI_injury1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_injury',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[0]->GLI_injury,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" class="t_field" style ="display:none;"  name="GLI_injury[]" id="GLI_injury1" onChange="javascript: add_commas('GLI_injury',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[0]->GLI_injury,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_1" id="greencolormoney"><?PHP  if($GLI_data[0]->GLI_injury) { echo number_format($GLI_data[0]->GLI_injury,2); }?></span>
         </div>
         <div class="clear"></div>
@@ -560,7 +588,7 @@ var val = parseFloat(x).toFixed(2)+'',
 	  <div class="comm">
         <div class="in-pan">
           <label>General Aggregate:</label>
-         <input type="text" style ="display:none;" class="t_field" name="GLI_policy_aggregate[]" id="GLI_policy_aggregate1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_policy_aggregate',this.value,1);" size="20"  style="color: green; text-align: left;" value="<?PHP if($GLI_data) {echo number_format($GLI_data[0]->GLI_policy_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style ="display:none;" class="t_field" name="GLI_policy_aggregate[]" id="GLI_policy_aggregate1" onChange="javascript: add_commas('GLI_policy_aggregate',this.value,1);" size="20"  style="color: green; text-align: left;" value="<?PHP if($GLI_data) {echo number_format($GLI_data[0]->GLI_policy_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_1" id="greencolormoney"><?PHP if($GLI_data[0]->GLI_policy_aggregate) {echo number_format($GLI_data[0]->GLI_policy_aggregate,2); } ?></span>
 		 <?php if(!$GLI_data[0]->GLI_policy_aggregate || $GLI_data[0]->GLI_policy_aggregate == '0.00') { ?> <span class="redstar_GLI1" style="color:red; font-size: 20px; display:none">*</span><?php } ?>
 		 
@@ -581,7 +609,7 @@ var val = parseFloat(x).toFixed(2)+'',
         </div>
         <div class="in-pan1">
           <label>Products - COMP/OP Agg:</label>
-         <input type="text" style="display:none;" class="t_field" name="GLI_products[]" id="GLI_products1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_products',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[0]->GLI_products,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style="display:none;" class="t_field" name="GLI_products[]" id="GLI_products1" onChange="javascript: add_commas('GLI_products',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[0]->GLI_products,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_1" id="greencolormoney"><?PHP  if($GLI_data[0]->GLI_products) { echo number_format($GLI_data[0]->GLI_products,2); }?></span>
         </div>
         <div class="clear"></div>
@@ -590,7 +618,7 @@ var val = parseFloat(x).toFixed(2)+'',
 	  <div class="comm">
         <div class="in-pan">
           <label>Damage to Rented Premises:</label>
-         <input type="text" style="display:none;" class="t_field" name="GLI_damage[]" id="GLI_damage1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_damage',this.value,1);" size="20"  style="color: green; text-align: left;" value="<?PHP if($GLI_data) {echo number_format($GLI_data[0]->GLI_damage,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style="display:none;" class="t_field" name="GLI_damage[]" id="GLI_damage1" onChange="javascript: add_commas('GLI_damage',this.value,1);" size="20"  style="color: green; text-align: left;" value="<?PHP if($GLI_data) {echo number_format($GLI_data[0]->GLI_damage,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 		  <span class="GLI_1" id="greencolormoney"><?PHP if($GLI_data[0]->GLI_damage) {echo number_format($GLI_data[0]->GLI_damage,2); } ?></span>
         </div>
         <div class="in-pan1" style="margin-top:-20px;">
@@ -635,7 +663,7 @@ var val = parseFloat(x).toFixed(2)+'',
 		  ?>
 		  <p id="GLI_cert1" style="display:none;"><input type="radio" <?php echo $gli_classf; ?> value="yes" name="GLI_certholder0"  style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $gli_classs; ?> value="no" name="GLI_certholder0"  style="margin-left:0px;" />&nbsp;No</p>
 		 
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="GLI_certhide1"><?php echo $glioccur; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="GLI_certhide1"><?php echo $glioccur; ?></span>
 		 <p style="height:8px;"></p>
 		 <label>Additional Insured:</label>
 		   <p id="GLI_add1" style="display:none;"><select name="GLI_additional0">
@@ -665,10 +693,17 @@ var val = parseFloat(x).toFixed(2)+'',
         
         <div class="clear"></div>
       </div>
-	  
+
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input name="GLI_date_verified[]" id="GLI_date_verified1" type="text" size="10" value="<?PHP 
+        <input name="GLI_date_verified[]" id="GLI_date_verified1" type="text" size="10" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($GLI_data[0]->GLI_status == '-1') echo 'Rejected';  
 		else if($GLI_data[0]->GLI_date_verified == '00-00-0000') echo 'Pending';
 		else echo $GLI_data[0]->GLI_date_verified;  ?>"/>
@@ -693,6 +728,7 @@ var val = parseFloat(x).toFixed(2)+'',
 		 ?>
 		 
 					</div>
+</div>					
 					 </div>
 <?php 
 if($GLI_data[0]->GLI_date_verified == '00-00-0000' && !$GLI_data[0]->GLI_upld_cert) {
@@ -831,15 +867,15 @@ var val = parseFloat(x).toFixed(2)+'',
 		}
 		?>
  <?PHP $GLI_end_date2 = explode('-',$GLI_data[$k]->GLI_end_date);  ?>
-  <input name="GLI_end_date[]" style="display:none" id="GLI_end_date<?PHP echo $k+1; ?>" type="text" class="t_field" size="10" value="<?PHP echo $GLI_end_date2[1].'-'.$GLI_end_date2[2].'-'.$GLI_end_date2[0]; ?>" />
+  <input name="GLI_end_date[]" style="display:none" id="GLI_end_date<?PHP echo $k+1; ?>" type="text" class="t_field" size="10" readonly="readonly" value="<?PHP echo $GLI_end_date2[1].'-'.$GLI_end_date2[2].'-'.$GLI_end_date2[0]; ?>" />
   <span class="GLI_<?PHP echo $k+1; ?>" style="color:<?php echo $color_exp; ?>"><?PHP echo $GLI_end_date2[1].'/'.$GLI_end_date2[2].'/'.$GLI_end_date2[0]; ?></span>
   <?php $color_exp = ''; ?>
   
-  <script type="text/javascript">G('#GLI_end_date<?PHP echo $k+1; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+  <script type="text/javascript">G('#GLI_end_date<?PHP echo $k+1; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
   </div>
   <div class="in-pan1">
           <label>Med. Expenses:</label>
-         <input type="text" style="display:none;" class="t_field" name="GLI_med[]" id="GLI_med<?PHP echo $k+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_med',this.value,<?PHP echo $k+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[$k]->GLI_med,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style="display:none;" class="t_field" name="GLI_med[]" id="GLI_med<?PHP echo $k+1; ?>" onChange="javascript: add_commas('GLI_med',this.value,<?PHP echo $k+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[$k]->GLI_med,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_<?PHP echo $k+1; ?>" id="greencolormoney"><?PHP  if($GLI_data[$k]->GLI_med) { echo number_format($GLI_data[$k]->GLI_med,2); }?></span>
         </div>
       </div>
@@ -847,14 +883,14 @@ var val = parseFloat(x).toFixed(2)+'',
       <div class="comm">
         <div class="in-pan">
           <label>Each Occurrence:</label>
-         <input type="text" style="display:none;" class="t_field" name="GLI_policy_occurence[]" id="GLI_policy_occurence<?PHP echo $k+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_policy_occurence',this.value,<?PHP echo $k+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[$k]->GLI_policy_occurence,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style="display:none;" class="t_field" name="GLI_policy_occurence[]" id="GLI_policy_occurence<?PHP echo $k+1; ?>" onChange="javascript: add_commas('GLI_policy_occurence',this.value,<?PHP echo $k+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[$k]->GLI_policy_occurence,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_<?PHP echo $k+1; ?>" id="greencolormoney"><?PHP  if($GLI_data[$k]->GLI_policy_occurence) { echo number_format($GLI_data[$k]->GLI_policy_occurence,2); }?></span>
 		 
 		 <?php if(!$GLI_data[$k]->GLI_policy_occurence || $GLI_data[$k]->GLI_policy_occurence == '0.00') { ?> <span style="color:red; font-size: 20px;">*</span><?php } ?>
         </div>
         <div class="in-pan1">
           <label>Personal & Adv Injury:</label>
-         <input type="text" style="display:none;" class="t_field" name="GLI_injury[]" id="GLI_injury<?PHP echo $k+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_injury',this.value,<?PHP echo $k+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[$k]->GLI_injury,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style="display:none;" class="t_field" name="GLI_injury[]" id="GLI_injury<?PHP echo $k+1; ?>" onChange="javascript: add_commas('GLI_injury',this.value,<?PHP echo $k+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[$k]->GLI_injury,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_<?PHP echo $k+1; ?>" id="greencolormoney"><?PHP  if($GLI_data[$k]->GLI_injury) { echo number_format($GLI_data[$k]->GLI_injury,2); }?></span>
         </div>
         <div class="clear"></div>
@@ -863,7 +899,7 @@ var val = parseFloat(x).toFixed(2)+'',
 	  <div class="comm">
         <div class="in-pan">
           <label>General Aggregate:</label>
-         <input type="text" style="display:none" name="GLI_policy_aggregate[]" id="GLI_policy_aggregate<?PHP echo $k+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_policy_aggregate',this.value,<?PHP echo $k+1; ?>);" class="t_field" size="20" style="color: green; text-align: left;" value="<?PHP echo number_format($GLI_data[$k]->GLI_policy_aggregate,2); ?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style="display:none" name="GLI_policy_aggregate[]" id="GLI_policy_aggregate<?PHP echo $k+1; ?>" onChange="javascript: add_commas('GLI_policy_aggregate',this.value,<?PHP echo $k+1; ?>);" class="t_field" size="20" style="color: green; text-align: left;" value="<?PHP echo number_format($GLI_data[$k]->GLI_policy_aggregate,2); ?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 
 		 <span class="GLI_<?PHP echo $k+1; ?>" id="greencolormoney"><?PHP  if($GLI_data[$k]->GLI_policy_aggregate){ echo number_format($GLI_data[$k]->GLI_policy_aggregate,2); } ?></span>
 		 
@@ -887,7 +923,7 @@ var val = parseFloat(x).toFixed(2)+'',
         </div>
         <div class="in-pan1">
           <label>Products - COMP/OP Agg:</label>
-         <input type="text" style="display:none;" class="t_field" name="GLI_products[]" id="GLI_products<?PHP echo $k+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_products',this.value,<?PHP echo $k+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[$k]->GLI_products,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style="display:none;" class="t_field" name="GLI_products[]" id="GLI_products<?PHP echo $k+1; ?>" onChange="javascript: add_commas('GLI_products',this.value,<?PHP echo $k+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($GLI_data) { echo number_format($GLI_data[$k]->GLI_products,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_<?PHP echo $k+1; ?>" id="greencolormoney"><?PHP  if($GLI_data[$k]->GLI_products) { echo number_format($GLI_data[$k]->GLI_products,2); }?></span>
         </div>
         <div class="clear"></div>
@@ -896,7 +932,7 @@ var val = parseFloat(x).toFixed(2)+'',
 	  <div class="comm">
         <div class="in-pan">
           <label>Damage to Rented Premises:</label>
-         <input type="text" style="display:none; class="t_field" name="GLI_damage[]" id="GLI_damage<?PHP echo $k+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('GLI_damage',this.value,<?PHP echo $k+1; ?>);" size="20"  style="color: green; text-align: left;" value="<?PHP if($GLI_data) {echo number_format($GLI_data[$k]->GLI_damage,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+         <input type="text" style="display:none;" class="t_field" name="GLI_damage[]" id="GLI_damage<?PHP echo $k+1; ?>" onChange="javascript: add_commas('GLI_damage',this.value,<?PHP echo $k+1; ?>);" size="20"  style="color: green; text-align: left;" value="<?PHP if($GLI_data) {echo number_format($GLI_data[$k]->GLI_damage,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="GLI_<?PHP echo $k+1; ?>" id="greencolormoney"><?PHP if($GLI_data[$k]->GLI_damage) {echo number_format($GLI_data[$k]->GLI_damage,2); } ?></span>
         </div>
         <div class="in-pan1"  style="margin-top:-20px;">
@@ -939,7 +975,7 @@ var val = parseFloat(x).toFixed(2)+'',
 		  ?>
 		  
           <p id="GLI_cert<?PHP echo $k+1; ?>" style="display:none;"><input type="radio" <?php echo $gli_chekcedf; ?> value="yes" name="GLI_certholder<?php echo $k; ?>"  style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $gli_chekceds; ?> value="no" name="GLI_certholder<?php echo $k; ?>"  style="margin-left:0px;" />&nbsp;No</p>
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="GLI_certhide<?PHP echo $k+1; ?>"><?php echo $glioccur; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="GLI_certhide<?PHP echo $k+1; ?>"><?php echo $glioccur; ?></span>
 		 <p style="height:8px;"></p>
 		  <label>Additional Insured:</label>
 		   <p id="GLI_add<?PHP echo $k+1; ?>" style="display:none;"><select name="GLI_additional<?PHP echo $k; ?>">
@@ -970,10 +1006,16 @@ var val = parseFloat(x).toFixed(2)+'',
         <div class="clear"></div>
       </div>
 	  
-	  
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input name="GLI_date_verified[]" id="GLI_date_verified<?PHP echo $k+1; ?>" type="text" size="10" value="<?PHP 
+        <input name="GLI_date_verified[]" id="GLI_date_verified<?PHP echo $k+1; ?>" type="text" size="10" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($GLI_data[$k]->GLI_status == '-1') echo 'Rejected'; 
 		else if($GLI_data[$k]->GLI_date_verified == '00-00-0000') echo 'Pending';
 		else echo $GLI_data[$k]->GLI_date_verified;  ?>"/>
@@ -985,6 +1027,7 @@ var val = parseFloat(x).toFixed(2)+'',
 					<input type="radio" name="GLI_radio[<?PHP echo $k+1; ?>]" onclick="javascript:rejvendor(<?php echo $userid ?>);" value="-1" <?PHP if($GLI_data[$k]->GLI_status == '-1') {?> checked="checked" <?PHP } ?> />&nbsp;Reject&nbsp;&nbsp;&nbsp;
 					<!--<input type="radio" name="GLI_radio[<?PHP echo $k+1; ?>]" value="0" <?PHP if($GLI_data[$k]->GLI_status == 0) {?> checked="checked" <?PHP } ?> />&nbsp;Pending-->
 					</td></tr></table></div>
+</div>					
     </div>
 	<div class="clear"></div>
 	<?php 
@@ -1063,7 +1106,7 @@ else{
    
    <input type="hidden" class="file_input_textbox" name="aip_upld_cert[]" id="aip_upld_cert1"  value="<?PHP echo $AIP_data[0]->aip_upld_cert; ?>" />
       
-	  <div class="1aip" id="savedocs_vendor_before"">
+	  <div class="1aip" id="savedocs_vendor_before">
   <a href="javascript:del_upld_cert('aip_upld_cert1','<?PHP echo $AIP_data[0]->aip_upld_cert; ?>','vendor_auto_insurance','aip','<?PHP echo $AIP_data[0]->id; ?>','1')" class="adminedit_complaince" ></a>
    <br />  
 	<a href="javascript:cleardocument('aip','<?PHP echo $AIP_data[0]->id; ?>','1')" class="adminclear_complaince" style="margin-left:8px;"></a> 
@@ -1098,17 +1141,17 @@ else{
 			}
 		 ?>
             <?PHP $aip_date = explode('-',$AIP_data[0]->aip_end_date); ?>
-        <input type="text" style="display:none;" size="10" name="aip_end_date[]" id="aip_end_date1" value="<?PHP if($AIP_data[0]->aip_end_date){ echo $aip_date[1].'-'.$aip_date[2].'-'.$aip_date[0]; }  ?>" />
+        <input type="text" style="display:none;" size="10" name="aip_end_date[]" id="aip_end_date1" readonly="readonly" value="<?PHP if($AIP_data[0]->aip_end_date){ echo $aip_date[1].'-'.$aip_date[2].'-'.$aip_date[0]; }  ?>" />
 		<span class="aip_1" style="color:<?php echo $color_exp; ?>"><?PHP if($AIP_data[0]->aip_end_date){ echo $aip_date[1].'/'.$aip_date[2].'/'.$aip_date[0]; }  ?></span>
 		<?php $color_exp = ''; ?>
 		
-		<script type="text/javascript">G('#aip_end_date1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+		<script type="text/javascript">G('#aip_end_date1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 		</div>
 		 <div class="in-pan1">
 		 <label>Bodily Injury - Per Person:</label>
 		 
 		 
-		 <input type="text" style="display:none;" class="t_field" name="aip_bodily[]" id="aip_bodily1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('aip_bodily',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[0]->aip_bodily,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+		 <input type="text" style="display:none;" class="t_field" name="aip_bodily[]" id="aip_bodily1" onChange="javascript: add_commas('aip_bodily',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[0]->aip_bodily,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="aip_1" id="greencolormoney"><?PHP  if($AIP_data[0]->aip_bodily) { echo number_format($AIP_data[0]->aip_bodily,2); }?></span>
 		 </div>
       </div>
@@ -1116,13 +1159,13 @@ else{
 	  <div class="comm">
 	   <div class="in-pan">
         <label>Combined Single Limit:</label>
-        <input type="text" class="t_field"  style="display:none;" name="aip_combined[]" id="aip_combined1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('aip_combined',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[0]->aip_combined,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+        <input type="text" class="t_field"  style="display:none;" name="aip_combined[]" id="aip_combined1" onChange="javascript: add_commas('aip_combined',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[0]->aip_combined,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		<span class="aip_1" id="greencolormoney"><?PHP  if($AIP_data[0]->aip_combined) { echo number_format($AIP_data[0]->aip_combined,2); }?></span>
 		<?php if(!$AIP_data[0]->aip_combined) { ?> <span style="color:red; font-size: 20px;"></span><?php } ?>
 		</div>
 		 <div class="in-pan1">
 		 <label>Bodily Injury - Per Accident:</label>
-		 <input type="text" class="t_field" style="display:none;" name="aip_body_injury[]" id="aip_body_injury1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('aip_body_injury',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[0]->aip_body_injury,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+		 <input type="text" class="t_field" style="display:none;" name="aip_body_injury[]" id="aip_body_injury1" onChange="javascript: add_commas('aip_body_injury',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[0]->aip_body_injury,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="aip_1" id="greencolormoney"><?PHP  if($AIP_data[0]->aip_body_injury) { echo number_format($AIP_data[0]->aip_body_injury,2); }?></span>
 		 </div>
       </div>
@@ -1131,7 +1174,7 @@ else{
 	   <div class="in-pan">
         <label>Property Damage - Per Accident:</label>
        
-	    <input type="text" style="display:none;" class="t_field" name="aip_property[]" id="aip_property1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('aip_property',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[0]->aip_property,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+	    <input type="text" style="display:none;" class="t_field" name="aip_property[]" id="aip_property1" onChange="javascript: add_commas('aip_property',this.value,1);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[0]->aip_property,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		<span class="aip_1" id="greencolormoney"><?PHP  if($AIP_data[0]->aip_property) { echo number_format($AIP_data[0]->aip_property,2); }?></span>
 		</div>
 		 <div class="in-pan1">
@@ -1163,7 +1206,7 @@ else{
 		  ?>
 		  <p id="aip_cert1" style="display:none;"><input type="radio" <?php echo $aip_classf; ?> value="yes" name="aip_cert0"  style="margin-left:1px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $aip_classs; ?> value="no" name="aip_cert0"  style="margin-left:1px;" />&nbsp;No</p>
 		 
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="aip_certhide1"><?php echo $aipoccur; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="aip_certhide1"><?php echo $aipoccur; ?></span>
 		 <p style="height: 10px;"></p>
 		 <label>Additional Insured:</label>
 		   <p id="aip_add1" style="display:none;"><select name="aip_addition0">
@@ -1210,11 +1253,17 @@ else{
         </div>
 		</div>
 		
-		
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   		
       <div class="comm">
 	  <div class="in-pan">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input class="bak" size="10" name="aip_date_verified[]" id="aip_date_verified"  type="text" value="<?PHP 
+        <input class="bak" size="10" name="aip_date_verified[]" id="aip_date_verified"  type="text" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($AIP_data[0]->aip_status == '-1' ){ echo 'Rejected'; } 
 		else if($AIP_data[0]->aip_date_verified == '00-00-0000') { echo 'Pending'; }
 		else { echo $AIP_data[0]->aip_date_verified; } ?>"/>
@@ -1230,7 +1279,7 @@ else{
 					<?php /*?><?PHP if($AIP_data[0]->aip_end_date != '0000-00-00' && $AIP_data[0]->aip_end_date < date('Y-m-d') && $AIP_data[0]->aip_end_date) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div></div>
-					
+			</div>		
     </div>
 	
 	<?php 
@@ -1335,15 +1384,15 @@ else{
 	?>
 		
     <?PHP $aip_date1 = explode('-',$AIP_data[$mj]->aip_end_date); ?>
-        <input type="text" style="display:none;" size="10" name="aip_end_date[]" id="aip_end_date<?PHP echo $mj+1; ?>" value="<?PHP echo $aip_date1[1].'-'.$aip_date1[2].'-'.$aip_date1[0]; ?>" />
+        <input type="text" style="display:none;" size="10" name="aip_end_date[]" id="aip_end_date<?PHP echo $mj+1; ?>" readonly="readonly" value="<?PHP echo $aip_date1[1].'-'.$aip_date1[2].'-'.$aip_date1[0]; ?>" />
 		<span class="aip_<?PHP echo $mj+1; ?>" style="color:<?php echo $color_exp; ?>"><?PHP echo $aip_date1[1].'/'.$aip_date1[2].'/'.$aip_date1[0]; ?></span>
 		<?php $color_exp = ''; ?>
-		<script type="text/javascript">G('#aip_end_date<?PHP echo $mj+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+		<script type="text/javascript">G('#aip_end_date<?PHP echo $mj+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
       </div>
 	  <div class="in-pan1">
 		 <label>Bodily Injury - Per Person:</label>
 		 
-		 <input type="text" class="t_field" style="display:none;" name="aip_bodily[]" id="aip_bodily<?PHP echo $mj+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('aip_bodily',this.value,<?PHP echo $mj+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[$mj]->aip_bodily,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+		 <input type="text" class="t_field" style="display:none;" name="aip_bodily[]" id="aip_bodily<?PHP echo $mj+1; ?>" onChange="javascript: add_commas('aip_bodily',this.value,<?PHP echo $mj+1; ?>);"  size="16"  style="color:green; text-align: left;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[$mj]->aip_bodily,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		  <span class="aip_<?PHP echo $mj+1; ?>" id="greencolormoney"><?PHP  if($AIP_data[$mj]->aip_bodily) { echo number_format($AIP_data[$mj]->aip_bodily,2); }?></span>
 		 </div>
 		 </div>
@@ -1351,12 +1400,12 @@ else{
 		 <div class="comm">
 	   <div class="in-pan">
         <label>Combined Single Limit:</label>
-        <input type="text" class="t_field" name="aip_combined[]" id="aip_combined<?PHP echo $mj+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('aip_combined',this.value,<?PHP echo $mj+1; ?>);"  size="16"  style="color:green; text-align: left; display:none;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[$mj]->aip_combined,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+        <input type="text" class="t_field" name="aip_combined[]" id="aip_combined<?PHP echo $mj+1; ?>" onChange="javascript: add_commas('aip_combined',this.value,<?PHP echo $mj+1; ?>);"  size="16"  style="color:green; text-align: left; display:none;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[$mj]->aip_combined,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		<span class="aip_<?PHP echo $mj+1; ?>" id="greencolormoney"><?PHP  if($AIP_data[$mj]->aip_combined) { echo number_format($AIP_data[$mj]->aip_combined,2); }?></span>
 		</div>
 		 <div class="in-pan1">
 		 <label>Bodily Injury - Per Accident:</label>
-		 <input type="text" class="t_field" name="aip_body_injury[]" id="aip_body_injury<?PHP echo $mj+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('aip_body_injury',this.value,<?PHP echo $mj+1; ?>);"  size="16"  style="color:green; text-align: left; display:none" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[$mj]->aip_body_injury,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+		 <input type="text" class="t_field" name="aip_body_injury[]" id="aip_body_injury<?PHP echo $mj+1; ?>" onChange="javascript: add_commas('aip_body_injury',this.value,<?PHP echo $mj+1; ?>);"  size="16"  style="color:green; text-align: left; display:none" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[$mj]->aip_body_injury,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		 <span class="aip_<?PHP echo $mj+1; ?>" id="greencolormoney"><?PHP  if($AIP_data[$mj]->aip_body_injury) { echo number_format($AIP_data[$mj]->aip_body_injury,2); }?></span>
 		 
 		 </div>
@@ -1365,7 +1414,7 @@ else{
 	  <div class="comm">
 	   <div class="in-pan">
         <label>Property Damage - Per Accident:</label>
-        <input type="text" class="t_field" name="aip_property[]" id="aip_property<?PHP echo $mj+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('aip_property',this.value,<?PHP echo $mj+1; ?>);"  size="16"  style="color:green; text-align: left;  display:none;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[$mj]->aip_property,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
+        <input type="text" class="t_field" name="aip_property[]" id="aip_property<?PHP echo $mj+1; ?>" onChange="javascript: add_commas('aip_property',this.value,<?PHP echo $mj+1; ?>);"  size="16"  style="color:green; text-align: left;  display:none;" value="<?PHP  if($AIP_data) { echo number_format($AIP_data[$mj]->aip_property,2); }?>" onClick="if(this.value == '0.00') this.value='';"/>
 		<span class="aip_<?PHP echo $mj+1; ?>" id="greencolormoney"><?PHP  if($AIP_data[$mj]->aip_property) { echo number_format($AIP_data[$mj]->aip_property,2); }?></span>
 		</div>
 		 <div class="in-pan1">
@@ -1400,7 +1449,7 @@ else{
 		  ?>
 		  <p id="aip_cert<?PHP echo $mj+1; ?>" style="display:none;"><input type="radio" <?php echo $aip_classf; ?> value="yes" name="aip_cert<?PHP echo $mj; ?>" style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $aip_classs; ?> value="no" name="aip_cert<?PHP echo $mj; ?>" style="margin-left:0px;" />&nbsp;No</p>
 		 
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="aip_certhide<?PHP echo $mj+1; ?>"><?php echo $aipoccur; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="aip_certhide<?PHP echo $mj+1; ?>"><?php echo $aipoccur; ?></span>
 		 <p style="height:10px;"></p>
 		 <label>Additional Insured:</label>
 		   <p id="aip_add<?PHP echo $mj+1; ?>" style="display:none;"><select name="aip_addition<?PHP echo $mj; ?>">
@@ -1451,11 +1500,17 @@ else{
 		<?php  $aip_any = ''; $aip_owned = ''; $aip_nonowned = ''; $aip_hired = ''; $aip_sch = '';  ?>
 	  </div>
 	  
-	  
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
 	  <div class="in-pan">
         <label>Last Verified By MyVendorCenter On:</label>
-   <input class="bak" size="10" name="aip_date_verified[]" id="aip_date_verified<?PHP echo $mj+1; ?>"  type="text" value="<?PHP 
+   <input class="bak" size="10" name="aip_date_verified[]" id="aip_date_verified<?PHP echo $mj+1; ?>"  type="text" placeholder = "mm-dd-yyyy" value="<?PHP 
    if($AIP_data[$mj]->aip_status == '-1' ){ echo 'Rejected'; } 
    else if($AIP_data[$mj]->aip_date_verified == '00-00-0000') { echo 'Pending'; }
    else { echo $AIP_data[$mj]->aip_date_verified; }?>"/>
@@ -1469,7 +1524,7 @@ else{
 					<?php /*?><?PHP if($AIP_data[$mj]->aip_end_date != '0000-00-00' && $AIP_data[$mj]->aip_end_date < date('Y-m-d') && $AIP_data[$mj]->aip_end_date) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div></div>
-    </div>
+</div>    </div>
     <div class="clear"></div>
 
     
@@ -1612,14 +1667,14 @@ else{
           <?PHP 
 		  if( $WCI_data[0]->WCI_end_date != 'Does Not Expire' ){
 		  $WCI_end_date = explode('-',$WCI_data[0]->WCI_end_date);  ?>
-    <input style="display:none" name="WCI_end_date[]" id="WCI_end_date1" type="text" class="t_field" size="20" value="<?PHP echo $WCI_end_date[1].'-'.$WCI_end_date[2].'-'.$WCI_end_date[0]; ?>" />
+    <input style="display:none" name="WCI_end_date[]" id="WCI_end_date1" type="text" class="t_field" size="20" readonly="readonly" value="<?PHP echo $WCI_end_date[1].'-'.$WCI_end_date[2].'-'.$WCI_end_date[0]; ?>" />
 	<span class="WCI_1" style="color:<?php echo $color_exp; ?>"><?PHP echo $WCI_end_date[1].'/'.$WCI_end_date[2].'/'.$WCI_end_date[0]; ?></span>
 	<?php $color_exp = ''; 
 	 } else { ?>
 	<input  style="display:none" name="WCI_end_date[]" id="WCI_end_date1" type="text" class="t_field" size="20" value="Does Not Expire" />
 	<span class="WCI_1"><?php 	echo "Does Not Expire"; ?></span>
 	<?php } ?>
-<script type="text/javascript">G('#WCI_end_date1').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+<script type="text/javascript">G('#WCI_end_date1').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 	<script type="text/javascript">
 	G('#WCI_end_date1').click(function(){
 	var check = "<span class='othercheck'><input type='checkbox' value='does not expire' onclick='closecalWCI1();'>This document does not expire</span>";
@@ -1636,7 +1691,7 @@ else{
 	</div>
 	<div class="in-pan1">
 	<label>Disease - Policy Limit:</label>
-	<input type="text" class="t_field" name="WCI_disease_policy[]" id="WCI_disease_policy1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('WCI_disease_policy',this.value,1);" size="20"  style="color: green; text-align: left; display:none" value="<?PHP if($WCI_data) {echo number_format($WCI_data[0]->WCI_disease_policy,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+	<input type="text" class="t_field" name="WCI_disease_policy[]" id="WCI_disease_policy1" onChange="javascript: add_commas('WCI_disease_policy',this.value,1);" size="20"  style="color: green; text-align: left; display:none" value="<?PHP if($WCI_data) {echo number_format($WCI_data[0]->WCI_disease_policy,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="WCI_1" id="greencolormoney"><?PHP if($WCI_data[0]->WCI_disease_policy) {echo number_format($WCI_data[0]->WCI_disease_policy,2); } ?></span>
 	
 	</div>
@@ -1644,12 +1699,12 @@ else{
 	  <div class="comm">
 	  <div class="in-pan">
         <label>Each Accident:</label>
-    <input type="text" class="t_field" name="WCI_each_accident[]" id="WCI_each_accident1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('WCI_each_accident',this.value,1);" size="20"  style="color: green; text-align: left;display:none" value="<?PHP if($WCI_data) {echo number_format($WCI_data[0]->WCI_each_accident,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+    <input type="text" class="t_field" name="WCI_each_accident[]" id="WCI_each_accident1" onChange="javascript: add_commas('WCI_each_accident',this.value,1);" size="20"  style="color: green; text-align: left;display:none" value="<?PHP if($WCI_data) {echo number_format($WCI_data[0]->WCI_each_accident,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
     <span class="WCI_1" id="greencolormoney"><?PHP if($WCI_data[0]->WCI_each_accident) {echo number_format($WCI_data[0]->WCI_each_accident,2); } ?></span>
 	</div>
 	<div class="in-pan1">
 	<label>Disease - Each Employee:</label>
-	<input type="text" class="t_field" name="WCI_disease[]" id="WCI_disease1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('WCI_disease',this.value,1);" size="20"  style="color: green; text-align: left; display:none" value="<?PHP if($GLI_data) {echo number_format($WCI_data[0]->WCI_disease,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+	<input type="text" class="t_field" name="WCI_disease[]" id="WCI_disease1" onChange="javascript: add_commas('WCI_disease',this.value,1);" size="20"  style="color: green; text-align: left; display:none" value="<?PHP if($GLI_data) {echo number_format($WCI_data[0]->WCI_disease,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="WCI_1" id="greencolormoney"><?PHP if($WCI_data[0]->WCI_disease) {echo number_format($WCI_data[0]->WCI_disease,2); } ?></span>
 	<p style="height:10px;"></p>
 	<?php
@@ -1680,17 +1735,23 @@ else{
 		  }
 		  ?>
 		  <p id="WCI_cert1" style="display:none;"><input type="radio" <?php echo $wci_classf; ?> value="yes" name="WCI_cert0"  style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $wci_classs; ?> value="no" name="WCI_cert0"  style="margin-left:0px;" />&nbsp;No</p>
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="WCI_certhide1"><?php echo $wcioccur; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="WCI_certhide1"><?php echo $wcioccur; ?></span>
         </div>
         
         <div class="clear"></div>
       </div>
 	  
-	  
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
 	  <div class="in-pan">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input name="WCI_date_verified[]" id="WCI_date_verified1" type="text" size="10" value="<?PHP 
+        <input name="WCI_date_verified[]" id="WCI_date_verified1" type="text" size="10" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($WCI_data[0]->WCI_status == '-1'){ echo 'Rejected'; } 
 		else if($WCI_data[0]->WCI_date_verified == '00-00-0000') { echo 'Pending'; }
 		else { echo $WCI_data[0]->WCI_date_verified; }  ?>"/>
@@ -1705,7 +1766,7 @@ else{
 					<?php /*?><?PHP if($WCI_data[0]->WCI_end_date != '0000-00-00' && $WCI_data[0]->WCI_end_date < date('Y-m-d') && $WCI_data[0]->WCI_end_date) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div></div>
-    </div>
+</div>    </div>
     <div class="clear"></div>
 	
   <div class="clear"></div>
@@ -1840,7 +1901,7 @@ else{
          <?PHP 
 		 if( $WCI_data[$m]->WCI_end_date != 'Does Not Expire' ){
 		 $WCI_end_date2 = explode('-',$WCI_data[$m]->WCI_end_date);  ?>
-    <input name="WCI_end_date[]" style="display:none;" id="WCI_end_date<?PHP echo $m+1; ?>" type="text" class="t_field" size="20" value="<?PHP echo $WCI_end_date2[1].'-'.$WCI_end_date2[2].'-'.$WCI_end_date2[0]; ?>"  />
+    <input name="WCI_end_date[]" style="display:none;" id="WCI_end_date<?PHP echo $m+1; ?>" type="text" class="t_field" size="20" readonly="readonly" value="<?PHP echo $WCI_end_date2[1].'-'.$WCI_end_date2[2].'-'.$WCI_end_date2[0]; ?>"  />
 	<span class="WCI_<?PHP echo $m+1; ?>" style="color:<?php echo $color_exp; ?>"><?PHP echo $WCI_end_date2[1].'/'.$WCI_end_date2[2].'/'.$WCI_end_date2[0]; ?></span>
 		<?php } else { ?>
 	<input name="WCI_end_date[]" style="display:none;" id="WCI_end_date<?PHP echo $m+1; ?>" type="text" class="t_field" size="20" value="Does Not Expire"  />
@@ -1848,7 +1909,7 @@ else{
 		<?php } ?>
 		
 	<?php if($WCI_data[$m]->WCI_end_date < date('Y-m-d')) { ?><?php } ?>
-	<script type="text/javascript">G('#WCI_end_date<?PHP echo $m+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+	<script type="text/javascript">G('#WCI_end_date<?PHP echo $m+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 	<script type="text/javascript">
 	G('#WCI_end_date<?PHP echo $m+1; ?>').click(function(){
 	var check = "<span class='othercheck'><input type='checkbox' value='does not expire' onclick='closecalWCI<?PHP echo $m+1; ?>();'>This document does not expire</span>";
@@ -1864,11 +1925,11 @@ else{
 	</div>
 	<div class="in-pan1">
 	<label>Disease - Policy Limit:</label>
-    <input type="text" class="t_field" name="WCI_disease_policy[]" id="WCI_disease_policy<?PHP echo $m+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('WCI_disease_policy',this.value,<?PHP echo $m+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($WCI_data) {echo number_format($WCI_data[$m]->WCI_disease_policy,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+    <input type="text" class="t_field" name="WCI_disease_policy[]" id="WCI_disease_policy<?PHP echo $m+1; ?>" onChange="javascript: add_commas('WCI_disease_policy',this.value,<?PHP echo $m+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($WCI_data) {echo number_format($WCI_data[$m]->WCI_disease_policy,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="WCI_<?PHP echo $m+1; ?>" id="greencolormoney"><?PHP if($WCI_data[$m]->WCI_disease_policy) {echo number_format($WCI_data[$m]->WCI_disease_policy,2); } else { echo "0.00"; } ?></span>
 	<p style="height:10px;"></p>
 	<label>Disease - Each Employee:</label>
-	<input type="text" class="t_field" name="WCI_disease[]" id="WCI_disease<?PHP echo $m+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('WCI_disease',this.value,<?PHP echo $m+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($GLI_data) {echo number_format($WCI_data[$m]->WCI_disease,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+	<input type="text" class="t_field" name="WCI_disease[]" id="WCI_disease<?PHP echo $m+1; ?>" onChange="javascript: add_commas('WCI_disease',this.value,<?PHP echo $m+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($GLI_data) {echo number_format($WCI_data[$m]->WCI_disease,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="WCI_<?PHP echo $m+1; ?>" id="greencolormoney"><?PHP if($WCI_data[$m]->WCI_disease) {echo number_format($WCI_data[$m]->WCI_disease,2); } else { echo "0.00"; } ?></span>
 	</div>
       </div>
@@ -1892,7 +1953,7 @@ else{
 	  <div class="comm">
 	  <div class="in-pan" style="margin-top:-74px;">
         <label>Each Accident:</label>
-    <input type="text" class="t_field" name="WCI_each_accident[]" id="WCI_each_accident<?PHP echo $m+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('WCI_each_accident',this.value,<?PHP echo $m+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($WCI_data) {echo number_format($WCI_data[$m]->WCI_each_accident,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+    <input type="text" class="t_field" name="WCI_each_accident[]" id="WCI_each_accident<?PHP echo $m+1; ?>" onChange="javascript: add_commas('WCI_each_accident',this.value,<?PHP echo $m+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($WCI_data) {echo number_format($WCI_data[$m]->WCI_each_accident,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="WCI_<?PHP echo $m+1; ?>" id="greencolormoney"><?PHP if($WCI_data[$m]->WCI_each_accident) {echo number_format($WCI_data[$m]->WCI_each_accident,2); } ?></span>
 	</div>
       </div>
@@ -1912,16 +1973,22 @@ else{
 		  }
 		  ?>
 		  <p id="WCI_cert<?PHP echo $m+1; ?>" style="display:none;"><input type="radio" <?php echo $wci_classfp; ?> value="yes" name="WCI_cert<?PHP echo $m; ?>" style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $wci_classsp; ?> value="no" name="WCI_cert<?PHP echo $m; ?>" style="margin-left:0px;" />&nbsp;No</p>
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="WCI_certhide<?PHP echo $m+1; ?>"><?php echo $wcioccurp; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="WCI_certhide<?PHP echo $m+1; ?>"><?php echo $wcioccurp; ?></span>
         </div>
         
         <div class="clear"></div>
       </div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
 	  
-	  
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input name="WCI_date_verified[]" id="WCI_date_verified<?PHP echo $m+1; ?>" type="text" size="10" value="<?PHP 
+        <input name="WCI_date_verified[]" id="WCI_date_verified<?PHP echo $m+1; ?>" type="text" size="10" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($WCI_data[$m]->WCI_status == '-1'){ echo 'Rejected'; } 
 		else if($WCI_data[$m]->WCI_date_verified == '00-00-0000') { echo 'Pending';	 }
 		else { echo $WCI_data[$m]->WCI_date_verified; } ?>"/>
@@ -1936,7 +2003,7 @@ else{
 					<?php /*?><?PHP if($WCI_data[$m]->WCI_end_date != '0000-00-00' && $WCI_data[$m]->WCI_end_date < date('Y-m-d')) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div>
-    </div>
+</div>    </div>
 	
 <?php 
 if($WCI_data[$m]->WCI_date_verified == '00-00-0000' && !$WCI_data[$m]->WCI_upld_cert) {
@@ -2046,15 +2113,15 @@ else{
                     $UMB_data[0]->UMB_expdate='0000-00-00';                            
                     }  ?>
            <?PHP $UMB_date = explode('-',$UMB_data[0]->UMB_expdate); ?>
-        <input type="text" style="display:none;" size="10" name="UMB_expdate[]" id="UMB_expdate1" value="<?PHP echo $UMB_date[1].'-'.$UMB_date[2].'-'.$UMB_date[0]; ?>" />
+        <input type="text" style="display:none;" size="10" name="UMB_expdate[]" id="UMB_expdate1" readonly="readonly" value="<?PHP echo $UMB_date[1].'-'.$UMB_date[2].'-'.$UMB_date[0]; ?>" />
 		<span class="UMB_1" style="color:<?php echo $color_exp; ?>"><?PHP echo $UMB_date[1].'/'.$UMB_date[2].'/'.$UMB_date[0]; ?></span>
         <?php $color_exp = ''; ?>
         <?php if($UMB_data[0]->UMB_expdate < date('Y-m-d')) { ?><?php } ?>
-        <script type="text/javascript">G('#UMB_expdate1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+        <script type="text/javascript">G('#UMB_expdate1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 		</div>
 		<div class="in-pan1">
 		<label>Aggregate:</label>
-	<input type="text" class="t_field" name="UMB_aggregate[]" id="UMB_aggregate1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('UMB_aggregate',this.value,1);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($UMB_data) {echo number_format($UMB_data[0]->UMB_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+	<input type="text" class="t_field" name="UMB_aggregate[]" id="UMB_aggregate1" onChange="javascript: add_commas('UMB_aggregate',this.value,1);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($UMB_data) {echo number_format($UMB_data[0]->UMB_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="UMB_1" id="greencolormoney"><?PHP if($UMB_data[0]->UMB_aggregate) {echo number_format($UMB_data[0]->UMB_aggregate,2); } ?></span>
 	<?php if(!$UMB_data[0]->UMB_aggregate || $UMB_data[0]->UMB_aggregate == '0.00') { ?> <span class="redstar_UMB1" style="color:red; font-size: 20px; display:none;">*</span><?php } ?>
 	
@@ -2065,7 +2132,7 @@ else{
 	  <div class="in-pan">
         <label>Each Occurrence</label>
            <?PHP $UMB_date = explode('-',$UMB_data[0]->UMB_expdate); ?>
-        <input type="text" class="t_field" name="UMB_occur[]" id="UMB_occur1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('UMB_occur',this.value,1);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($UMB_data) {echo number_format($UMB_data[0]->UMB_occur,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+        <input type="text" class="t_field" name="UMB_occur[]" id="UMB_occur1" onChange="javascript: add_commas('UMB_occur',this.value,1);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($UMB_data) {echo number_format($UMB_data[0]->UMB_occur,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 		<span class="UMB_1" id="greencolormoney"><?PHP if($UMB_data[0]->UMB_occur) {echo number_format($UMB_data[0]->UMB_occur,2); } ?></span>
 		<?php if(!$UMB_data[0]->UMB_occur || $UMB_data[0]->UMB_occur == '0.00') { ?> <span class="redstar_UMB1" style="color:red; font-size: 20px; display:none;">*</span><?php } ?>
 		
@@ -2087,13 +2154,20 @@ else{
 		  }
 		  ?>
 		  <p id="UMB_cert1" style="display:none;"><input type="radio" <?php echo $umb_classf; ?> value="yes" name="umb_cert0"  style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $umb_classs; ?> value="no" name="umb_cert0"  style="margin-left:0px;" />&nbsp;No</p>
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="UMB_certhide1"><?php echo $umboccur; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="UMB_certhide1"><?php echo $umboccur; ?></span>
         </div>
 		</div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   		
       <div class="comm">
 	  <div class="in-pan">
         <label style="padding-top:5px;">Last Verified By MyVendorCenter On:</label>
-        <input type="text" class="bak" size="10" name="UMB_date_verified[]" id="UMB_date_verified"  type="text" value="<?PHP  
+        <input type="text" class="bak" size="10" name="UMB_date_verified[]" id="UMB_date_verified"  type="text" placeholder = "mm-dd-yyyy" value="<?PHP  
 		if($UMB_data[0]->UMB_status == '-1' ){ echo 'Rejected'; } 
 		else if($UMB_data[0]->UMB_date_verified == '00-00-0000') { echo 'Pending';	 }
 		else { echo $UMB_data[0]->UMB_date_verified; } ?>"/>
@@ -2115,7 +2189,7 @@ else{
 					<?PHP if($UMB_data[0]->UMB_end_date != '0000-00-00' && $UMB_data[0]->UMB_end_date < date('Y-m-d') && $UMB_data[0]->UMB_end_date) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?></td></tr></table></div></div>
-					
+</div>					
     </div>
 	<div class="clear"></div>
 	
@@ -2231,15 +2305,15 @@ else{
 			}
 		?>
            <?PHP $UMB_date2 = explode('-',$UMB_data[$i]->UMB_expdate); ?>
-      <input  style="display:none;" name="UMB_expdate[]" type="text" id="UMB_expdate<?PHP echo $i+1; ?>" size="10" class="t_field" value="<?PHP echo $UMB_date2[1].'-'.$UMB_date2[2].'-'.$UMB_date2[0]; ?>">
+      <input  style="display:none;" name="UMB_expdate[]" type="text" id="UMB_expdate<?PHP echo $i+1; ?>" size="10" class="t_field" readonly="readonly" value="<?PHP echo $UMB_date2[1].'-'.$UMB_date2[2].'-'.$UMB_date2[0]; ?>">
 	  <span class="UMB_<?PHP echo $i+1; ?>" style="color:<?php echo $color_exp; ?>"><?PHP echo $UMB_date2[1].'/'.$UMB_date2[2].'/'.$UMB_date2[0]; ?></span>
 	  <?php $color_exp = ''; ?>
 	  <?php if($UMB_data[$i]->UMB_expdate < date('Y-m-d')){ ?> <?php } ?>
-	  <script type="text/javascript">G('#UMB_expdate<?PHP echo $i+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+	  <script type="text/javascript">G('#UMB_expdate<?PHP echo $i+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 	  </div>
 	  <div class="in-pan1">
 		<label>Aggregate:</label>
-	<input type="text" class="t_field" name="UMB_aggregate[]" id="UMB_aggregate<?PHP echo $i+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('UMB_aggregate',this.value,<?PHP echo $i+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($UMB_data) {echo number_format($UMB_data[$i]->UMB_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+	<input type="text" class="t_field" name="UMB_aggregate[]" id="UMB_aggregate<?PHP echo $i+1; ?>" onChange="javascript: add_commas('UMB_aggregate',this.value,<?PHP echo $i+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($UMB_data) {echo number_format($UMB_data[$i]->UMB_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="UMB_<?PHP echo $i+1; ?>" id="greencolormoney"><?PHP if($UMB_data[$i]->UMB_aggregate) {echo number_format($UMB_data[$i]->UMB_aggregate,2); } ?></span>
 		</div>
       </div>
@@ -2247,7 +2321,7 @@ else{
 	  <div class="comm">
 	  <div class="in-pan">
         <label>Each Occurrence</label>
-        <input type="text" class="t_field" name="UMB_occur[]" id="UMB_occur<?PHP echo $i+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('UMB_occur',this.value,<?PHP echo $i+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($UMB_data) {echo number_format($UMB_data[$i]->UMB_occur,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+        <input type="text" class="t_field" name="UMB_occur[]" id="UMB_occur<?PHP echo $i+1; ?>" onChange="javascript: add_commas('UMB_occur',this.value,<?PHP echo $i+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($UMB_data) {echo number_format($UMB_data[$i]->UMB_occur,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 		<span class="UMB_<?PHP echo $i+1; ?>" id="greencolormoney"><?PHP if($UMB_data[$i]->UMB_occur) {echo number_format($UMB_data[$i]->UMB_occur,2); } ?></span>
 		</div>
 		</div>
@@ -2267,15 +2341,21 @@ else{
 		  }
 		  ?>
 		  <p id="UMB_cert<?PHP echo $i+1; ?>" style="display:none;"><input type="radio" <?php echo $umb_classfs; ?> value="yes" name="umb_cert<?PHP echo $i; ?>"  style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $umb_classss; ?> value="no" name="umb_cert<?PHP echo $i; ?>"  style="margin-left:0px;" />&nbsp;No</p>
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="UMB_certhide<?PHP echo $i+1; ?>"><?php echo $umboccurs; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="UMB_certhide<?PHP echo $i+1; ?>"><?php echo $umboccurs; ?></span>
         </div>
 		</div>
 		
-		
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   		
       <div class="comm">
 	  <div class="in-pan">
         <label style="padding-top:5px;">Last Verified By MyVendorCenter On:</label>
-        <input type="text" class="bak" size="10" name="UMB_date_verified[]" id="UMB_date_verified<?PHP echo $i+1 ?>"  type="text" value="<?PHP  
+        <input type="text" class="bak" size="10" name="UMB_date_verified[]" id="UMB_date_verified<?PHP echo $i+1 ?>"  type="text" placeholder = "mm-dd-yyyy" value="<?PHP  
 		if($UMB_data[$i]->UMB_status == '-1' ){ echo 'Rejected'; } 
 		else if($UMB_data[$i]->UMB_date_verified == '00-00-0000') { echo 'Pending';		 }
 		else { echo $UMB_data[$i]->UMB_date_verified; } ?>"/>
@@ -2299,7 +2379,7 @@ else{
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div>
 		</div>			
-					
+			</div>		
 	
 <?php 
 if($UMB_data[$i]->UMB_date_verified == '00-00-0000' && !$UMB_data[$i]->UMB_upld_cert) {
@@ -2433,14 +2513,14 @@ else{
            <?PHP 
 		   if( $OLN_data[0]->OLN_expdate != 'Does Not Expire' ) {
 		   $OLN_date = explode('-',$OLN_data[0]->OLN_expdate); ?>
-        <input type="text" style="display:none;" size="10" name="OLN_expdate[]" id="OLN_expdate1" value="<?PHP echo $OLN_date[1].'-'.$OLN_date[2].'-'.$OLN_date[0]; ?>"/>
+        <input type="text" style="display:none;" size="10" name="OLN_expdate[]" id="OLN_expdate1" placeholder = "mm-dd-yyyy" value="<?PHP echo $OLN_date[1].'-'.$OLN_date[2].'-'.$OLN_date[0]; ?>"/>
 		<span class="OLN_1" style="color:<?php echo $color_exp; ?>"><?PHP echo $OLN_date[1].'/'.$OLN_date[2].'/'.$OLN_date[0]; ?></span>
 		<?php } else { ?>
 		<input type="text" style="display:none;" size="10" name="OLN_expdate[]" id="OLN_expdate1" value="Does Not Expire"/>
 		<span class="OLN_1" ><?php echo "Does Not Expire"; ?></span>
 		<?php } ?>
             <?php if($OLN_data[0]->OLN_expdate < date('Y-m-d')) { ?><?php } ?>
-        <script type="text/javascript">G('#OLN_expdate1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+        <script type="text/javascript">G('#OLN_expdate1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 		<script type="text/javascript">
 	G('#OLN_expdate1').click(function(){
 	var check = "<span class='othercheck'><input type='checkbox' value='does not expire' onclick='closecalOLN1();'>This document does not expire</span>";
@@ -2455,9 +2535,16 @@ else{
 	</script>
 	
       </div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input type="text" class="bak" size="10" name="OLN_date_verified[]" id="OLN_date_verified" type="text" value="<?PHP 
+        <input type="text" class="bak" size="10" name="OLN_date_verified[]" id="OLN_date_verified" type="text" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($OLN_data[0]->OLN_status == '-1' ){ echo 'Rejected'; } 
 		else if($OLN_data[0]->OLN_date_verified == '00-00-0000') { echo 'Pending';	}
 		else { echo $OLN_data[0]->OLN_date_verified; } ?>"/>
@@ -2472,6 +2559,7 @@ else{
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table>
         </div>
+		</div>
     </div>
 <?php 
 if($OLN_data[0]->OLN_date_verified == '00-00-0000' && !$OLN_data[0]->OLN_upld_cert) {
@@ -2604,13 +2692,13 @@ else{
            <?PHP 
 		   if( $OLN_data[$i]->OLN_expdate != 'Does Not Expire' ){
 		   $OLN_date2 = explode('-',$OLN_data[$i]->OLN_expdate); ?>
-      <input  name="OLN_expdate[]" style="display:none;" type="text" id="OLN_expdate<?PHP echo $i+1; ?>" size="10" class="t_field" value="<?PHP echo $OLN_date2[1].'-'.$OLN_date2[2].'-'.$OLN_date2[0]; ?>"> <?php if($OLN_data[$i]->OLN_expdate < date('Y-m-d')){ ?> <?php } ?>
+      <input  name="OLN_expdate[]" style="display:none;" type="text" id="OLN_expdate<?PHP echo $i+1; ?>" size="10" class="t_field" placeholder = "mm-dd-yyyy" value="<?PHP echo $OLN_date2[1].'-'.$OLN_date2[2].'-'.$OLN_date2[0]; ?>"> <?php if($OLN_data[$i]->OLN_expdate < date('Y-m-d')){ ?> <?php } ?>
 	  <span class="OLN_<?PHP echo $i+1; ?>" style="color:<?php echo $color_exp; ?>"><?PHP echo $OLN_date2[1].'/'.$OLN_date2[2].'/'.$OLN_date2[0]; ?></span>
 	  <?php } else { ?>
 	  <input  name="OLN_expdate[]" style="display:none;" type="text" id="OLN_expdate<?PHP echo $i+1; ?>" size="10" class="t_field" value="Does Not Expire">
 	  <span class="OLN_<?PHP echo $i+1; ?>"><?php  echo "Does Not Expire"; ?> </span>
 	  <?php } ?>
-	  <script type="text/javascript">G('#OLN_expdate<?PHP echo $i+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+	  <script type="text/javascript">G('#OLN_expdate<?PHP echo $i+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 	  <script type="text/javascript">
 	G('#OLN_expdate<?PHP echo $i+1; ?>').click(function(){
 	var check = "<span class='othercheck'><input type='checkbox' value='does not expire' onclick='closecalOLN<?PHP echo $i+1; ?>();'>This document does not expire</span>";
@@ -2624,9 +2712,16 @@ else{
 	}
 	</script>
       </div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input type="text" class="bak" size="10" name="OLN_date_verified[]" id="OLN_date_verified<?PHP echo $i+1 ?>"  type="text" value="<?PHP 
+        <input type="text" class="bak" size="10" name="OLN_date_verified[]" id="OLN_date_verified<?PHP echo $i+1 ?>"  type="text" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($OLN_data[$i]->OLN_status == '-1' ){ echo 'Rejected'; } 
 		else if($OLN_data[$i]->OLN_date_verified == '00-00-0000') echo 'Pending';	
 		else { echo $OLN_data[$i]->OLN_date_verified; } ?>"/>
@@ -2640,6 +2735,7 @@ else{
 					<?php /*?><?PHP if($OLN_data[$i]->OLN_expdate != '0000-00-00' && $OLN_data[$i]->OLN_expdate < date('Y-m-d')) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div>
+					</div>
     </div>
     <div class="clear"></div>
 	<div id="OLN_delete_<?PHP echo $i+1; ?>" class="<?PHP echo $i+1; ?>OLN" style="width:650px;">
@@ -2802,11 +2898,11 @@ else{
 	?>
         <?PHP $PLN_date = explode('-',$PLN_data[0]->PLN_expdate);  ?>
 
-  <input name="PLN_expdate[]" style="display:none;" id="PLN_expdate1" type="text" class="t_field" size="10" value="<?PHP echo $PLN_date[1].'-'.$PLN_date[2].'-'.$PLN_date[0]; ?>" >
+  <input name="PLN_expdate[]" style="display:none;" id="PLN_expdate1" type="text" class="t_field" size="10" placeholder = "mm-dd-yyyy" value="<?PHP echo $PLN_date[1].'-'.$PLN_date[2].'-'.$PLN_date[0]; ?>" >
   <span class="PLN_1" style="color:<?php echo $color_exp; ?>"><?PHP echo $PLN_date[1].'/'.$PLN_date[2].'/'.$PLN_date[0]; ?></span>
   <?php $color_exp = ''; ?>
   
-  <?php if($PLN_data[0]->PLN_expdate < date('Y-m-d')) { ?> <?php } ?><script type="text/javascript">G('#PLN_expdate1').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+  <?php if($PLN_data[0]->PLN_expdate < date('Y-m-d')) { ?> <?php } ?><script type="text/javascript">G('#PLN_expdate1').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
       </div>
       <div class="comm">
         <div class="in-pan">
@@ -2825,9 +2921,16 @@ else{
         </div>
         <div class="clear"></div>
       </div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input name="PLN_date_verified[]" id="PLN_date_verified" type="text" size="10" value="<?PHP 
+        <input name="PLN_date_verified[]" id="PLN_date_verified" type="text" size="10" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($PLN_data[0]->PLN_status == '-1' ){ echo 'Rejected'; } 
 		else if($PLN_data[0]->PLN_date_verified == '00-00-0000') echo 'Pending';	
 		else { echo $PLN_data[0]->PLN_date_verified; } ?>"/>
@@ -2841,6 +2944,7 @@ else{
 					<?php /*?><?PHP if($PLN_data[0]->PLN_expdate != '0000-00-00' && $PLN_data[0]->PLN_expdate < date('Y-m-d') && $PLN_data[0]->PLN_expdate) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div>
+					</div>
     </div>
    <div class="clear"></div>
  
@@ -2999,11 +3103,11 @@ else{
 		
         <?PHP $PLN_date = explode('-',$PLN_data[$j]->PLN_expdate);  ?>
 
-  <input style="display:none;" name="PLN_expdate[]" id="PLN_expdate<?PHP echo $j+1; ?>" type="text" class="t_field" size="10" value="<?PHP echo $PLN_date[1].'-'.$PLN_date[2].'-'.$PLN_date[0]; ?>" > 
+  <input style="display:none;" name="PLN_expdate[]" id="PLN_expdate<?PHP echo $j+1; ?>" type="text" class="t_field" size="10" placeholder = "mm-dd-yyyy" value="<?PHP echo $PLN_date[1].'-'.$PLN_date[2].'-'.$PLN_date[0]; ?>" > 
   
   <span class="PLN_<?PHP echo $j+1; ?>" style="color:<?php echo $color_exp; ?>"><?PHP echo $PLN_date[1].'/'.$PLN_date[2].'/'.$PLN_date[0]; ?></span>
   <?php $color_exp = ''; ?>
-  <?php if($PLN_data[$j]->PLN_expdate < date('Y-m-d')) { ?> <?php } ?><script type="text/javascript">G('#PLN_expdate<?PHP echo $j+1; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+  <?php if($PLN_data[$j]->PLN_expdate < date('Y-m-d')) { ?> <?php } ?><script type="text/javascript">G('#PLN_expdate<?PHP echo $j+1; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
       </div>
       <div class="comm">
         <div class="in-pan">
@@ -3020,9 +3124,16 @@ else{
         </div>
         <div class="clear"></div>
       </div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input name="PLN_date_verified[]" id="PLN_date_verified<?php echo $j+1; ?>" type="text" size="10" value="<?PHP 
+        <input name="PLN_date_verified[]" id="PLN_date_verified<?php echo $j+1; ?>" type="text" size="10" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($PLN_data[$j]->PLN_status == '-1' ){ echo 'Rejected'; } 
 		else if($PLN_data[$j]->PLN_date_verified == '00-00-0000') { echo 'Pending';	}
 		else { echo $PLN_data[$j]->PLN_date_verified; } ?>"/>
@@ -3036,6 +3147,7 @@ else{
 					<?php /*?><?PHP if($PLN_data[$j]->PLN_expdate != '0000-00-00' && $PLN_data[$j]->PLN_expdate < date('Y-m-d')) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div>
+					</div>
     </div>
 <div class="clear"></div>
   </div>
@@ -3170,14 +3282,21 @@ else{
 		}
 		?>
             <?PHP $wc_date = explode('-',$WC_data[0]->wc_end_date); ?>
-        <input type="text" style="display:none;" size="10" name="wc_end_date[]" id="wc_end_date1" value="<?PHP if($WC_data[0]->wc_end_date){ echo $wc_date[1].'-'.$wc_date[2].'-'.$wc_date[0]; }  ?>" />
+        <input type="text" style="display:none;" size="10" name="wc_end_date[]" id="wc_end_date1" placeholder = "mm-dd-yyyy" value="<?PHP if($WC_data[0]->wc_end_date){ echo $wc_date[1].'-'.$wc_date[2].'-'.$wc_date[0]; }  ?>" />
 		<span class="wc_1" style="color:<?php echo $color_exp; ?>"><?PHP if($WC_data[0]->wc_end_date){ echo $wc_date[1].'/'.$wc_date[2].'/'.$wc_date[0]; }  ?></span>
 		<?php $color_exp = ''; ?>
-		<?php if($WC_data[0]->wc_end_date < date('Y-m-d')) { ?><?php } ?><script type="text/javascript">G('#wc_end_date1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+		<?php if($WC_data[0]->wc_end_date < date('Y-m-d')) { ?><?php } ?><script type="text/javascript">G('#wc_end_date1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
       </div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-         <input class="bak" size="10" name="wc_date_verified[]" id="wc_date_verified"  type="text" value="<?PHP 
+         <input class="bak" size="10" name="wc_date_verified[]" id="wc_date_verified"  type="text" placeholder = "mm-dd-yyyy" value="<?PHP 
 		 if($WC_data[0]->wc_status == '-1' ){ echo 'Rejected'; } 
 		 else if($WC_data[0]->wc_date_verified == '00-00-0000') { echo 'Pending';		}
 		 else { echo $WC_data[0]->wc_date_verified; } ?>"/>
@@ -3192,6 +3311,7 @@ else{
 					<?php /*?><?PHP if($WC_data[0]->wc_end_date != '0000-00-00' && $WC_data[0]->wc_end_date < date('Y-m-d') && $WC_data[0]->wc_end_date) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div>
+					</div>
     </div>
 <?php 
 if($WC_data[0]->wc_date_verified == '00-00-0000' && !$WC_data[0]->wc_upld_cert) {
@@ -3324,15 +3444,22 @@ else{
 			}
 		?>
     <?PHP $wc_date1 = explode('-',$WC_data[$mj]->wc_end_date); ?>
-        <input type="text" style="display:none;" size="10" name="wc_end_date[]" id="wc_end_date<?PHP echo $mj+1; ?>" value="<?PHP echo $wc_date1[1].'-'.$wc_date1[2].'-'.$wc_date1[0]; ?>" />
+        <input type="text" style="display:none;" size="10" name="wc_end_date[]" id="wc_end_date<?PHP echo $mj+1; ?>" placeholder = "mm-dd-yyyy" value="<?PHP echo $wc_date1[1].'-'.$wc_date1[2].'-'.$wc_date1[0]; ?>" />
 		
 		<span class="wc_<?PHP echo $mj+1; ?>" style="color:<?php echo $color_exp; ?>"><?PHP echo $wc_date1[1].'/'.$wc_date1[2].'/'.$wc_date1[0]; ?></span>
 		<?php $color_exp = ''; ?>
-		<?php if($WC_data[$mj]->wc_end_date < date('Y-m-d')) { ?><?php } ?><script type="text/javascript">G('#wc_end_date<?PHP echo $mj+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+		<?php if($WC_data[$mj]->wc_end_date < date('Y-m-d')) { ?><?php } ?><script type="text/javascript">G('#wc_end_date<?PHP echo $mj+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
       </div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   	  
       <div class="comm">
         <label>Last Verified By MyVendorCenter On:</label>
-        <input class="bak" size="10" name="wc_date_verified[]" id="wc_date_verified<?PHP echo $mj+1; ?>" type="text" value="<?PHP 
+        <input class="bak" size="10" name="wc_date_verified[]" id="wc_date_verified<?PHP echo $mj+1; ?>" type="text" placeholder = "mm-dd-yyyy" value="<?PHP 
 		if($WC_data[$mj]->wc_status == '-1' ){ echo 'Rejected'; } 
 		else if($WC_data[$mj]->wc_date_verified == '00-00-0000') { echo 'Pending';		}
 		else { echo $WC_data[$mj]->wc_date_verified; }?>"/>
@@ -3347,6 +3474,7 @@ else{
 					<?PHP if($WC_data[$mj]->wc_end_date != '0000-00-00' && $WC_data[$mj]->wc_end_date < date('Y-m-d')) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?></td></tr></table></div>
+					</div>
     </div>
 	<?php 
 if($WC_data[$mj]->wc_date_verified == '00-00-0000' && !$WC_data[$mj]->wc_upld_cert) {
@@ -3458,14 +3586,14 @@ else{
 			$OMI_data[0]->OMI_end_date = '0000-00-00';
 		} ?>
            <?PHP $OMI_date = explode('-',$OMI_data[0]->OMI_end_date); ?>
-        <input type="text" size="10" style=" display:none" name="OMI_end_date[]" id="OMI_end_date1" value="<?PHP echo $OMI_date[1].'-'.$OMI_date[2].'-'.$OMI_date[0]; ?>" />
+        <input type="text" size="10" style=" display:none" name="OMI_end_date[]" id="OMI_end_date1" readonly="readonly" value="<?PHP echo $OMI_date[1].'-'.$OMI_date[2].'-'.$OMI_date[0]; ?>" />
 		<span class="OMI_1" style="color:<?php echo $color_exp; ?>"><?PHP echo $OMI_date[1].'/'.$OMI_date[2].'/'.$OMI_date[0]; ?></span>
         <?php if($OMI_data[0]->OMI_end_date < date('Y-m-d')) { ?><?php } ?>
-        <script type="text/javascript">G('#OMI_end_date1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+        <script type="text/javascript">G('#OMI_end_date1').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 		</div>
 		<div class="in-pan1">
 		<label>Aggregate:</label>
-	<input type="text"  class="t_field" name="OMI_aggregate[]" id="OMI_aggregate1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid numer'); this.value=''; }" onChange="javascript: add_commas('OMI_aggregate',this.value,1);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($OMI_data) {echo number_format($OMI_data[0]->OMI_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+	<input type="text"  class="t_field" name="OMI_aggregate[]" id="OMI_aggregate1" onChange="javascript: add_commas('OMI_aggregate',this.value,1);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($OMI_data) {echo number_format($OMI_data[0]->OMI_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="OMI_1" id="greencolormoney"><?PHP if($OMI_data[0]->OMI_aggregate) {echo number_format($OMI_data[0]->OMI_aggregate,2); } ?></span>
 		</div>
       </div>
@@ -3474,7 +3602,7 @@ else{
 	  <div class="in-pan">
         <label>Each Claim:</label>
            <?PHP $OMI_date = explode('-',$OMI_data[0]->OMI_end_date); ?>
-        <input type="text" class="t_field" name="OMI_each_claim[]" id="OMI_each_claim1" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('OMI_each_claim',this.value,1);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($OMI_data) {echo number_format($OMI_data[0]->OMI_each_claim,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+        <input type="text" class="t_field" name="OMI_each_claim[]" id="OMI_each_claim1" onChange="javascript: add_commas('OMI_each_claim',this.value,1);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($OMI_data) {echo number_format($OMI_data[0]->OMI_each_claim,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 		<span class="OMI_1" id="greencolormoney"><?PHP if($OMI_data[0]->OMI_each_claim) {echo number_format($OMI_data[0]->OMI_each_claim,2); } ?></span>
 		</div>
 		</div>
@@ -3494,13 +3622,20 @@ else{
 		  }
 		  ?>
 		  <p id="OMI_cert1" style="display:none;"><input type="radio" <?php echo $omi_classf; ?> value="yes" name="omi_cert0"  style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $omi_classs; ?> value="no" name="omi_cert0"  style="margin-left:0px;" />&nbsp;No</p>
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="OMI_certhide1"><?php echo $omioccur; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="OMI_certhide1"><?php echo $omioccur; ?></span>
         </div>
 		</div>
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   		
       <div class="comm">
 	  <div class="in-pan">
         <label style="padding-top:5px;">Last Verified By MyVendorCenter On:</label>
-        <input type="text" class="bak" size="10" name="OMI_date_verified[]" id="OMI_date_verified"  type="text" value="<?PHP  
+        <input type="text" class="bak" size="10" name="OMI_date_verified[]" id="OMI_date_verified"  type="text" placeholder = "mm-dd-yyyy" value="<?PHP  
 		if($OMI_data[0]->OMI_status == '-1' ){ echo 'Rejected'; } 
 		else if($OMI_data[0]->OMI_date_verified == '00-00-0000') { echo 'Pending';	 }
 		else { echo $OMI_data[0]->OMI_date_verified; } ?>"/>
@@ -3522,7 +3657,7 @@ else{
 					<?php /*?><?PHP if($OMI_data[0]->OMI_end_date != '0000-00-00' && $OMI_data[0]->OMI_end_date < date('Y-m-d') && $OMI_data[0]->OMI_end_date) {?>
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div></div>
-					
+					</div>
     </div>
 	<div class="clear"></div>
 	
@@ -3612,9 +3747,9 @@ else{
       </div>
 	  <div id="OMI_delete_<?PHP echo $i+1; ?>" class="<?PHP echo $i+1; ?>OMI">
 <span class="remove2"><a  href="javascript:del_upld_cert('OMI_upld_cert<?PHP echo $i+1; ?>','<?PHP echo $OMI_data[$i]->OMI_upld_cert; ?>','omissions_companies_insurance','OMI','<?PHP echo $OMI_data[$i]->id; ?>','<?PHP echo $i+1; ?>')"  class="adminedit_complaince" id="removeOMI<?PHP echo $i+1; ?>"> </a>
-	  <br /> <a  href="javascript:del_callajaxcomp_OMI('errors_omissions_insurance','<?php echo $OMI_data[$i]->id;?>','<?PHP echo $i+1; ?>');" class="admindelete_complaince" style="margin-top:-1px;"></a>
+	  <br /> <a  href="javascript:del_callajaxcomp_OMI('errors_omissions_insurance','<?php echo $OMI_data[$i]->id;?>','<?PHP echo $i+1; ?>');" class="admindelete_complaince" ></a>
 <?php if( count($OMI_data) == $i+1 ){ ?>	   
- <br /><a href="javascript:callajaxcomp_OMI();" class="adminaddanotherbutton_vendor" style="margin-top:-1px;"></a>
+ <br /><a href="javascript:callajaxcomp_OMI();" class="adminaddanotherbutton_vendor" ></a>
  <?php } ?>
  
 	   </span>
@@ -3636,16 +3771,16 @@ else{
 	}
 	?>
            <?PHP $OMI_date2 = explode('-',$OMI_data[$i]->OMI_end_date); ?>
-      <input  style="display:none"; name="OMI_end_date[]" type="text" id="OMI_end_date<?PHP echo $i+1; ?>" size="10" class="t_field" value="<?PHP echo $OMI_date2[1].'-'.$OMI_date2[2].'-'.$OMI_date2[0]; ?>">
+      <input  style="display:none"; name="OMI_end_date[]" type="text" id="OMI_end_date<?PHP echo $i+1; ?>" size="10" class="t_field"  value="<?PHP echo $OMI_date2[1].'-'.$OMI_date2[2].'-'.$OMI_date2[0]; ?>">
 	  <span class="OMI_<?PHP echo $i+1; ?>" style="color:<?php echo $color_exp; ?>"><?PHP echo $OMI_date2[1].'/'.$OMI_date2[2].'/'.$OMI_date2[0]; ?></span>
 	<?php 
 	$color_exp = '';
 	   if($OMI_data[$i]->OMI_end_date < date('Y-m-d')){ ?> <?php } ?>
-	  <script type="text/javascript">G('#OMI_end_date<?PHP echo $i+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,maxDate: "+5y",changeMonth:true});</script>
+	  <script type="text/javascript">G('#OMI_end_date<?PHP echo $i+1; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 	  </div>
 	  <div class="in-pan1">
 		<label>Aggregate:</label>
-	<input type="text" class="t_field" name="OMI_aggregate[]" id="OMI_aggregate<?PHP echo $i+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('OMI_aggregate',this.value,<?PHP echo $i+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($OMI_data) {echo number_format($OMI_data[$i]->OMI_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+	<input type="text" class="t_field" name="OMI_aggregate[]" id="OMI_aggregate<?PHP echo $i+1; ?>" onChange="javascript: add_commas('OMI_aggregate',this.value,<?PHP echo $i+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($OMI_data) {echo number_format($OMI_data[$i]->OMI_aggregate,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 	<span class="OMI_<?PHP echo $i+1; ?>" id="greencolormoney"><?PHP if($OMI_data[$i]->OMI_aggregate) {echo number_format($OMI_data[$i]->OMI_aggregate,2); } else { echo "0.00"; } ?></span>
 		</div>
       </div>
@@ -3653,7 +3788,7 @@ else{
 	  <div class="comm">
 	  <div class="in-pan">
         <label>Each Claim:</label>
-        <input type="text" class="t_field" name="OMI_each_claim[]" id="OMI_each_claim<?PHP echo $i+1; ?>" onKeyup="if(isNaN(parseInt(this.value)) && this.value!='' && event.keycode!='13' && event.keycode!='9') { alert('Please enter valid number'); this.value=''; }" onChange="javascript: add_commas('OMI_each_claim',this.value,<?PHP echo $i+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($OMI_data) {echo number_format($OMI_data[$i]->OMI_each_claim,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
+        <input type="text" class="t_field" name="OMI_each_claim[]" id="OMI_each_claim<?PHP echo $i+1; ?>" onChange="javascript: add_commas('OMI_each_claim',this.value,<?PHP echo $i+1; ?>);" size="20"  style="color: green; text-align: left; display:none;" value="<?PHP if($OMI_data) {echo number_format($OMI_data[$i]->OMI_each_claim,2); } ?>" onClick="if(this.value == '0.00') this.value='';"/>
 		<span class="OMI_<?PHP echo $i+1; ?>" id="greencolormoney"><?PHP if($OMI_data[$i]->OMI_each_claim) {echo number_format($OMI_data[$i]->OMI_each_claim,2); } else { echo "0.00"; } ?></span>
 		</div>
 		</div>
@@ -3673,15 +3808,21 @@ else{
 		  }
 		  ?>
 		  <p id="OMI_cert<?PHP echo $i+1; ?>" style="display:none;"><input type="radio" <?php echo $omi_classfs; ?> value="yes" name="omi_cert<?PHP echo $i; ?>"  style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $omi_classss; ?> value="no" name="omi_cert<?PHP echo $i; ?>"  style="margin-left:0px;" />&nbsp;No</p>
-         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:160px; margin-top:-18px; display:block;" id="OMI_certhide<?PHP echo $i+1; ?>"><?php echo $omioccurs; ?></span>
+         <span style="color:<?php echo $color; ?>; font-weight:bold;  margin-left:165px; margin-top:-18px; display:block;" id="OMI_certhide<?PHP echo $i+1; ?>"><?php echo $omioccurs; ?></span>
         </div>
 		</div>
 		
-		
+	<?php 
+		if( $user->subscribe_type == 'free' )
+			$display = 'none';	   
+		else
+			$display = '';	   	
+	?>	
+<div class="freeaccounts_display" style="display:<?php echo $display; ?>">	   		
       <div class="comm">
 	  <div class="in-pan">
         <label style="padding-top:5px;">Last Verified By MyVendorCenter On:</label>
-        <input type="text" class="bak" size="10" name="OMI_date_verified[]" id="OMI_date_verified<?PHP echo $i+1 ?>"  type="text" value="<?PHP  
+        <input type="text" class="bak" size="10" name="OMI_date_verified[]" id="OMI_date_verified<?PHP echo $i+1 ?>"  type="text" placeholder = "mm-dd-yyyy" value="<?PHP  
 		if($OMI_data[$i]->OMI_status == '-1' ){ echo 'Rejected'; } 
 		else if($OMI_data[$i]->OMI_date_verified == '00-00-0000') { echo 'Pending';		 }
 		else { echo $OMI_data[$i]->OMI_date_verified; } ?>"/>
@@ -3705,7 +3846,7 @@ else{
 					<b style="padding-left:50px; color:#FF0000;">(Expired)</b>
 					<?PHP } ?><?php */?></td></tr></table></div>
 		</div>			
-					
+				</div>	
 		<?php 
 if($OMI_data[$i]->OMI_date_verified == '00-00-0000' && !$OMI_data[$i]->OMI_upld_cert) {
 echo '<div class="verf"><div class="wse"><font color="gray">NONE</font></div></div>';

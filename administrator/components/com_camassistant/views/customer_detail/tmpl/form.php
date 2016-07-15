@@ -62,7 +62,7 @@ function verifyemail(email){
 		}
 	}
 		function submitbutton(pressbutton) {
-
+		
 			var form = document.adminForm;
             var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 			re = /[0-9]/;

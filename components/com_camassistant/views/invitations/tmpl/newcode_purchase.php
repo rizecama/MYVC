@@ -469,7 +469,7 @@ if($codes){ ?>
 <div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
 <span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">ERROR</font></span>
 </div></div>
-<div style="text-align:justify"><p class="existcodemsg">You are not authorized to become a Preferred Vendor because your Client is requesting that Vendors have a VERIFIED account to purchase this code.</p>
+<div style="text-align:justify"><p class="existcodemsg">You have already purchased this Preferred Vendor Code.</p>
 </div>
 <div style="padding-top:30px;" align="center">
 <div id="canceler" name="doneer" value="Ok" class="become_verified"></div>

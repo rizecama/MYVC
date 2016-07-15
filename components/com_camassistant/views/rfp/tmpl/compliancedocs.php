@@ -390,7 +390,7 @@ $status	= JRequest::getVar('status','');
 					$success_gli_exp[] = $success_arr_exp[$exp];
 				}
 			}
-			if(!$success_gli_exp) { ?>
+			if( !$success_gli_exp && $success_gli_file ) { ?>
 			<li><span style="color:red;">Expired</span></li>
 			<?php }
 			?>
@@ -933,7 +933,7 @@ $status	= JRequest::getVar('status','');
 						}
 				}
 				
-			if(!$success_aip_exp) { ?>
+			if( !$success_aip_exp && $success_aip_file ) { ?>
 			<li><span style="color:red;">Expired</span></li>
 			<?php }
 			?>
@@ -1537,7 +1537,7 @@ $status	= JRequest::getVar('status','');
 					$success_wci_exp[] = $success_arr_exp[$exp];
 				}
 			}
-			if(!$success_wci_exp) { ?>
+			if(!$success_wci_exp && $success_wci_file ) { ?>
 			<li><span style="color:red;">Expired</span></li>
 			<?php }
 			?>
@@ -1764,7 +1764,7 @@ $status	= JRequest::getVar('status','');
 					$success_umb_exp[] = $success_arr_exp[$exp];
 				}
 			}
-			if(!$success_umb_exp) { ?>
+			if(!$success_umb_exp && $success_umb_file ) { ?>
 			<li><span style="color:red;">Expired</span></li>
 			<?php }
 			?>
@@ -1974,7 +1974,7 @@ $status	= JRequest::getVar('status','');
 					$success_omi_exp[] = $success_arr_exp[$exp];
 				}
 			}
-			if(!$success_omi_exp) { ?>
+			if(!$success_omi_exp && $success_omi_file ) { ?>
 			<li><span style="color:red;">Expired</span></li>
 			<?php }
 			?>

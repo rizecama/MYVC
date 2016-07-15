@@ -28,8 +28,8 @@ $delid = $compliance;
     <div class="lic-pan-right">
       <div class="comm">
         <label>Expiration Date:</label>
-          <input name="OLN_expdate[]" id="OLN_expdate<?PHP echo $compliance; ?>" type="text" class="t_field" value="" />
-<script type="text/javascript">G('#OLN_expdate<?PHP echo $compliance; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,maxDate: "+5y"});</script>
+          <input name="OLN_expdate[]" id="OLN_expdate<?PHP echo $compliance; ?>" type="text" class="t_field" placeholder = "mm-dd-yyyy" value="" />
+<script type="text/javascript">G('#OLN_expdate<?PHP echo $compliance; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,minDate: "0y",maxDate: "+5y"});</script>
 <script type="text/javascript">
 	G('#OLN_expdate<?PHP echo $compliance; ?>').click(function(){
 	var check = "<span class='othercheck'><input type='checkbox' value='does not expire' onclick='closecalOLN<?PHP echo $compliance; ?>();'>This document does not expire</span>";

@@ -121,9 +121,10 @@ function proposalpopup(){
 <?PHP echo $vdata->company_address;  ?><br />
 <?PHP echo $vdata->city.',&nbsp;'.strtoupper($vdata->state).'&nbsp;'.$vdata->zipcode;  ?><br /><br />
 <?PHP echo "P:&nbsp;".$vdata->company_phone; if($vdata->phone_ext) { echo "&nbsp;(".$vdata->phone_ext.')'; }?><br />
-<?php if($vdata->alt_phone){
+<?php if( $vdata->alt_phone && $vdata->alt_phone !='--'){
 echo "Alt:&nbsp;".$vdata->alt_phone; if($vdata->alt_phone_ext) { echo "&nbsp;(".$vdata->alt_phone_ext.')'; }?><br />
-<?php } ?>
+<?php } else { ?>
+ Alt:&nbsp; None <?php }?><br />
 <a href="mailto:<?PHP echo $vdata->email;  ?>"><?PHP echo $vdata->email;  ?></a><br />
     </div>
     <?php //echo '<pre>'; print_r($RFP); ?>
@@ -209,9 +210,9 @@ Alt. Phone: <?PHP echo $RFP->comp_alt_phno;  ?><br />
 <a href="http://<?PHP echo $RFP->comp_website;  ?>" target="_blank"><?PHP echo $RFP->comp_website;  ?></a>
 
     </div>
-
+<?php $duetime = date("h:i A", strtotime($RFP->proposalDueTime)) ?>
 <div class="signupreview_new">
-<label><strong>Requested Due Date:</strong> <?PHP echo $RFP->proposalDueDate.',&nbsp;'.$RFP->proposalDueTime  ?></label>
+<label><strong>Requested Due Date:</strong> <?PHP echo $RFP->proposalDueDate.',&nbsp;'.$duetime  ?></label>
 </div>
 	
 <div class="signupreview">
@@ -224,7 +225,7 @@ Alt. Phone: <?PHP echo $RFP->comp_alt_phno;  ?><br />
 <label><strong>City:</strong> <?PHP echo $RFP->city;  ?></label>
 </div>
 <div class="signupreview">
-<label><strong>State:</strong> <?PHP echo $RFP->state;  ?></label>
+<label><strong>State:</strong> <?PHP echo strtoupper($RFP->state);  ?></label>
 </div>
 <div class="signupreview">
 <label><strong>Zip:</strong> <?PHP echo $RFP->zip;  ?></label>

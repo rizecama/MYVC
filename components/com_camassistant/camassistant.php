@@ -84,6 +84,12 @@ $redirect = 1;
 if($_REQUEST['task'] == 'save_pcode') {
 $redirect = 1;
 }
+if($_REQUEST['task'] == 'getallcounties') {
+$redirect = 1;
+}
+if($_REQUEST['task'] == 'getallindustries') {
+$redirect = 1;
+}
 
 
 if($user->id=='' && $redirect=='' ){

@@ -25,13 +25,13 @@ $delid = $compliance;
 
   
   
-  <input type="hidden" class="file_input_textbox" name="UMB_upld_cert[]" id="UMB_upld_cert<?PHP echo  $UMB_title; ?>"  value="" /></div></div>
+  <input type="hidden" class="file_input_textbox" name="UMB_upld_cert[]" id="UMB_upld_cert<?PHP echo  $UMB_title; ?>"   value="" /></div></div>
     <div class="lic-pan-rightnew">
       <div class="comm">
 	  <div class="in-pan1">
         <label>Exp. Date:</label>
-          <input name="UMB_expdate[]" id="UMB_expdate<?PHP echo $compliance; ?>" type="text" class="t_field" value="" /><span style="color:red; font-size: 20px;">*</span>
-<script type="text/javascript">G('#UMB_expdate<?PHP echo $compliance; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,maxDate: "+5y"});</script>
+          <input name="UMB_expdate[]" id="UMB_expdate<?PHP echo $compliance; ?>" type="text" class="t_field" placeholder = "mm-dd-yyyy" value="" /><span style="color:red; font-size: 20px;">*</span>
+<script type="text/javascript">G('#UMB_expdate<?PHP echo $compliance; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,minDate: "0y",maxDate: "+5y"});</script>
 </div>
 <div class="in-pan1">
 		<label>Aggregate:</label>

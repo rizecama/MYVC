@@ -172,8 +172,47 @@ L('#phone1').keyup(function(){
 		else
 		L( this ).prev().addClass( 'active' );
 	});			
-	
-					
+
+
+L('#property_name').bind('input',function(){ 
+if( L(this).val() == '' )
+L( this ).prev().removeClass( 'active' );
+else
+L( this ).prev().addClass( 'active' );          
+});
+L('#streeaddress').bind('input',function(){ 
+if( L(this).val() == '' )
+L( this ).prev().removeClass( 'active' );
+else
+L( this ).prev().addClass( 'active' );          
+});
+L('#city').bind('input',function(){ 
+if( L(this).val() == '' )
+L( this ).prev().removeClass( 'active' );
+else
+L( this ).prev().addClass( 'active' );          
+});
+L('#zipcode').bind('input',function(){ 
+if( L(this).val() == '' )
+L( this ).prev().removeClass( 'active' );
+else
+L( this ).prev().addClass( 'active' );          
+});
+L('#units').bind('input',function(){ 
+if( L(this).val() == '' )
+L( this ).prev().removeClass( 'active' );
+else
+L( this ).prev().addClass( 'active' );          
+});
+
+L('#phone1').bind('input',function(){ 
+if( L(this).val() == '' )
+L( this ).prev().removeClass( 'active' );
+else
+L( this ).prev().addClass( 'active' );          
+});
+
+				
 	});
 </script>
 
@@ -207,6 +246,7 @@ L('#phone1').keyup(function(){
 <div class="signup">
 <label class="propertyownerredicons">Title (your relation to this property):</label>
 <select name="board_position" id="board_position">
+<option value="0">select your position</option>
 <option value="Owner" <?PHP if($property->board_position == 'Owner'){?> selected="selected" <?PHP } ?>>Owner</option>
 <option value="President" <?PHP if($property->board_position == 'President'){?> selected="selected" <?PHP } ?>>President</option>
 <option value="Vice President" <?PHP if($property->board_position == 'Vice President') {?> selected="selected" <?PHP } ?>>Vice President</option>
@@ -232,7 +272,7 @@ L('#phone1').keyup(function(){
 <div class="state">
 <label class="propertyownerredicons">State: </label>
 <select name="state"  id="stateid" onchange="javascript:county();" >
-<option value="">Select State</option>
+<option value="0">Select State</option>
   <?php 
 
 for ($i=0; $i<count($this->states); $i++){
@@ -252,13 +292,14 @@ $states = $this->states[$i];
 
 <label class="propertyownerredicons">County: </label>
 <select name="divcounty" id="divcounty" >
-<option value="">Select County</option>
+<option value="0">Select County</option>
 </select>
 
 </div>
 <div class="signup">
 <label class="propertyownerredicons">Time Zone:  </label>
 <select  name="timezone"  id="timezone" >
+<option value="0"> Select Timezone</option>
 <option <?php if( $property->timezone == 'eat'){ echo "selected='selected'"; } ?> value="est">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
 <option <?php if( $property->timezone == 'cen'){ echo "selected='selected'"; } ?> value="cen">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
 <option <?php if( $property->timezone == 'mou'){ echo "selected='selected'"; } ?> value="mou">(GMT -7:00) Mountain Time (US &amp; Canada)</option>

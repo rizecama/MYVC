@@ -11,7 +11,7 @@ $from = JRequest::getVar('from','');
 G = jQuery.noConflict();
 	G(document).ready(function(){
 		G('#current').val('');
-		G('#cancelpopup').click(function(){
+		G('#cancelpopup_new').click(function(){
 			window.parent.document.getElementById( 'sbox-window' ).close();
 		});
 		
@@ -24,7 +24,7 @@ G = jQuery.noConflict();
 </div></div>
 <p class="uninitedtext_vendor">The Manager who submitted this request has uninvited you for the following reason:<br /><br /><strong><?php echo $this->message ?></strong></p>
 <div class="resetpasswords_message">
-<a id="cancelpopup" href="#" class="oknewsmall_new"></a>
+<a id="cancelpopup_new" href="#" class="oknewsmall_new"></a>
 </div>
 <?php
 exit;

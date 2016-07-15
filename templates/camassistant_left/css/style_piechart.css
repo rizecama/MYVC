@@ -1,3 +1,42 @@
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://example.com/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
+       url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
+       url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+
 * { list-style: none; margin: 0; outline: none; padding: 0; text-decoration: none; }
 
 body { font: 14px "Open Sans", sans-serif; color: #2c384a; -webkit-font-smoothing: antialiased; text-shadow: 0 0 1px rgba(0, 0, 0, 0.01); }
@@ -23,19 +62,20 @@ fleft, header .logos, header .misc-logo-container, .compliance-report-summary .d
 
 fright { float: right; }
 
-.wrapper { margin: 0 auto; width: 940px; padding: 0 10px; position: relative; }
+.wrapper { margin:  0 auto; width: 1024px; padding: 0 10px; position: relative; }
 
-header { background: url(../piechart_images/header-bg.jpg) no-repeat; border-bottom: 4px solid #8dc63f; color: #ffffff; padding: 60px 0; }
+header { background: url(../piechart_images/header-bg.jpg) no-repeat; border-bottom: 12px solid #8dc63f; color: #ffffff; padding: 60px 0; }
 header .logos { width: 554px; }
 header .logos .top-logo { margin-bottom: 10px; width: 262px; }
 header .logos .bottom-logo { margin-bottom: 5px; width: 400px; }
 header .logos .logo-slogan { color: #ffffff; }
 header .misc-logo-container { width: 386px; text-align: center; }
-header .misc-logo-container .misc-logo { float: right; }
+header .misc-logo-container .misc-logo { float: right; background-color: #ffffff; padding: 15px;}
 
-.compliance-report-summary { background-color: #f5f5f5; padding: 50px 0; }
-.compliance-report-summary .disclaimer { margin-right: 20px; padding-top: 30px; width: 376px; }
-.compliance-report-summary .compliance-overview { width: 544px; }
+.compliance-report-summary { background-color: #f5f5f5;}
+/*.compliance-report-summary .disclaimer { margin-right: 20px; padding-top: 30px; width: 376px; }*/
+.compliance-report-summary .disclaimer { margin-right: 20px;  padding: 82px 0 100px;  width: 376px;}
+.compliance-report-summary .compliance-overview { width: 628px; }
 .compliance-report-summary .compliance-overview .stats { position: relative; }
 .compliance-report-summary .compliance-overview .stats .chart { /* Edit the css for the chart in piechart.css */ position: relative; z-index: 2; }
 .compliance-report-summary .compliance-overview .stats .number-of-vendors-in-compliance { background-color: #e3e4e6; margin-left: -130px; margin-top: calc(260px/2 - 161px/2); padding: 30px 30px 30px 148px; position: relative; z-index: 1; }
@@ -46,16 +86,16 @@ header .misc-logo-container .misc-logo { float: right; }
 .compliance-report-summary .compliance-overview .stats .number-of-vendors-in-compliance .number-non-compliants { margin-bottom: 10px; }
 .compliance-report-summary .compliance-overview .stats .number-of-vendors-in-compliance .number-non-compliants > span { background-color: #f00; }
 
-#main h2.vender-category-title { font-size: 30px; padding-top: 30px; text-align: center; }
-#main .company { padding: 60px 0; }
+#main h2.vender-category-title { font-size: 30px; margin: 0px 0 0 1px; text-align: center; border: 1px solid #808080; margin-left:1px;padding-bottom: 12px;padding-top: 12px;}
+#main .company {   padding: 49px 0 32px;}
 #main .company:nth-of-type(odd) { background-color: #ffffff; }
 #main .company:nth-of-type(even) { background-color: #f5f5f5; }
-#main .company .company-information { padding-right: 10px; width: 25%; }
-#main .company .company-information ul li { margin-bottom: 32px; min-height: 51px; }
+#main .company .company-information { padding-right: 10px; width: 28%; }
+#main .company .company-information ul li { margin-bottom: 21px; min-height: 51px; }
 #main .company .company-information ul li:last-child { margin-bottom: 0; }
 #main .company .company-information .company-compliance-status .company-name { display: block; font-size: 20px; font-weight: 700; margin-bottom: 5px; }
 #main .company .company-information .company-compliance-status .company-name + span { margin-bottom: 5px; }
-#main .company .company-information .company-compliance-status .in-compliance, #main .company .company-information .company-compliance-status .not-in-compliance { font-size: 16px; font-weight: 700; display: none; }
+#main .company .company-information .company-compliance-status .in-compliance, #main .company .company-information .company-compliance-status .not-in-compliance { font-size: 18px; font-weight: 700; display: none; }
 #main .company .company-information .company-compliance-status .in-compliance:before, #main .company .company-information .company-compliance-status .not-in-compliance:before { border-radius: 50%; content: ""; display: inline-block; height: 25px; margin-right: 10px; vertical-align: middle; width: 25px; }
 #main .company .company-information .company-compliance-status .in-compliance.current, #main .company .company-information .company-compliance-status .not-in-compliance.current { display: block; }
 #main .company .company-information .company-compliance-status .in-compliance { color: #8dc63f; }
@@ -63,8 +103,8 @@ header .misc-logo-container .misc-logo { float: right; }
 #main .company .company-information .company-compliance-status .not-in-compliance { color: #f00; }
 #main .company .company-information .company-compliance-status .not-in-compliance:before { background: #f00 url(../piechart_images/compliance-failed-icon.svg) 0 0 no-repeat; }
 #main .company .company-information .company-address, #main .company .company-information .company-contact { font-size: 12px; }
-#main .company .company-compliances { width: 75%; }
-#main .company .company-compliances ul.compliance-category-column { padding-right: 10px; width: 33.3333333%; }
+#main .company .company-compliances { width: 72%; }
+#main .company .company-compliances ul.compliance-category-column { width: 33.3333333%; }
 #main .company .company-compliances ul.compliance-category-column:last-child { margin-right: 0; }
 #main .company .company-compliances ul.compliance-category-column li.compliance { margin-bottom: 40px; }
 #main .company .company-compliances ul.compliance-category-column li.compliance:last-child { margin-bottom: 0; }
@@ -77,14 +117,214 @@ header .misc-logo-container .misc-logo { float: right; }
 #main .company .company-compliances ul.compliance-category-column li.compliance[data-compliance="compliant"] .compliance-category { color: #8dc63f; }
 #main .company .company-compliances ul.compliance-category-column li.compliance[data-compliance="non-compliant"] .icon { background: #f00 url(../piechart_images/non-compliant-icon.svg) 0 0 no-repeat; }
 #main .company .company-compliances ul.compliance-category-column li.compliance[data-compliance="non-compliant"] .compliance-category { color: #f00; }
-#main .company .company-compliances ul.compliance-category-column li.compliance .compliance-category { color: #636363; display: inline-block; font-size: 16px; padding-left: 6px; vertical-align: middle; }
+#main .company .company-compliances ul.compliance-category-column li.compliance .compliance-category { color: #636363; display: inline-block; font-size: 16px; padding-left: 6px; vertical-align: middle; padding-top:10px;}
 #main .company .company-compliances ul.compliance-category-column li.compliance .compliance-category .compliance-category-title { display: block; font-weight: 700; }
 #main .company .company-compliances ul.compliance-category-column li.compliance .compliance-category .compliance-date { display: block; }
+.noncurrent:before{
+background: rgba(0, 0, 0, 0) url(../piechart_images/compliance-failed-icon.svg) no-repeat scroll 0 0;
+content: "";
+height: 26px;
+left: 0;
+position: absolute;
+top: 0;
+width: 26px;
+}
 .noncurrent {
-  background: rgba(0, 0, 0, 0) url(../piechart_images/compliance-failed-icon.svg) no-repeat scroll 0 0;
-  color: #ff0000;
-  display: block;
-  font-size: 18px;
-  padding-left: 29px;
+color: #ff0000;
+display: block;
+font-size: 18px;
+padding-left: 35px;
+margin-bottom:9px;
+padding-bottom:2px;
+position: relative;
+}
+.current:before{
+background: rgba(0, 0, 0, 0) url(../piechart_images/compliance-verified-icon.svg) no-repeat scroll 0 0;content: "";
+height: 26px;
+left: 0;
+position: absolute;
+top: 0;
+width: 26px;
+}
+.current {
+color: #8dc63f;
+display: block;
+font-size: 18px;
+padding-left: 35px;
+margin-bottom:9px;
+padding-bottom:2px;
+position: relative;
+}
+
+.vendortype, .vendortypenew {
+color: #6bbe2a;
+font-size: 18px;
+font-weight: bold;
+margin-left: 10px;
+vertical-align: 7px;
+}
+
+.compliancepdf {
+  margin-left: 162px;
+  font-size: 12px;
+}
+.compliancepdf a{
+color: #ffffff;
+font-size: 12px;
+}
+ .logo-slogan a {
+color: #fff;
+display: block;
+padding-top: 8px;
+}
+.logo-slogan a:hover {
+text-decoration: underline;
+}
+.socialicons {
+  background: gray none repeat scroll 0 0;
+  margin: -60px 0 0;
+  position: fixed;
+  width: 100%;
+  z-index:999;
+}
+.socialicons > ul {
+  height: 43px;
+  text-align: center;
+}
+.socialicons ul li {
+  display: inline;
+}
+.material-icons:hover {
+    color: #636363;
+}
+.material-icons {
+color: #ffffff;
+padding-left: 15px;
+padding-top: 10px;
+}
+.provide .material-icons {
+  color: #a6a6a6;
+  font-size: 60px !important;
+  padding-left: 0;
+  padding-top: 0;
+}
+.provide{
+display:inline-block;
+float: left;
+}
+.none .material-icons {
+  color: #a6a6a6;
+  font-size: 60px !important;
+  padding-left: 0;
+  padding-top: 0;
+}
+.none{
+display:inline-block;
+float: left;
+}
+.cancel .material-icons {
+  color: red;
+  font-size: 60px !important;
+  padding-left: 0;
+  padding-top: 0;
+}
+.cancel{
+display:inline-block;
+float: left;
+}
+.verified .material-icons {
+  color: #8dc63f;
+  font-size: 26px !important;
+  padding-left: 0;
+  padding-top: 0;
+}
+.unverified .material-icons {
+  color: red;
+  font-size: 26px !important;
+  padding-left: 0;
+  padding-top: 0;
+}
+
+.stats {
+  float: right;
+  padding: 38px 0;
+  margin-right: 46px;
+}
+.company-address .company-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+.company-address span {
+  font-size: 14px;
+ }
+.company-contact strong, .company-contact span {
+  font-size: 14px;
+}
+.company-name {
+  line-height: 30px;
+}
+.address1 {
+  line-height: 25px;
+}
+.in-compliance.current {
+  margin-bottom: 9px;
+}
+#loading-div-background{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	background:rgba(0, 0, 0, 0.6);
+	z-index:999;
+}
+
+#loading-div {
+  background-color: #fff;
+  border: 6px solid #7ab800;
+  color: gray;
+  height: 150px;
+  left: 50%;
+  margin-left: -150px;
+  margin-top: -100px;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  width: 300px;
+}
+.contact {
+  line-height: 19px;
+}
+.contact-phone {
+line-height: 22px;
+}
+.company-compliance-status .doctype{
+font-weight:600;
+vertical-align: -1px;
+}
+.noncurrent .doctype {
+vertical-align: -2px; 
+}
+.company-compliance-status.vertical_middle .doctype {
+  vertical-align: -1px;
+}
+
+.company-compliance-status .nondoctype {
+font-weight: 600;
+vertical-align: -1px;
+}
+.company-address {
+max-width: 240px;
+}
+@media (min-width: 768px) and (max-width: 1031px){
+	header, body {
+	min-width:1044px;
+	}
+}
+@media (min-width: 320px) and (max-width: 480px){
+	header, body {
+	min-width:1044px;
+	}
 }
 /*# sourceMappingURL=style.css.map */

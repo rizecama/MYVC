@@ -1,5 +1,5 @@
 
-<?php /*?>$country = '';
+<?php /*?><?php $country = '';
 $IP = $_SERVER['REMOTE_ADDR'];
 if (!empty($IP)) {
    $country = trim(file_get_contents("http://ipinfo.io/{$IP}/country"));
@@ -10,7 +10,8 @@ $allowed = array(
 'US',
 'IN',
 );
-if(!in_array($country,$allowed)) { echo "<div class='noentry_country'><img src='templates/camassistant/images/myvendorcenter.gif'><br /><span>MyVendorCenter is currently available in the United States and Canada only. <br />Please email <a href='mailto:support@myvendorcenter.com'>support@myvendorcenter.com</a> <br />if you're interested in finding out when our program will be available in your country.</span></div>"; die();}<?php */?>
+if(!in_array($country,$allowed)) { echo "<div class='noentry_country'><img src='templates/camassistant/images/myvendorcenter.gif'><br /><span>MyVendorCenter is currently available in the United States and Canada only. <br />Please email <a href='mailto:support@myvendorcenter.com'>support@myvendorcenter.com</a> <br />if you're interested in finding out when our program will be available in your country.</span></div>"; die();}
+?><?php */?>
 <?php 
 /**
 
@@ -56,8 +57,8 @@ JHTML::_('behavior.modal');
 
 
 
-defined( '_JEXEC' ) or die( 'Restricted access' );
 
+defined( '_JEXEC' ) or die( 'Restricted access' );
 
 
 ?>
@@ -114,7 +115,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/assets/css/style.css" type="text/css" />
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <!--<script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/camassistant/js/jquery-latest.js"></script>-->
 
@@ -463,7 +464,7 @@ document.writeln('<scr' + 'ipt language="JavaScript" src="'+tl_loc0+'" type="tex
 
 
 
-   <div id="supportcallnumber">Call 1-800-985-9243</div>
+   <div id="supportcallnumber"><i class="material-icons">call</i>Call 1-800-985-9243</div>
 
 
 

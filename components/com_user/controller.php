@@ -124,7 +124,6 @@ class UserController extends JController
 		//JRequest::checkToken('request') or jexit( 'Invalid Token' );
 
 		global $mainframe;
-
 		if ($return = JRequest::getVar('return', '', 'method', 'base64')) {
 
 			$return = base64_decode($return);
@@ -133,14 +132,34 @@ class UserController extends JController
 				$return = '';
 			}
 		}
-
+        $rembember = JRequest::getVar('remember', '');
+		$username = JRequest::getVar('username', '');
+		$passwd = JRequest::getVar('passwd', '');
+		
+		if( $rembember == 'yes' )
+			{
+			
+				 setcookie("username", $username, time()+(3600 * 24 * 365));
+				 setcookie("passwd", $passwd, time()+(3600 * 24 * 365));  /* expire in 1 hour */
+		}
+		else {
+		 setcookie("username", "",  time()-(3600 * 24 * 365));
+          setcookie("passwd", "",  time()-(3600 * 24 * 365));
+  
+		}
 		$options = array();
 		$options['remember'] = JRequest::getBool('remember', false);
+		
 		$options['return'] = $return;
 
 		$credentials = array();
 		$credentials['username'] = JRequest::getVar('username', '', 'method', 'username');
 		$credentials['password'] = JRequest::getString('passwd', '', 'post', JREQUEST_ALLOWRAW);
+		
+	
+		
+
+	
 		$from = JRequest::getVar('from', '', 'method', 'from');
 		
 		if($from =='adminlogin'){

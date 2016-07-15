@@ -3586,10 +3586,11 @@ function store_vendor_compliance_w9docs_info($data)
 		$res_records[$t]['divcounty'] = $county_id ;
 		
 		// Check vendor in uninvited or NOT
-		$sql_un = "SELECT proposaltype FROM #__cam_vendor_proposals WHERE rfpno=".$res_records[$t]['rfp_id']." and proposedvendorid = ".$user->id." ";
+		$sql_un = "SELECT proposaltype, proposeddate FROM #__cam_vendor_proposals WHERE rfpno=".$res_records[$t]['rfp_id']." and proposedvendorid = ".$user->id." ";
 		$db->Setquery($sql_un);
-		$uninvited = $db->loadResult();	
-		$res_records[$t]['uninvited'] = $uninvited ;
+		$uninvited = $db->loadObject();	
+		$res_records[$t]['uninvited'] = $uninvited->proposaltype ;
+		$res_records[$t]['pro_date'] = $uninvited->proposeddate ;
 		/*$sql_countyid = "SELECT County FROM #__cam_counties WHERE id = ".$county_id." ";
 		$db->Setquery($sql_countyid);
 		$county_name = $db->loadResult();*/	
@@ -3704,10 +3705,22 @@ function store_vendor_compliance_w9docs_info($data)
 
 		}
 		// echo count($rec);
-		
+		//echo '<pre>';print_r($rec);
 		return $rec;
 	
 	}
+	
+	function personalrequests()
+	 {
+	    $db = JFactory::getDBO();
+		$user = JFactory::getUser();
+		 $sql = "SELECT * FROM #__invitations_personal WHERE vendorid=".$user->id;
+		$db->Setquery($sql);
+		$elible_rfps = $db->loadObjectList();
+		//echo '<pre>';print_r($elible_rfps);
+		return $elible_rfps;
+	 
+	 } 
 	//function to get vendor compliance WCI data details sateesh
 	function get_compliance_W9_datav($user)
 	{
@@ -6208,20 +6221,20 @@ else if($totalprefers_new_w9 == 'no' && $totalprefers_new_gli == 'no' && $totalp
 		$y= date("Y"); // Year value
 		$today = date('m-d-Y', mktime(0,0,0,$m,($de+1),$y));
 		//$today = date('m-d-Y');
-
+       $date_1 = date('Y-m-d') ;
+	   
 		//$query = "SELECT A.id, A.rfp_id,A.prp_id,R.projectName,R.proposalDueDate,A.not_interested,P.property_name,P.property_name,P.divcounty,R.industry_id,R.proposalDueTime,A.status  FROM #__cam_vendor_availablejobs as A
 				//  LEFT JOIN #__cam_rfpinfo as R ON A.rfp_id = R.id
 				//  LEFT JOIN #__rfp_invitations as I ON A.rfp_id = I.rfpid
 				//  LEFT JOIN #__cam_property as P ON A.prp_id = P.id
 				//  WHERE I.rfpid = A.rfp_id AND I.vendorid = A.user_id AND A.status = 1 AND R.rfp_type = 'rfp' AND  A.user_id=".$user->id." AND R.publish=1 and A.publish=1 order by R.proposalDueDate,R.proposalDueTime  ASC";
 
-
-  $query = "SELECT DISTINCT(A.rfp_id), A.id, A.prp_id,R.projectName,R.proposalDueDate,A.not_interested,P.property_name,P.property_name,P.divcounty,R.property_id,R.industry_id,R.proposalDueTime,A.status,R.jobtype,R.create_rfptype  FROM jos_cam_vendor_availablejobs as A
+				  $query = "SELECT DISTINCT(A.rfp_id), A.id, A.prp_id,R.projectName,R.proposalDueDate,A.not_interested,P.property_name,P.property_name,P.divcounty,R.property_id,R.industry_id,R.proposalDueTime,A.status,R.jobtype,R.create_rfptype  FROM jos_cam_vendor_availablejobs as A
 				  LEFT JOIN jos_cam_rfpinfo as R ON A.rfp_id = R.id
 				  LEFT JOIN jos_rfp_invitations as I ON A.rfp_id = I.rfpid
 				  LEFT JOIN jos_cam_property as P ON A.prp_id = P.id
-				  WHERE I.rfpid = A.rfp_id AND I.vendorid = A.user_id AND A.status = 0 AND R.rfp_type = 'rfp' AND  A.user_id=".$user->id." AND R.publish=1 and A.publish=0 and R.create_rfptype='open' and R.rfpapproval !=1 and R.rfpapproval_decline !=2 order by R.proposalDueDate,R.proposalDueTime  ASC " ;
-				  
+				  WHERE I.rfpid = A.rfp_id AND I.vendorid = A.user_id AND A.status = 0 AND R.rfp_type = 'rfp' AND  A.user_id=".$user->id." AND R.publish=1 and A.publish=0  and ( R.create_rfptype='open' || date_format( str_to_date( createdDate, '%m-%d-%Y' ) , '%Y-%m-%d' ) >= '".$date_1."' ) and R.rfpapproval !=1 and R.rfpapproval_decline !=2 order by R.proposalDueDate,R.proposalDueTime  ASC " ;
+		  		  
 		//$res_records = $this->_getList($query,$this->getState("limitstart"),$this->getState("limit"));
 		$db->Setquery($query);
 		$res_records = $db->loadAssocList();
@@ -6238,10 +6251,11 @@ else if($totalprefers_new_w9 == 'no' && $totalprefers_new_gli == 'no' && $totalp
 		$res_records[$t]['divcounty'] = $county_id ;
 		
 		// Check vendor in uninvited or NOT
-		$sql_un = "SELECT proposaltype FROM #__cam_vendor_proposals WHERE rfpno=".$res_records[$t]['rfp_id']." and proposedvendorid = ".$user->id." ";
+		$sql_un = "SELECT proposaltype,proposeddate FROM #__cam_vendor_proposals WHERE rfpno=".$res_records[$t]['rfp_id']." and proposedvendorid = ".$user->id." ";
 		$db->Setquery($sql_un);
-		$uninvited = $db->loadResult();	
+		$uninvited = $db->loadObject();	
 		$res_records[$t]['uninvited'] = $uninvited ;
+		$res_records[$t]['pro_date'] = $uninvited->proposeddate ;
 		/*$sql_countyid = "SELECT County FROM #__cam_counties WHERE id = ".$county_id." ";
 		$db->Setquery($sql_countyid);
 		$county_name = $db->loadResult();*/	
@@ -6355,10 +6369,1114 @@ else if($totalprefers_new_w9 == 'no' && $totalprefers_new_gli == 'no' && $totalp
 			}
 
 		}
-		// echo count($rec);
+		for($un = 0;$un<count($records); $un++)
+		{
+
+		$records[$un]['block_status']= $this->getunverfied_status ( $records[$un]['rfp_id'] );
+		$records[$un]['block_unv']= $this->getunverfied ( $records[$un]['rfp_id'] );
+        $records[$un]['block_comp']= $this->getunverfied_com ( $records[$un]['rfp_id'] );
+        
+		}
 		
-		return $rec;
+		
+		
+		return $records;
 	
 	}
+	
+function getunverfied_status($rfpid)
+{
+$db=&JFactory::getDBO();
+$manager_id = "SELECT cust_id FROM #__cam_rfpinfo where id =".$rfpid.""; 
+$db->setQuery($manager_id);
+$manager_id = $db->loadResult();
+$managerid = $this->getmasterfirmaccount_un($manager_id);
+$block_status = $this->getblock_vendors($managerid);
+$block_compliancestatus = $this->getblock_vendorstatus($managerid);
+if( $block_status )
+$block = 'blockvendor';
+else if ( $block_compliancestatus == 'fail' )
+$block = 'blockvendor';
+else
+$block = 'vendorsucess';
+return $block ;
+
+}
+
+
+function getblock_vendorstatus($managerid)
+	{
+	$db=&JFactory::getDBO();
+	$user=&JFactory::getUser();
+	$blok_vendor = "SELECT block_complinace FROM #__cam_master_block_users where masterid=".$managerid."";
+	$db->Setquery($blok_vendor);
+	$block = $db->loadResult();
+	
+	if ( $block  == 1 )
+	 {  
+     	$status =	$this->checkcompliancestatus_vendors($user->id,$managerid);
+		}
+	return 	$status;
+	
+}		
+
+function checkcompliancestatus_vendors($vendorid,$managerid){
+		$db=&JFactory::getDBO();
+		$user =& JFactory::getUser();
+		$master =	$this->getmasterfirmaccount_un($managerid);
+		$vendorindustrieslist = $this->vendorallindustries($vendorid);
+		
+			for( $vi=0; $vi<count($vendorindustrieslist); $vi++ )
+				{
+					$totalprefers_new_w9	=	$this->checknewspecialrequirements_w9_vendors($vendorid,$vendorindustrieslist[$vi]->value,$master);
+					$totalprefers_new_gli	=	$this->checknewspecialrequirements_gli_vendors($vendorid,$vendorindustrieslist[$vi]->value,$master);
+					$totalprefers_new_aip	=	$this->checknewspecialrequirements_aip_vendors($vendorid,$vendorindustrieslist[$vi]->value,$master);
+					$totalprefers_new_wci	=	$this->checknewspecialrequirements_wci_vendors($vendorid,$vendorindustrieslist[$vi]->value,$master);
+					$totalprefers_new_umb	=	$this->checknewspecialrequirements_umb_vendors($vendorid,$vendorindustrieslist[$vi]->value,$master);
+					$totalprefers_new_pln	=	$this->checknewspecialrequirements_pln_vendors($vendorid,$vendorindustrieslist[$vi]->value,$master);
+					$totalprefers_new_occ	=	$this->checknewspecialrequirements_occ_vendors($vendorid,$vendorindustrieslist[$vi]->value,$master);
+					$totalprefers_new_omi	=	$this->checknewspecialrequirements_omi_vendors($vendorid,$vendorindustrieslist[$vi]->value,$master);
+					
+					$vendorindustrieslist[$vi]->status = '' ;
+					
+					/*if($vendorid == '1802' ){
+					echo $vendorindustrieslist[$vi]->value;
+					echo "GLI".$totalprefers_new_gli ;
+					echo "AIP".$totalprefers_new_aip ;
+					echo "WCI".$totalprefers_new_wci ;
+					echo "UMB".$totalprefers_new_umb ;
+					echo "PLN".$totalprefers_new_pln ;
+					echo "OCC:".$totalprefers_new_occ;
+					echo "<br><br>";
+				}*/
+				
+					if($totalprefers_new_w9 == 'success' && $totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success'  && $totalprefers_new_omi == 'success' ){
+							$vendorindustrieslist[$vi]->status = 'success' ;
+						}
+						else{
+							$vendorindustrieslist[$vi]->status = 'fail' ;
+						}
+		
+				}	
+				
+		if($vendorindustrieslist){
+					foreach($vendorindustrieslist as $statues){
+						$final_state[] = $statues->status;
+						$med_fina_state = '';
+						$med_fina_state = array_unique($final_state);
+							if( count($med_fina_state) == 2 ) {
+								$final_status = 'medium' ;
+							}
+							if( count($med_fina_state) == 1 &&  $med_fina_state[0] == 'fail') {
+								$final_status = 'fail' ;
+							}
+							if( count($med_fina_state) == 1 &&  $med_fina_state[0] == 'success' ){
+					
+										$final_status = 'success' ;
+										$masteraccount = $this->getmasterfirmaccount();
+										$sql_terms = "SELECT termsconditions FROM #__cam_vendor_aboutus WHERE vendorid=".$masteraccount." "; 
+										$db->setQuery($sql_terms);
+										$terms_exist = $db->loadResult();
+										if($terms_exist == '1'){
+										$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$vendorid." and masterid=".$masteraccount." "; 
+										$db->setQuery($sql);
+										$terms = $db->loadResult();
+											if($terms == '1'){
+											$final_status = 'success' ;
+											}
+											else{
+											$final_status = 'fail' ;
+											}
+										}
+										else{
+										
+										}
+					
+						}
+					
+					}
+						$final_state = '';
+						$med_fina_state = '';	
+				}
+				
+				if($permission == 'yes'){
+				$final_status = 'nostandards';
+				}
+				else{
+				$final_status = $final_status ;
+				}
+		return  $final_status;
+	}
+
+
+function getblock_vendors($managerid)
+	{
+	$db=&JFactory::getDBO();
+	$user=&JFactory::getUser();
+	$blok_vendor = "SELECT block FROM #__cam_master_block_users where masterid=".$managerid."";
+	$db->Setquery($blok_vendor);
+	$block = $db->loadResult();
+	if ( $block  == 1 )
+	 {  
+		$unverified_vendor = "SELECT id FROM #__users where id =".$user->id." AND ( subscribe_type = 'free' OR subscribe_type = '' )";
+		$db->Setquery($unverified_vendor);
+		$unverified_vendor = $db->loadResult();
+		$unverified_vendors = $unverified_vendor;	
+    }
+	return $unverified_vendors;
+	}	
+
+function getmasterfirmaccount_un($manager_id){
+	$user =& JFactory::getUser();
+		$db=&JFactory::getDBO();
+			
+			  $query = "SELECT * FROM #__users WHERE id=".$manager_id." ";
+				$db->setQuery($query);
+				$type = $db->loadObject();
+				
+			if($type->user_type == '12'){
+				$query_c = "SELECT comp_id FROM #__cam_customer_companyinfo WHERE cust_id=".$type->id." ";
+				$db->setQuery($query_c);
+				$cid = $db->loadResult();	
+				$camfirmid = "SELECT cust_id FROM #__cam_camfirminfo WHERE id=".$cid." ";
+				$db->setQuery($camfirmid);
+				$camfirm = $db->loadResult();
+				$masterid = "SELECT masterid FROM #__cam_masteraccounts WHERE firmid=".$camfirm." ";
+				$db->setQuery($masterid);
+				$master = $db->loadResult();
+				}
+			elseif($type->user_type == '13' && $type->accounttype!='master'){
+				$masterid = "SELECT masterid FROM #__cam_masteraccounts WHERE firmid=".$type->id." "; 
+				$db->setQuery($masterid);
+				$master = $db->loadResult();
+			}
+			else{
+			$master = $manager_id;
+			}	
+			return $master ;
+	}
+	
+ function getallindustries()
+	{
+	    $db=&JFactory::getDBO();
+		$industries = "SELECT industry_name as name,id FROM #__cam_industries where published=1 order by industry_name ASC"; 
+		$db->setQuery($industries);
+		$industries_list = $db->loadObjectList();
+		$industrieslist = json_encode($industries_list);	
+		echo $industrieslist; 
+		exit;
+    }
+	 function getallcountie()
+	{
+		$db=&JFactory::getDBO();
+		$ind = "SELECT code as state FROM #__cam_vendor_states order BY code ASC"; 
+		$db->setQuery($ind);
+		$states = $db->loadObjectList();
+			for( $c =0 ; $c<count($states) ; $c++)
+			{
+				$counties = "SELECT County as name, id FROM #__cam_counties where State= '".$states[$c]->state."' order By County ASC"; 
+				$db->setQuery($counties);
+				$counties_list = $db->loadObjectList();
+				$states[$c]->counties = $counties_list;
+			}
+	$states = json_encode($states);	
+	echo $states; 
+	exit;
+	
+    }	
+	function sendmailtovendor($managerid,$vendorid){
+		$user =& JFactory::getUser();
+		$db = & JFactory::getDBO();
+		//get article text
+		$mailbody = $this->getmailtext();
+		$mastercname = $this->getmasterdetails($managerid);
+		$vendorinfo = $this->getvendordetails($vendorid);
+		$managername = "SELECT name,lastname,username FROM #__users where id=".$managerid."";
+	    $db->setQuery($managername);
+	    $managername = $db->loadObject();
+		$fromname_1 = $managername->name.'&nbsp;'.$managername->lastname;
+		
+		$body = str_replace('[Vendor Company Name]',$vendorinfo->company_name,$mailbody);
+		$body = str_replace('[Manager Full Name]',$fromname_1,$body);
+		$body = str_replace('[Manager Company Name]',$mastercname,$body);
+		
+		$mailfrom = $managername->username;
+		$fromname = 'MyVendorCenter.com';
+		$mailsubject = "Vendor Invitation";
+		$to = $vendorinfo->email;
+		$ccemails = $vendorinfo->ccemail;
+		
+		$result = JUtility::sendMail($mailfrom, $fromname, $to, $mailsubject, $body, $mode = 1);
+		//$to_support = 'rize.cama@gmail.com';
+		$to_support = 'vendoremails@myvendorcenter.com';
+		$result = JUtility::sendMail($mailfrom, $fromname, $to_support, $mailsubject, $body, $mode = 1);
+		$cclist = explode(';',$ccemails);
+			for($c=0; $c<=count($cclist); $c++){
+				$listcc = $cclist[$c];
+				if($listcc){
+					$result = JUtility::sendMail($mailfrom, $fromname, $listcc, $mailsubject, $body, $mode = 1);
+				}
+			} 
+		
+	}
+	function getmailtext(){
+	$db = & JFactory::getDBO();
+	$body_msg = "SELECT introtext  FROM #__content where id='329'";
+	$db->setQuery($body_msg);
+	$msg=$db->loadResult();
+	return $msg;
+	}
+	function getmasterdetails($managerid){
+		$user =& JFactory::getUser();
+		$db = & JFactory::getDBO();
+		$masterdata = "SELECT comp_name  FROM #__cam_customer_companyinfo where cust_id=".$managerid." ";
+		$db->setQuery($masterdata);
+		$master_c_name = $db->loadResult();
+		return $master_c_name;
+	}
+	function getvendordetails($vendorid){
+		$db = & JFactory::getDBO();
+		$sql_vcname = "SELECT V.company_name, U.email, U.ccemail FROM #__cam_vendor_company as V, #__users as U where V.user_id=".$vendorid." and V.user_id=U.id";
+		$db->setQuery( $sql_vcname );
+		$vendordata = $db->loadObject();
+		return $vendordata;
+	}
+	 function checknewspecialrequirements_w9_vendors($vendorid,$industryid,$managerid){
+	  
+		$totalprefers_new_w9 = '';
+		$db = & JFactory::getDBO();
+		$user = & JFactory::getUser();
+		
+		$w9_data ="SELECT * from #__cam_vendor_compliance_w9docs WHERE vendor_id=".$vendorid; //validation to status of docs
+		$db->Setquery($w9_data);
+		$vendor_w9_data = $db->loadObjectList();
+		//Get RFP data
+		$whers_cond = 'masterid='.$managerid.'';
+		
+		 $rfp_w9_data ="SELECT * from #__cam_master_w9_standards WHERE ".$whers_cond." and industry_id=".$industryid; 
+		$db->Setquery( $rfp_w9_data );
+		$rfp_w9_data = $db->loadObject();
+		
+		$occur_w9 = '';
+			if($rfp_w9_data){
+					if( !$vendor_w9_data[0]->w9_upld_cert || $vendor_w9_data[0]->w9_status == '-1') {
+						$occur_w9[] = 'no' ;
+					}
+					else{
+						$occur_w9[] = 'yes' ;
+					}
+				}
+		
+				
+			if($occur_w9){
+				if( in_array("no", $occur_w9) ){
+				$cabins_w9[] = "no";
+				}
+				else{
+				$cabins_w9[] = "yes";
+				}
+			}
+				
+		
+			if($cabins_w9){
+					if( in_array("yes", $cabins_w9) ){
+					$special_w9 = "success";
+					}
+					else{
+					$special_w9 = "fail";
+					}
+			
+			}
+			
+			else{
+					if($rfp_w9_data)
+					$special_w9 = "fail";
+					else
+					$special_w9 = "success";
+			}
+			
+				
+			$cabins_w9 = '';
+			//echo $special_w9;exit;
+			return $special_w9 ;
+			
+	 }
+	 function checknewspecialrequirements_gli_vendors($vendorid,$industryid,$managerid){
+		$totalprefers_new_gli = '';
+		$db = & JFactory::getDBO();
+		$gli_data ="SELECT * from #__cam_vendor_liability_insurence  WHERE vendor_id=".$vendorid; //validation to status of docs
+		$db->Setquery($gli_data);
+		$vendor_gli_data = $db->loadObjectList();
+		//Get RFP data
+		$whers_cond = 'masterid='.$managerid.'';
+		$rfp_gli_data ="SELECT * from #__cam_master_generalinsurance_standards WHERE ".$whers_cond." and industry_id=".$industryid; //validation to status of docs
+		$db->Setquery($rfp_gli_data);
+		$rfp_gli_data = $db->loadObject();
+		//echo "<br />";
+		//echo "<pre>"; print_r($vendor_gli_data); echo "</pre>";
+		//echo "<pre>"; print_r($rfp_gli_data); echo "</pre>";
+		
+		$occur = '';
+		for( $gl=0; $gl<count($vendor_gli_data); $gl++ ){
+			if($rfp_gli_data->occur ==  'yes'){
+				if( $vendor_gli_data[$gl]->GLI_occur == 'occur' ){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			
+			if($rfp_gli_data->each_occurrence >  '0'){
+				if($rfp_gli_data->each_occurrence <= $vendor_gli_data[$gl]->GLI_policy_occurence){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->damage_retend > '0'){
+				if($rfp_gli_data->damage_retend <= $vendor_gli_data[$gl]->GLI_damage){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->med_expenses > '0'){
+				if($rfp_gli_data->med_expenses <= $vendor_gli_data[$gl]->GLI_med){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}	
+			if($rfp_gli_data->personal_inj > '0'){
+				if($rfp_gli_data->personal_inj <= $vendor_gli_data[$gl]->GLI_injury){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->general_aggr > '0'){	
+				if($rfp_gli_data->general_aggr <= $vendor_gli_data[$gl]->GLI_policy_aggregate){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+
+			if($rfp_gli_data->applies_to == 'pol'){
+				if($vendor_gli_data[$gl]->GLI_applies == 'pol'){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->applies_to == 'proj'){
+				if($vendor_gli_data[$gl]->GLI_applies == 'proj'){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->applies_to == 'loc'){
+				if($vendor_gli_data[$gl]->GLI_applies == 'loc'){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->products_aggr >  '0'){
+				if($rfp_gli_data->products_aggr <= $vendor_gli_data[$gl]->GLI_products){
+
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}	
+			if($rfp_gli_data->waiver_sub == 'yes') {
+				if($vendor_gli_data[$gl]->GLI_waiver == 'waiver'){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->primary_noncontr == 'yes') {
+				if($vendor_gli_data[$gl]->GLI_primary == 'primary'){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->additional_insured == 'yes') {
+				if($vendor_gli_data[$gl]->GLI_additional){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+			if($rfp_gli_data->cert_holder == 'yes') {
+				if($vendor_gli_data[$gl]->GLI_certholder == 'yes'){
+					$occur[] = 'yes' ;
+				}
+				else{
+					$occur[] = 'no' ;
+				}
+			}
+				if($rfp_gli_data){
+					if($vendor_gli_data[$gl]->GLI_end_date < date('Y-m-d') || !$vendor_gli_data[$gl]->GLI_upld_cert || !$vendor_gli_data[$gl]->GLI_policy_occurence || !$vendor_gli_data[$gl]->GLI_policy_aggregate || $vendor_gli_data[$gl]->GLI_status == '-1') {
+						$occur[] = 'no' ;
+					}
+					else{
+						$occur[] = 'yes' ;
+					}
+				}
+		
+			if($occur){
+				if( in_array("no", $occur) ){
+				$cabins_gli[] = "no";
+				}
+				else{
+				$cabins_gli[] = "yes";
+				}
+			}
+			$occur = '';
+		}
+		
+		if($cabins_gli){
+			if( in_array("yes", $cabins_gli) ){
+			$special = "success";
+			}
+			else{
+			$special = "fail";
+			}
+			
+		}
+		else{
+				if($rfp_gli_data)
+				$special = "fail";
+				else
+				$special = "success";
+		}
+			
+		$cabins_gli = '';
+		
+		return $special ;
+		
+	}
+//Completed
+function checknewspecialrequirements_aip_vendors($vendorid,$industryid,$managerid){
+		$db = & JFactory::getDBO();
+		$aip_data ="SELECT * from #__cam_vendor_auto_insurance  WHERE vendor_id=".$vendorid; //validation to status of docs
+		$db->Setquery($aip_data);
+		$vendor_aip_data = $db->loadObjectList();
+		//Get RFP data
+		
+		$whers_cond = 'masterid='.$managerid.'';
+		$rfp_aip_data ="SELECT * from #__cam_master_autoinsurance_standards WHERE ".$whers_cond." and industryid=".$industryid; //validation to status of docs
+		$db->Setquery($rfp_aip_data);
+		$rfp_aip_data = $db->loadObject();
+		
+			for( $ai=0; $ai<count($vendor_aip_data); $ai++ ){
+				if($rfp_aip_data->applies_to_any == 'any'){
+					if($rfp_aip_data->applies_to_any == $vendor_aip_data[$ai]->aip_applies_any){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				
+				}
+				
+
+				if($rfp_aip_data->applies_to_owned == 'owned'){
+					if($rfp_aip_data->applies_to_owned == $vendor_aip_data[$ai]->aip_applies_owned){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				
+				}
+				
+              
+				if($rfp_aip_data->applies_to_nonowned == 'nonowned'){
+					if($rfp_aip_data->applies_to_nonowned == $vendor_aip_data[$ai]->aip_applies_nonowned){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+ 
+				if($rfp_aip_data->applies_to_hired == 'hired'){
+					if($rfp_aip_data->applies_to_hired == $vendor_aip_data[$ai]->aip_applies_hired){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+				
+
+				if($rfp_aip_data->applies_to_scheduled == 'scheduled'){
+					if($vendor_aip_data[$ai]->aip_applies_scheduled == 'sch'){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+				
+				
+				if($rfp_aip_data->combined_single > '0'){	
+					if($rfp_aip_data->combined_single <= $vendor_aip_data[$ai]->aip_combined){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+				
+				
+				if($rfp_aip_data->bodily_injusy_person > '0'){	
+					if($rfp_aip_data->bodily_injusy_person <= $vendor_aip_data[$ai]->aip_bodily){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+				
+				if($rfp_aip_data->bodily_injusy_accident > '0'){	
+					if($rfp_aip_data->bodily_injusy_accident <= $vendor_aip_data[$ai]->aip_body_injury){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+				
+				
+				if($rfp_aip_data->property_damage > '0'){	
+					if($rfp_aip_data->property_damage <= $vendor_aip_data[$ai]->aip_property){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+			
+				
+				if($rfp_aip_data->waiver == 'yes'){
+					if($vendor_aip_data[$ai]->aip_waiver == 'waiver'){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+					
+				
+				if($rfp_aip_data->primary == 'yes'){
+					if($vendor_aip_data[$ai]->aip_primary == 'primary'){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+				
+				if($rfp_aip_data->additional_ins == 'yes'){
+					if($vendor_aip_data[$ai]->aip_addition == '' || $vendor_aip_data[$ai]->aip_addition == '0'){
+						$occur_aip[] = 'no' ;
+					}
+					else{
+						$occur_aip[] = 'yes' ;
+					}
+				}
+				
+				
+				if($rfp_aip_data->cert_holder == 'yes'){
+					if($vendor_aip_data[$ai]->aip_cert == 'yes'){
+						$occur_aip[] = 'yes' ;
+					}
+					else{
+						$occur_aip[] = 'no' ;
+					}
+				}
+				
+				
+				if($rfp_aip_data){
+					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' ) 		{
+						$occur_aip[] = 'no' ;
+						}
+					else
+						{
+						$occur_aip[] = 'yes' ;
+						}
+				}
+				
+				if($occur_aip){
+					if( in_array("no", $occur_aip) ){
+						$cabins_aip[] = "no";
+					}
+					else{
+						$cabins_aip[] = "yes";
+					}
+				}
+				$occur_aip = '';
+			}
+			//echo '<pre>';print_r($cabins_aip);exit;	
+			if($cabins_aip){
+				if( in_array("yes", $cabins_aip) ){
+					$special_aip = "success";
+				}
+				else{
+					$special_aip = "fail";
+				}
+			}
+			else{
+				if($rfp_aip_data)
+				$special_aip = "fail";
+				else
+				$special_aip = "success";
+			}
+			
+				//echo $special_aip ;exit;
+				$cabins_aip = '';
+		 
+		return $special_aip ;
+		
+		
+	}
+	
+	//Function to check WCI documents
+	function checknewspecialrequirements_wci_vendors($vendorid,$industryid,$managerid){
+		
+		$db = & JFactory::getDBO();
+		$wci_data ="SELECT * from #__cam_vendor_workers_companies_insurance  WHERE vendor_id=".$vendorid; //validation to status of docs
+		$db->Setquery($wci_data);
+		$vendor_wci_data = $db->loadObjectList();
+		//Get RFP data
+		
+		$whers_cond = 'masterid='.$managerid.'';
+		$rfp_wci_data ="SELECT * from #__cam_master_workers_standards WHERE ".$whers_cond." and industryid=".$industryid; //validation to status of docs
+		$db->Setquery($rfp_wci_data);
+		$rfp_wci_data = $db->loadObject();
+
+			for( $wci=0; $wci<count($vendor_wci_data); $wci++ ){
+				
+				if($rfp_wci_data->disease_policy > '0'){	
+					if($rfp_wci_data->disease_policy <= $vendor_wci_data[$wci]->WCI_disease_policy){
+						$occur_wci[] = 'yes' ;
+					}
+					else{
+						$occur_wci[] = 'no' ;
+					}
+				}	
+					
+				if($rfp_wci_data->disease_eachemp > '0'){
+					if($rfp_wci_data->disease_eachemp <= $vendor_wci_data[$wci]->WCI_disease){
+						$occur_wci[] = 'yes' ;
+					}
+					else{
+						$occur_wci[] = 'no' ;
+					}
+				}
+				
+				if($rfp_wci_data->waiver_work == 'yes'){
+					if($vendor_wci_data[$wci]->WCI_waiver == 'waiver'){
+						$occur_wci[] = 'yes' ;
+					}
+					else{
+						$occur_wci[] = 'no' ;
+					}
+				}
+				
+				if($rfp_wci_data->each_accident > '0'){
+					if($rfp_wci_data->each_accident <= $vendor_wci_data[$wci]->WCI_each_accident){
+						$occur_wci[] = 'yes' ;
+					}
+					else{
+						$occur_wci[] = 'no' ;
+					}
+				}
+				
+				if($rfp_wci_data->certholder_work == 'yes'){
+					if($vendor_wci_data[$wci]->WCI_cert == 'yes'){
+						$occur_wci[] = 'yes' ;
+					}
+					else{
+						$occur_wci[] = 'no' ;
+					}
+				}
+				if($rfp_wci_data){
+					if($vendor_wci_data[$wci]->WCI_end_date < date('Y-m-d') || $vendor_wci_data[$wci]->WCI_upld_cert=='' || $vendor_wci_data[$wci]->WCI_status == '-1') {
+							$occur_wci[] = 'no' ;
+					}
+					else{
+							$occur_wci[] = 'yes' ;
+					}
+				}	
+				if($occur_wci){
+					if( in_array("no", $occur_wci) ){
+						$cabins_wci[] = "no";
+					}
+					else{
+						$cabins_wci[] = "yes";
+					}
+				}
+				$occur_wci = '';
+			}
+			
+			if($cabins_wci){
+				if( in_array("yes", $cabins_wci) ){
+					$special_wci = "success";
+				}
+				else{
+					$special_wci = "fail";
+				}
+			}
+			else{
+				if($rfp_wci_data)
+				$special_wci = "fail";
+				else
+				$special_wci = "success";
+			}
+			
+				$cabins_wci = '';
+		
+		return $special_wci ;
+	}
+	
+	//COmpleted
+	
+	//function to check umbrella liability documents
+	 function checknewspecialrequirements_umb_vendors($vendorid,$industryid,$managerid){
+		$db = & JFactory::getDBO();
+		$umb_data ="SELECT * from #__cam_vendor_umbrella_license  WHERE vendor_id=".$vendorid; //validation to status of docs
+		$db->Setquery($umb_data);
+		$vendor_umb_data = $db->loadObjectList();
+		//Get RFP data
+		
+	
+		$whers_cond = 'masterid='.$managerid.'';
+		$rfp_umb_data ="SELECT * from #__cam_master_umbrellainsurance_standards WHERE ".$whers_cond." and industryid=".$industryid; //validation to status of docs
+		$db->Setquery($rfp_umb_data);
+		$rfp_umb_data = $db->loadObject();
+		
+			for( $umb=0; $umb<count($vendor_umb_data); $umb++ ){
+				
+				if($rfp_umb_data->each_occur > '0'){	
+					if($rfp_umb_data->each_occur <= $vendor_umb_data[$umb]->UMB_occur){
+						$occur_umb[] = 'yes' ;
+					}
+					else{
+						$occur_umb[] = 'no' ;
+					}
+				}	
+				if($rfp_umb_data->aggregate > '0'){	
+					if($rfp_umb_data->aggregate <= $vendor_umb_data[$umb]->UMB_aggregate){
+						$occur_umb[] = 'yes' ;
+					}
+					else{
+						$occur_umb[] = 'no' ;
+					}
+				}	
+				if($rfp_umb_data->certholder_umbrella == 'yes'){
+					if($vendor_umb_data[$umb]->UMB_certholder == 'yes'){
+						$occur_umb[] = 'yes' ;
+					}
+					else{
+						$occur_umb[] = 'no' ;
+					}
+				}
+				if($rfp_umb_data){
+				if($vendor_umb_data[$umb]->UMB_expdate < date('Y-m-d') || !$vendor_umb_data[$umb]->UMB_upld_cert || $vendor_umb_data[$umb]->UMB_status == '-1' || !$vendor_umb_data[$umb]->UMB_aggregate || !$vendor_umb_data[$umb]->UMB_occur) {
+						$occur_umb[] = 'no' ;
+				}
+				else{
+						$occur_umb[] = 'yes' ;
+				}
+				}
+				
+				if($occur_umb){
+					if( in_array("no", $occur_umb) ){
+						$cabins_umb[] = "no";
+					}
+					else{
+						$cabins_umb[] = "yes";
+					}
+				}
+				$occur_umb = '';
+			}	 
+				
+				if($cabins_umb){
+					if( in_array("yes", $cabins_umb) ){
+						$special_umb = "success";
+					}
+					else{
+						$special_umb = "fail";
+					}
+				}
+				else{
+					if($rfp_umb_data)
+					$special_umb = "fail";
+					else
+					$special_umb = "success";
+				}
+		
+				$cabins_umb = '';
+				return $special_umb ;
+	 }
+	//Completed
+	
+	//Funcion to check professional licensw
+	function checknewspecialrequirements_pln_vendors($vendorid,$industryid,$managerid){
+
+		$db = & JFactory::getDBO();
+		$pln_data ="SELECT * from #__cam_vendor_professional_license  WHERE vendor_id=".$vendorid; //validation to status of docs
+		$db->Setquery($pln_data);
+		$vendor_pln_data = $db->loadObjectList();
+		//Get RFP data
+		
+		$whers_cond = 'masterid='.$managerid.'';
+		$rfp_pln_data ="SELECT * from #__cam_master_licinsurance_standards WHERE ".$whers_cond." and industryid=".$industryid; //validation to status of docs
+		$db->Setquery($rfp_pln_data);
+		$rfp_pln_data = $db->loadObject();
+		
+			for( $pln=0; $pln<count($vendor_pln_data); $pln++ ){
+			
+				if($rfp_pln_data->professional == 'yes'){
+					if($vendor_pln_data[$pln]->PLN_expdate < date('Y-m-d') || !$vendor_pln_data[$pln]->PLN_upld_cert || $vendor_pln_data[$pln]->PLN_status == '-1') {
+						$occur_pln[] = 'no' ;
+					}
+					else{
+						$occur_pln[] = 'yes' ;
+					}
+				}
+				if( $occur_pln ){
+					if( in_array("no", $occur_pln) ){
+						$cabins_pln[] = "no";
+					}
+					else{
+						$cabins_pln[] = "yes";
+					}
+				}	
+			}	
+
+			
+			if($cabins_pln){
+				if( in_array("yes", $cabins_pln) ){
+					$special_pln = "success";
+				}
+				else{
+					$special_pln = "fail";
+				}
+				$cabins_pln = '';
+			}
+			
+			else{
+					if($rfp_pln_data->professional)
+					$special_pln = "fail";
+					else
+					$special_pln = "success";
+			}
+			
+				$cabins_pln = '';
+				return $special_pln ;
+	}
+	//Completed
+	
+	function checknewspecialrequirements_occ_vendors($vendorid,$industryid,$managerid){
+
+		$db = & JFactory::getDBO();
+		$occ_data ="SELECT * from #__cam_vendor_occupational_license  WHERE vendor_id=".$vendorid; //validation to status of docs
+		$db->Setquery($occ_data);
+		$vendor_occ_data = $db->loadObjectList();
+		//Get RFP data
+		
+		
+		$whers_cond = 'masterid='.$managerid.'';
+		$rfp_occ_data ="SELECT * from #__cam_master_licinsurance_standards WHERE ".$whers_cond." and industryid=".$industryid; //validation to status of docs
+		$db->Setquery($rfp_occ_data);
+		$rfp_occ_data = $db->loadObject();
+		
+			for( $occ=0; $occ<count($vendor_occ_data); $occ++ ){
+			
+				if($rfp_occ_data->occupational == 'yes'){
+					if($vendor_occ_data[$occ]->OLN_expdate < date('Y-m-d') || !$vendor_occ_data[$occ]->OLN_upld_cert || $vendor_occ_data[$pln]->OLN_status == '-1') {
+						$occur_occ[] = 'no' ;
+					}
+					else{
+						$occur_occ[] = 'yes' ;
+					}
+				}
+				if( $occur_occ ){
+					if( in_array("no", $occur_occ) ){
+						$cabins_occ[] = "no";
+					}
+					else{
+						$cabins_occ[] = "yes";
+					}
+				}	
+			}	
+			
+			if($cabins_occ){
+				if( in_array("yes", $cabins_occ) ){
+					$special_occ = "success";
+				}
+				else{
+					$special_occ = "fail";
+				}
+				$cabins_occ = '';
+			}
+			
+			else{
+					if($rfp_occ_data->occupational)
+					$special_occ = "fail";
+					else
+					$special_occ = "success";
+			}
+			
+				$cabins_occ = '';
+				return $special_occ ;
+	}
+	//Completed
+	
+	
+	function checknewspecialrequirements_omi_vendors($vendorid,$industryid,$managerid){
+
+		$db = & JFactory::getDBO();
+		$omi_data ="SELECT * from #__cam_vendor_errors_omissions_insurance  WHERE vendor_id=".$vendorid; //validation to status of docs
+		$db->Setquery($omi_data);
+		$vendor_omi_data = $db->loadObjectList();
+		//Get RFP data
+		$rfp_omi_data ="SELECT * from #__cam_master_errors_omissions WHERE masterid=".$managerid." and industryid=".$industryid; //validation to status of docs
+		$db->Setquery($rfp_omi_data);
+		$rfp_omi_data = $db->loadObject();
+		
+		
+		
+			for( $omi=0; $omi<count($vendor_omi_data); $omi++ ){
+				
+				if($rfp_omi_data->each_claim > '0'){	
+					if($rfp_omi_data->each_claim <= $vendor_omi_data[$omi]->OMI_each_claim){
+						$occur_omi[] = 'yes' ;
+					}
+					else{
+						$occur_omi[] = 'no' ;
+					}
+				}	
+				if($rfp_omi_data->aggregate_omi > '0'){	
+					if($rfp_omi_data->aggregate_omi <= $vendor_omi_data[$omi]->OMI_aggregate){
+						$occur_omi[] = 'yes' ;
+					}
+					else{
+						$occur_omi[] = 'no' ;
+					}
+				}	
+				if($rfp_omi_data->certholder_omi == 'yes'){
+					if($vendor_omi_data[$omi]->OMI_cert == 'yes'){
+						$occur_omi[] = 'yes' ;
+					}
+					else{
+						$occur_omi[] = 'no' ;
+					}
+				}
+				if($rfp_omi_data){
+				if($vendor_omi_data[$omi]->OMI_end_date < date('Y-m-d') || !$vendor_omi_data[$omi]->OMI_upld_cert || $vendor_omi_data[$omi]->OMI_status == '-1' ) {
+						$occur_omi[] = 'no' ;
+				}
+				else{
+						$occur_omi[] = 'yes' ;
+				}
+				}
+				
+				/*if( $vendorid == '1767' ){
+				echo "<pre>";	print_r($occur_omi); echo "</pre>";
+				//echo "<pre>";	print_r($rfp_omi_data); echo "</pre>";
+				}*/
+		
+				if($occur_omi){
+					if( in_array("no", $occur_omi) ){
+						$cabins_omi[] = "no";
+					}
+					else{
+						$cabins_omi[] = "yes";
+					}
+				}
+				$occur_omi = '';
+			}	
+			
+				if($cabins_omi){
+					if( in_array("yes", $cabins_omi) ){
+						$special_omi = "success";
+					}
+					else{
+						$special_omi = "fail";
+					}
+				}
+				else{
+					if($rfp_omi_data)
+					$special_omi = "fail";
+					else
+					$special_omi = "success";
+				}
+
+		
+				$cabins_omi = '';
+				return $special_omi ;
+				
+			
+	}
+	function getblockedvendors($rfpid)
+		{
+			$db=&JFactory::getDBO();
+			$manager_id = "SELECT cust_id FROM #__cam_rfpinfo where id =".$rfpid.""; 
+			$db->setQuery($manager_id);
+			$manager_id = $db->loadResult();
+			$managerid = $this->getmasterfirmaccount_un($manager_id);
+			$blok_vendor = "SELECT block, block_complinace FROM #__cam_master_block_users where masterid=".$managerid."";
+	        $db->Setquery($blok_vendor);
+	        $block = $db->loadObject();
+			return $block ;
+		}
+	function getunverfied($rfpid)
+		{
+			$db=&JFactory::getDBO();
+			$manager_id = "SELECT cust_id FROM #__cam_rfpinfo where id =".$rfpid.""; 
+			$db->setQuery($manager_id);
+			$manager_id = $db->loadResult();
+			$managerid = $this->getmasterfirmaccount_un($manager_id);
+			$blok_vendor = "SELECT block FROM #__cam_master_block_users where masterid=".$managerid."";
+	        $db->Setquery($blok_vendor);
+	        $block = $db->loadResult();
+			return $block ;
+		}
+	function getunverfied_com($rfpid)
+		{
+			$db=&JFactory::getDBO();
+			$manager_id = "SELECT cust_id FROM #__cam_rfpinfo where id =".$rfpid.""; 
+			$db->setQuery($manager_id);
+			$manager_id = $db->loadResult();
+			$managerid = $this->getmasterfirmaccount_un($manager_id);
+			$blok_vendor = "SELECT block_complinace FROM #__cam_master_block_users where masterid=".$managerid."";
+	        $db->Setquery($blok_vendor);
+	        $block = $db->loadResult();
+			return $block ;
+		}		
+	
 }
 ?>

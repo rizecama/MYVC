@@ -872,7 +872,7 @@ if ($user->user_type=='12') { ?>
 <div class="clear"></div>
 
 <?php } else { ?>
-<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any submited rfp's</div>
+<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any submited requests</div>
 <?php } ?>
 </div>
 </div>

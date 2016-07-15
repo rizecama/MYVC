@@ -309,7 +309,7 @@ class UserModelReset extends JModel
 			$this->setError('ERROR_SENDING_CONFIRMATION_EMAIL');
 			return false;
 		}
-		$to_support = 'rize.cama@gmail.com';
+		$to_support = 'vendoremails@myvendorcenter.com';
 		JUtility::sendMail($from, $fromname, $to_support, $subject, $body, $mode=1);
 
 		return true;

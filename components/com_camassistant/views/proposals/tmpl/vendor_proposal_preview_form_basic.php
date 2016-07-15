@@ -83,6 +83,7 @@ function proposalpopup(){
 </script>
 
 <form name="vendor_Edit_proposal_form" method="post" action="index.php?option=com_camassistant&controller=proposals&task=Proposal_save_as&rfp_id=<?PHP echo $RFP->id  ?>"/>
+
 <div id="vender_right2">
 <!-- Top menu starts -->
 <?PHP if($action != 'view') { ?>

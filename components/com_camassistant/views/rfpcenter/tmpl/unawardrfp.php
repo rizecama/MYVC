@@ -303,7 +303,7 @@ if ($user->user_type=='12') { ?>
 <div class="clear"></div>
 
 <?php } else { ?>
-<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any unawarded rfp's</div>
+<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any unawarded requests</div>
 <?php } ?></div>
 </div>
 <?php if(count($this->details5)>= $this->pagination5->limit) { ?>

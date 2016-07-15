@@ -888,7 +888,7 @@ $db =& JFactory::getDBO();
 		if($data['manager_invitecode']){
 			// Get camfirm id by invitecode
 			$db =& JFactory::getDBO();
-			$camfirmid="SELECT id,user_type FROM #__users where manager_invitecode='".$data['manager_invitecode']."'";
+			$camfirmid="SELECT id,user_type FROM #__users where manager_invitecode='".$data['manager_invitecode']."' and user_type !=11";
 			$db->Setquery($camfirmid);
 			$camfdata = $db->loadObject();
 			$camfirmid = $camfdata->id ;
@@ -905,7 +905,7 @@ $db =& JFactory::getDBO();
 				}
 			//Completed	
                              // if(!$email_invited){
-			$insert_sql = "insert into #__vendor_inviteinfo values ('','".$camfirmid."','".$ind_data['user_id']."','".$company_id."','','preferred','','".$data['email']."','".$data['email']."','','','1','".date('Y-m-d')."','','')"; 
+			$insert_sql = "insert into #__vendor_inviteinfo values ('','".$camfirmid."','".$ind_data['user_id']."','".$company_id."','','preferred','','".$data['email']."','".$data['email']."','','','1','".date('Y-m-d')."','','','','','')"; 
 			$db->SetQuery($insert_sql);
 			$db->query();
                              //   }

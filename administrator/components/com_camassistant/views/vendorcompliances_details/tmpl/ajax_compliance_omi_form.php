@@ -32,8 +32,8 @@ $delid = $compliance;
       <div class="comm">
 	  <div class="in-pan1">
         <label>Exp. Date:</label>
-          <input name="OMI_end_date[]" id="OMI_end_date<?PHP echo $compliance; ?>" type="text" class="t_field" value="" />
-<script type="text/javascript">G('#OMI_end_date<?PHP echo $compliance; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,maxDate: "+5y"});</script>
+          <input name="OMI_end_date[]" id="OMI_end_date<?PHP echo $compliance; ?>" type="text" class="t_field" value="" placeholder = "mm-dd-yyyy" />
+<script type="text/javascript">G('#OMI_end_date<?PHP echo $compliance; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,minDate: "0y",maxDate: "+5y"});</script>
 </div>
 <div class="in-pan1">
 		<label>Aggregate:</label>

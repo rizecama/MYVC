@@ -209,7 +209,6 @@ class vendorcompliancesModelvendorcompliances extends JModel
 
 		return $orderby;
 	}
-	
 	/**
 	 * Method to load content _detail data
 	 *

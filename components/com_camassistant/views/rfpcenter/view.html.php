@@ -25,6 +25,7 @@ class rfpcenterViewrfpcenter extends Jview
 		 $db = JFactory::getDBO();
 		$task = JRequest::getVar("task",'');
 		$pathway  =& $mainframe->getPathway();
+		
 		//$pathway->addItem( JText::_( 'Unsubmitted (Draft) RFPs' ));
 		// Load the form validation behavior
 		JHTML::_('behavior.formvalidation');
@@ -113,6 +114,8 @@ class rfpcenterViewrfpcenter extends Jview
 		$get_rfprequest = $model->awaitingrfprequest();
 		$get_rfpapproval = $model->awaitingrfpapproval();
 		$getrejectedrfp = $model->get_rejectedrfp();
+		$awaitingclientapproval = $model->awaitingclientapproval();
+		
 		$survey_rfp = $model->surveyrfps();
         $announcement = $model->getannouncement();
         $details4 = $model->getawardrfp();
@@ -133,6 +136,7 @@ class rfpcenterViewrfpcenter extends Jview
 		$this->assignRef('getrfprequest', $get_rfprequest);
 		$this->assignRef('getrfpapproval', $get_rfpapproval);
 		$this->assignRef('getrejectedrfp', $getrejectedrfp);
+		$this->assignRef('awaitingclientapproval', $awaitingclientapproval);
 		
         
 		parent::display($tpl);
@@ -259,15 +263,14 @@ class rfpcenterViewrfpcenter extends Jview
 			$this->assignRef('existingdata', $existingdata);
 			$aboutus = $model->getaboutus();
 			$this->assignRef('aboutus', $aboutus);
-			
 			$master = $model->getmasterfirmaccount();
 			$this->assignRef('masterexist', $master);
 			$permissions = $model->getpermissions();
 			$this->assignRef('permissions', $permissions);
-
-			$reportsmsg = $model->getpreferredvendors_list();  
+	        $reportsmsg = $model->getpreferredvendors_list();  
 			$this->assignRef('reportsmsg', $reportsmsg);
-			
+			$acount_type = $model->getacount_type();  
+			$this->assignRef('acount_type', $acount_type);
 			$this->setLayout('insurancestandards');
 			parent::display($tpl);
 		}
@@ -461,15 +464,17 @@ class rfpcenterViewrfpcenter extends Jview
 			$docs_permission = $model->getpermission_cdocs(); 
 			$this->assignRef('count_enable', $count_enable);
 			$this->assignRef('docs_permission', $docs_permission);
+			$reportmessage = $model->reportmessage();  
+			$this->assignRef('reportmessage', $reportmessage);
 			$this->setLayout('compliance_status_report');
 			parent::display($tpl);
 		}
-		else if($task == 'compliance_status_report_pdf')
+		else if($task == 'compliance_status_report_webpage')
 		{
 			$model = $this->getModel('rfpcenter');
 			$message = $model->getpreferredvendors_list_pdf();  
 			$this->assignRef('message', $message);
-			$count_enable = $model->countenableddocs();  
+			$count_enable = $model->getpermission_cdocs_webpage();  
 			$this->assignRef('count_enable', $count_enable);
 			$items  =& $this->get('inhouse');
 			$this->assignRef('items',$items);
@@ -477,7 +482,73 @@ class rfpcenterViewrfpcenter extends Jview
 			parent::display($tpl);
 		}
 		
+		else if($task == 'compliance_status_report_companywebpage')
+		{
+			$model = $this->getModel('rfpcenter');
+			$message = $model->getpreferredvendors_company();  
+			$this->assignRef('message', $message);
+			$count_enable = $model->getpermission_cdocs_webpage();  
+			$this->assignRef('count_enable', $count_enable);
+			$items  =& $this->get('inhouse');
+			$this->assignRef('items',$items);
+			$this->setLayout('compliance_status_report_companywebpage');
+			parent::display($tpl);
+		}
 		
+		else if($task == 'compliance_status_report_pdf')
+		{
+			$model = $this->getModel('rfpcenter');
+			$message = $model->getpreferredvendors_list_pdf();  
+			$this->assignRef('message', $message);
+			$count_enable = $model->getpermission_cdocs_webpage();  
+			$this->assignRef('count_enable', $count_enable);
+			$items  =& $this->get('inhouse');
+			$this->assignRef('items',$items);
+			$reportmessage = $model->reportmessage();  
+			$this->assignRef('reportmessage', $reportmessage);
+			
+			if( $count_enable->how_docs == 'all' || ($count_enable->w9 == 1 || $count_enable->gli == 1 || $count_enable->api == 1 || $count_enable->umb == 1 || $count_enable->wc == 1 || $count_enable->omi == 1 || $count_enable->pln == 1 || $count_enable->oln == 1 ))
+			 
+			     $this->setLayout('compliance_status_report_pdf');
+			else
+			  		$this->setLayout('compliance_status_nocompanyreport_pdf');
+			parent::display($tpl);
+		}
+		
+		else if($task == 'compliance_status_companyreport_pdf')
+		{
+			$model = $this->getModel('rfpcenter');
+			$message = $model->getpreferredvendors_company();  
+			$this->assignRef('message', $message);
+			$count_enable = $model->getpermission_cdocs_webpage();  
+			$this->assignRef('count_enable', $count_enable);
+			$items  =& $this->get('inhouse');
+			$this->assignRef('items',$items);
+			$reportmessage = $model->reportmessage();  
+			$this->assignRef('reportmessage', $reportmessage);
+			
+			if( $count_enable->how_docs == 'all' || ($count_enable->w9 == 1 || $count_enable->gli == 1 || $count_enable->api == 1 || $count_enable->umb == 1 || $count_enable->wc == 1 || $count_enable->omi == 1 || $count_enable->pln == 1 || $count_enable->oln == 1 ))
+			 
+			     $this->setLayout('compliance_status_companyreport_pdf');
+			else
+			     $this->setLayout('compliance_status_noreport_pdf');
+			parent::display($tpl);
+		}
+		
+		else if($task == 'compliance_status_companyreport')
+		{
+			$model = $this->getModel('rfpcenter');
+			$message = $model->getpreferredvendors_companylist();  
+			$this->assignRef('message', $message);
+			$count_enable = $model->countenableddocs(); 
+			$docs_permission = $model->getpermission_cdocs(); 
+			$this->assignRef('count_enable', $count_enable);
+			$this->assignRef('docs_permission', $docs_permission);
+			$reportmessage = $model->reportmessage();  
+			$this->assignRef('reportmessage', $reportmessage);
+			$this->setLayout('compliance_status_companyreport');
+			parent::display($tpl);
+		}
 		
 		else if( $task == 'getcompliance_null' ){
 			$this->setLayout('no_standards');
@@ -530,7 +601,10 @@ class rfpcenterViewrfpcenter extends Jview
 			$this->setLayout('allinvitations');
 			parent::display($tpl);
 		}
-		
+		else if( $task == 'viewstatussample' ){
+			$this->setLayout('viewstatussample');
+			parent::display($tpl);
+		}
 		
 		
 	// Get data from the model

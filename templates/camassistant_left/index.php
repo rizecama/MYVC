@@ -22,6 +22,8 @@
 
 // no direct access
 
+
+
 JHTML::_('behavior.modal');
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
@@ -300,6 +302,7 @@ $company_css = '<link rel="stylesheet" href="'.$this->baseurl.'/templates/camass
 <link rel="shortcut icon" href="<?php echo $this->baseurl ?>/templates/camassistant_left/images/favicon.ico"/>
 
  <link href="templates/camassistant_left/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+ <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
   <link rel="stylesheet" href="<?php echo $this->baseurl ?>/media/system/css/modal.css" type="text/css" />
@@ -638,7 +641,7 @@ echo $message ;
 
                 <?php } ?>
 
-		  <div class="info_message_report"><jdoc:include type="message" /></div>
+		  <div class="info_message_report" id="info_message_report_sat"><jdoc:include type="message" /></div>
 
 		<jdoc:include type="component" />
 

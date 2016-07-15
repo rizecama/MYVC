@@ -27,7 +27,7 @@ $delid = $compliance;
     <div class="lic-pan-rightnew">
       <div class="comm">
         <label>Expiration Date:</label>
-        <input type="text" size="10" name="wc_end_date[]" id="wc_end_date<?PHP echo $WC_title; ?>" value="" /><span style="color:red; font-size: 20px;">*</span><script type="text/javascript">G('#wc_end_date<?PHP echo $WC_title; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "-1y",maxDate: "+5y",changeMonth:true});</script>
+        <input type="text" size="10" name="wc_end_date[]" id="wc_end_date<?PHP echo $WC_title; ?>" placeholder = "mm-dd-yyyy" value="" /><span style="color:red; font-size: 20px;">*</span><script type="text/javascript">G('#wc_end_date<?PHP echo $WC_title; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
       </div>
       
     </div>

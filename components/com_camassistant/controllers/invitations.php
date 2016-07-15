@@ -2017,6 +2017,9 @@ $licdata = '';
 				<?php 
 				
 	}
+	
+	
+	
 	function updatedecline(){
 		$db = & JFactory::getDBO();
 		$masterid = JRequest::getVar("masterid",'');
@@ -2328,6 +2331,31 @@ $licdata = '';
 		echo "notremoved";
 		}		
 		exit;
+	}
+	
+	function updatenewaccept(){
+		$db = & JFactory::getDBO();
+		$masterid = JRequest::getVar("masterid",'');
+		$responce = JRequest::getVar("responce",'');
+		$user =& JFactory::getUser();	
+		$date = date('Y-m-d H:i:s');
+		
+		if( $responce == 'acc' )
+			$res = '1';
+		else
+			$res = '0';	
+		
+		$query_update = "UPDATE #__cam_vendor_terms SET update_date = '".$date."', accepted='".$res."' WHERE vendorid=".$user->id." AND masterid=".$masterid; 
+		$db->setQuery( $query_update );
+		$db->query();
+		
+		?>
+				<script type="text/javascript">
+				window.parent.document.getElementById( 'sbox-window' ).close();
+				parent.location.reload();
+				</script>
+				<?php 
+				
 	}
 	
 }

@@ -93,7 +93,7 @@ class customerController extends JController
 	}*/
 	function remove()
 	{
-		
+	
 		global $mainframe;
 		$cid = JRequest::getVar( 'cid', array(0), 'post', 'array' );
 		$cids = implode( ',', $cid );
@@ -108,7 +108,7 @@ class customerController extends JController
 			}
 			//$msg='';
 			
-			$msg='Customer Deleted Successfully';
+			$msg='Customer  Successfully';
 		}
 		$this->setRedirect( 'index.php?option=com_camassistant&controller=customer',$msg);
 	 }
@@ -385,7 +385,7 @@ class customerController extends JController
 		for( $i=0; $i<count($mansids_withdm); $i++ ){
 		$sql_mans = "SELECT managerid from #__cam_invitemanagers where dmanager=".$mansids_withdm[$i]." ";
 		$db->Setquery($sql_mans);
-		$mansidss = $db->loadObjectList();
+		$mansidss[] = $db->loadObjectList();
 			if($mansidss){
 				foreach($mansidss as $mansidss){
 					$remove_mans[] = $mansidss->managerid;
@@ -603,7 +603,7 @@ else {
 	
 	//Completed
 	function exportmanagers(){
-		//echo "style";	 exit;
+		
 		$db			=& JFactory::getDBO();
 		$output = "";
 		$table = "jos_users"; // Enter Your Table Name 
@@ -611,6 +611,7 @@ else {
 	
 		$sql = mysql_query($sql_query);
 		$columns_total = mysql_num_fields($sql);
+		
 		// Get The Field Name
 		for ($i = 0; $i < $columns_total; $i++) {
 		$heading = mysql_field_name($sql, $i);

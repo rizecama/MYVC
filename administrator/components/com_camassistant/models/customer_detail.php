@@ -314,6 +314,7 @@ class customer_detailModelcustomer_detail extends JModel
 			}
 			 $query4 = 'DELETE FROM #__cam_invitemanagers WHERE  managerid  IN ( '.$userid.' )';
 			$this->_db->setQuery( $query4 );
+
 			if(!$this->_db->query()) {
 				$this->setError($this->_db->getErrorMsg());
 				return false;	

@@ -1343,7 +1343,9 @@ $date = $main[2].'-'.$main[0].'-'.$main[1];
 $newdate = strtotime ( '0 day' , strtotime ( $date ) ) ;
 $RFP->proposalDueDate = date ( 'm-d-Y' , $newdate );
 ?>
-<?PHP echo $RFP->proposalDueDate.',&nbsp;'.$RFP->proposalDueTime  ?></label>
+<?PHP 
+ $duetime = date("h:i A", strtotime($RFP->proposalDueTime));
+echo $RFP->proposalDueDate.',&nbsp;'.$duetime  ?></label>
 </div>
 
 <?PHP
@@ -1363,7 +1365,7 @@ $date =  $day."-".$month."-".$year;
 </div>
 <div class="signupreview">
 <label><strong>State:</strong> 	</label>
-<?PHP echo $RFP->state;  ?>
+<?PHP echo strtoupper($RFP->state);  ?>
 </div>
 <div class="signupreview">
 <label>      <strong>Zip:</strong> 	</label>

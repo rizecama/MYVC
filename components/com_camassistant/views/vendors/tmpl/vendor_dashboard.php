@@ -23,6 +23,8 @@ $PLN_needed = $this->PLN_needed;
 $Jobs 		= $this->Jobs;
 $invitations 		= $this->Invitations;
 $openjobs 		= $this->openjobs;
+$personal_requests 		= $this->personalrequests;
+
  //echo '<pre>';print_r($invitations);exit;
 $deccount_pre = 0;
 	for($de=0; $de<count($invitations); $de++) {
@@ -61,6 +63,7 @@ if( $invitations > 0  && $_COOKIE['invites_cookie'] != 'invites' && count($invit
 L = jQuery.noConflict();
 
 function ITB_save(rfpid) {
+
 var formname = document.vendor_proposal_form;
 L('body,html').animate({
 scrollTop: 250
@@ -129,8 +132,6 @@ scrollTop: 250
 	});
 });*/
 //setTimeout("ITB_save()",10);
-
-	
 </script>
  <style>
 #mask1 {  position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
@@ -291,91 +292,7 @@ else {
 <!-- sof dotshead -->
 <!-- sof table pan -->
 <div class="clear"></div>  <br />
-<?PHP
-	$deccount_pre_open = 0;
-	for($oj=0; $oj<count($openjobs); $oj++) {
-		if($openjobs[$oj]['not_interested'] == '2') {
-			$deccount_pre_open ++ ;
-		}
-	}
-?>
-<div id="i_bar" style="background:#77b800;">
-<div id="i_bar_txt">
-<span><strong>NEW PROJECTS: Open Invite</strong></span>
-</div>
-<div id="i_icon001"><a style="text-decoration: none;" title="Click here" class="modal" rel="{handler: 'iframe', size: {x: 680, y: 530}}" href="index2.php?option=com_content&amp;view=article&amp;id=109&amp;Itemid=113"><img style="margin-top:6px;" src="templates/camassistant_left/images/info_icon2.png"> </a></div>
-</div>
-<div class="table_pannel">
-<div class="table_panneldiv">
-<table width="100%" cellpadding="0" cellspacing="4" class="vendortable">
-<?PHP if(count($openjobs)>0 && count($openjobs) > $deccount_pre_open ) { ?>
-    <tr class="vendorfirsttr">
-	<td></td>
-	<td width="30%" align="center" valign="middle">PROPERTY</td>
-    <td width="33%" align="center" valign="middle">PROJECT NAME</td>
-    <td width="15%" align="center" valign="middle">COUNTY</td>
-    <td width="25%" align="center" valign="middle">REQUESTED DUE DATE</td>
-   <!-- <td width="16%" align="center" valign="middle">TIME LEFT</td>-->
-    <?php /*?><td width="19%" align="center" valign="middle">OPTIONS</td><?php */?>
-  </tr>
-  <?php //echo "<pre>"; print_r($invitations); echo "</pre>"; ?>
-  
-  <?PHP 
-  	$deccount = 0;
-  for($d=0; $d<count($openjobs); $d++) {
-  			
-  			if($openjobs[$d]['not_interested'] != '2') {
-  		$subject = $Jobs[$d]['time_left'];
-		$pattern = '|-|';
-		preg_match($pattern, substr($subject,0), $matches, PREG_OFFSET_CAPTURE);
-		$cnt = count($matches);
-   if($openjobs[$d]['not_interested'] == '1') {?>
-  <tr class="table_blue_rowdots_submitted" style="color:#808080;" color="#808080">
-  <?php } else { ?>
-   <tr class="table_blue_rowdots_submitted">
-  <?php } ?>
-  <td align="center" valign="middle" width="15">
-	<a id="getcodeinfo_<?php echo $openjobs[$d]['rfp_id']; ?>" class="codeinfo_open" data="<?php echo $openjobs[$d]['rfp_id']; ?>" rel="<?php echo $openjobs[$d]['property_id']; ?>" href="javascript:void(0);"></a>
-	</td>
-	<td width="30%" align="center" valign="middle"><?PHP echo str_replace('_',' ',$openjobs[$d]['Propertyname']);  ?></td>
-    <td width="33%" align="center" valign="middle"><?PHP  echo $openjobs[$d]['projectName']; //echo $Drafts[$d]->Prperty_id;  ?></td>
-    <td width="15%" align="center" valign="middle">
-	<?PHP if($openjobs[$d]['County']) echo $openjobs[$d]['County'];
-		  else echo $openjobs[$d]['City'];
-		  	
-	  ?>
-	</td>
-	 <?php $main = $openjobs[$d]['proposalDueDate'];
-  if($main != '0000-00-00'){
-    $main = explode('-',$main);
-	$date = $main[0].'-'.$main[1].'-'.$main[2];
-	}
-	else{
-	$date = '00-00-0000';
-	}
 
-   ?>
-    <td width="25%" align="center" valign="middle"><?PHP echo $date;  ?></td>
-  </tr>
-  <tr><td colspan="5"><div id="codedetails_<?php echo $openjobs[$d]['rfp_id']; ?>" class="prop_details" ></div></td></tr>
-  <?PHP 
-  		 }
-		 else {
-		 	$deccount ++;
-		 }
-		  } 
-		  	}
-  if(count($openjobs)<=0 || count($openjobs) == $deccount_pre_open )
- { ?>
- <tr>
-    <td colspan="5"  align="center" valign="top"><p style="margin-bottom:10px; margin-top:10px;">You have not received any project invitations</p></td>
-  </tr>
-  <?PHP } ?>
- </table>
-<div class="clear"></div>
-</div>
-</div>
-<br />
 
 <?PHP
 	$deccount_pre = 0;
@@ -408,9 +325,26 @@ else {
   <?php //echo "<pre>"; print_r($invitations); echo "</pre>"; ?>
   
   <?PHP 
+  if($personal_requests)
+	{ 
+		for($p=0; $p<count($personal_requests); $p++) {
+		$all_vendors[] = $personal_requests[$p]->rfpid;
+	  }
+	}
+	else
+	$all_vendors[] = '';
+ 
+  
   	$deccount = 0;
   for($d=0; $d<count($invitations); $d++) {
-  			
+  
+  $previous_date = $invitations[$d]['pro_date'];
+  $previous_date = explode('-',$previous_date); 
+  $previous_date = $previous_date[2].'-'.$previous_date[0].'-'.$previous_date[1];
+	
+  
+	
+	if(in_array( $invitations[$d]['rfp_id'],$all_vendors) || $previous_date < date('Y-m-d') )	{	
   			if($invitations[$d]['not_interested'] != '2' && $invitations[$d]['create_rfptype'] != 'open') {
   		$subject = $Jobs[$d]['time_left'];
 		$pattern = '|-|';
@@ -464,7 +398,9 @@ else {
 		 else {
 		 	$deccount ++;
 		 }
-		  } 
+		  }
+		
+		  }
 		  	}
   if(count($invitations)<=0 || count($invitations) == $deccount_pre )
  { ?>
@@ -477,6 +413,124 @@ else {
 </div>
 </div>
 <BR  />
+
+
+
+<?PHP
+	$deccount_pre_open = 0;
+	for($oj=0; $oj<count($openjobs); $oj++) {
+		if($openjobs[$oj]['not_interested'] == '2') {
+			$deccount_pre_open ++ ;
+		}
+	}
+?>
+<div id="i_bar" style="background:#77b800;">
+<div id="i_bar_txt">
+<span><strong>NEW PROJECTS: Open Invite</strong></span>
+</div>
+<div id="i_icon001"><a style="text-decoration: none;" title="Click here" class="modal" rel="{handler: 'iframe', size: {x: 680, y: 530}}" href="index2.php?option=com_content&amp;view=article&amp;id=109&amp;Itemid=113"><img style="margin-top:6px;" src="templates/camassistant_left/images/info_icon2.png"> </a></div>
+</div>
+<div class="table_pannel">
+<div class="table_panneldiv">
+<table width="100%" cellpadding="0" cellspacing="4" class="vendortable">
+<?PHP
+//echo '<pre>';print_r($openjobs);exit;
+ if(count($openjobs)>0 && count($openjobs) > $deccount_pre_open ) { ?>
+    <tr class="vendorfirsttr">
+	<td></td>
+	<td width="30%" align="center" valign="middle">PROPERTY</td>
+    <td width="33%" align="center" valign="middle">PROJECT NAME</td>
+    <td width="15%" align="center" valign="middle">COUNTY</td>
+    <td width="25%" align="center" valign="middle">REQUESTED DUE DATE</td>
+   <!-- <td width="16%" align="center" valign="middle">TIME LEFT</td>-->
+    <?php /*?><td width="19%" align="center" valign="middle">OPTIONS</td><?php */?>
+  </tr>
+  <?php //echo "<pre>"; print_r($openjobs); echo "</pre>"; ?>
+  
+  <?PHP 
+	if($personal_requests)
+	{ 
+		for($p=0; $p<count($personal_requests); $p++) {
+		$all_vendors[] = $personal_requests[$p]->rfpid;
+	  }
+	}
+	else
+	$all_vendors[] = '';
+	$deccount = 0;
+  for($d=0; $d<count($openjobs); $d++) {
+   $previous_date = $openjobs[$d]['pro_date'];
+  $previous_date = explode('-',$previous_date); 
+  $previous_date = $previous_date[2].'-'.$previous_date[0].'-'.$previous_date[1];
+  	
+  
+  
+  	if(!in_array( $openjobs[$d]['rfp_id'],$all_vendors) || $previous_date < date('Y-m-d') )	{	
+  			
+  			if($openjobs[$d]['not_interested'] != '2') {
+  		$subject = $Jobs[$d]['time_left'];
+		$pattern = '|-|';
+		preg_match($pattern, substr($subject,0), $matches, PREG_OFFSET_CAPTURE);
+		$cnt = count($matches);
+   if($openjobs[$d]['not_interested'] == '1') {?>
+  <tr class="table_blue_rowdots_submitted" style="color:#808080;" color="#808080">
+  <?php } else { ?>
+   <tr class="table_blue_rowdots_submitted">
+  <?php } ?>
+  <td align="center" valign="middle" width="15">
+	<a id="getcodeinfo_<?php echo $openjobs[$d]['rfp_id']; ?>" class="codeinfo_open" data="<?php echo $openjobs[$d]['rfp_id']; ?>" rel="<?php echo $openjobs[$d]['property_id']; ?>" href="javascript:void(0);"></a>
+	</td>
+	<?php  
+	if ( $openjobs[$d]['block_status'] == 'blockvendor' ) {
+	$propertyname = '<a href= "javascript:void(0);" onclick="getblockmessage('.$openjobs[$d]['block_unv'].','.$openjobs[$d]['block_comp'].');"> Blocked</a>';
+	$projectname = '<a href= "javascript:void(0);" onclick="getblockmessage('.$openjobs[$d]['block_unv'].','.$openjobs[$d]['block_comp'].');"> Blocked</a>';
+	}
+	else
+	{
+	$propertyname = str_replace('_',' ',$openjobs[$d]['Propertyname']);
+	$projectname = $openjobs[$d]['projectName'];
+	}
+	 ?>
+	<td width="30%" align="center" valign="middle"><?PHP echo $propertyname;  ?></td>
+    <td width="33%" align="center" valign="middle"><?PHP  echo $projectname; //echo $Drafts[$d]->Prperty_id;  ?></td>
+    <td width="15%" align="center" valign="middle">
+	<?PHP if($openjobs[$d]['County']) echo $openjobs[$d]['County'];
+		  else echo $openjobs[$d]['City'];
+		  	
+	  ?>
+	</td>
+	 <?php $main = $openjobs[$d]['proposalDueDate'];
+  if($main != '0000-00-00'){
+    $main = explode('-',$main);
+	$date = $main[0].'-'.$main[1].'-'.$main[2];
+	}
+	else{
+	$date = '00-00-0000';
+	}
+
+   ?>
+    <td width="25%" align="center" valign="middle"><?PHP echo $date;  ?></td>
+  </tr>
+  <tr><td colspan="5"><div id="codedetails_<?php echo $openjobs[$d]['rfp_id']; ?>" class="prop_details" ></div></td></tr>
+  <?PHP 
+  		 }
+		 else {
+		 	$deccount ++;
+		 }
+		  } 
+		  }
+		 
+		  	}
+  if(count($openjobs)<=0 || count($openjobs) == $deccount_pre_open )
+ { ?>
+ <tr>
+    <td colspan="5"  align="center" valign="top"><p style="margin-bottom:10px; margin-top:10px;">There are no open projects at this time</p></td>
+  </tr>
+  <?PHP } ?>
+ </table>
+<div class="clear"></div>
+</div>
+</div>
+<br />
 <!-- Completed -->
 <?php
 /**
@@ -507,6 +561,77 @@ function getshowmessage(rfpid){
 	var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 672, y:250}}"))
 	SqueezeBox.fromElement(el,options);
 }
+function getblockmessage(un,noncom){
+
+if(un == 1 && noncom != 1 )
+ onlyunverifiedblock();
+else if(un !=1 && noncom == 1)
+onlycomplianceblock();
+else 
+bothcomplianceblock();
+}
+
+
+
+function onlyunverifiedblock()
+{
+ var maskHeight = G(document).height();
+		var maskWidth = G(window).width();
+		G('#maskexu').css({'width':maskWidth,'height':maskHeight});
+		G('#maskexu').fadeIn(100);
+		G('#maskexu').fadeTo("slow",0.8);
+		var winH = G(window).height();
+		var winW = G(window).width();
+		G("#submitexu").css('top',  winH/2-G("#submitexu").height()/2);
+		G("#submitexu").css('left', winW/2-G("#submitexu").width()/2);
+		G("#submitexu").fadeIn(2000);
+		
+		G('.windowexu #cancelexu').click(function (e) {
+		e.preventDefault();
+		G('#maskexu').hide();
+		G('.windowexu').hide();
+		});
+} 
+
+function onlycomplianceblock()
+{
+ var maskHeight = G(document).height();
+		var maskWidth = G(window).width();
+		G('#maskexc').css({'width':maskWidth,'height':maskHeight});
+		G('#maskexc').fadeIn(100);
+		G('#maskexc').fadeTo("slow",0.8);
+		var winH = G(window).height();
+		var winW = G(window).width();
+		G("#submitexc").css('top',  winH/2-G("#submitexc").height()/2);
+		G("#submitexc").css('left', winW/2-G("#submitexc").width()/2);
+		G("#submitexc").fadeIn(2000);
+		
+		G('.windowexc #cancelexc').click(function (e) {
+		e.preventDefault();
+		G('#maskexc').hide();
+		G('.windowexc').hide();
+		});
+}   
+function bothcomplianceblock()
+{
+ var maskHeight = G(document).height();
+		var maskWidth = G(window).width();
+		G('#maskex').css({'width':maskWidth,'height':maskHeight});
+		G('#maskex').fadeIn(100);
+		G('#maskex').fadeTo("slow",0.8);
+		var winH = G(window).height();
+		var winW = G(window).width();
+		G("#submitex").css('top',  winH/2-G("#submitex").height()/2);
+		G("#submitex").css('left', winW/2-G("#submitex").width()/2);
+		G("#submitex").fadeIn(2000);
+		
+		G('.windowex #cancelex').click(function (e) {
+		e.preventDefault();
+		G('#maskex').hide();
+		G('.windowex').hide();
+		});
+}     
+
 function deleteproposal(rfpid,proposalid,altbid){
 		G('.rfpid').val(rfpid);
 		G('.proposalid').val(proposalid);
@@ -545,6 +670,26 @@ function deleteproposal(rfpid,proposalid,altbid){
 #donedp {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
 #closedp {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
 
+#maskex { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesex .windowex {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesex #submitex {  width:508px;  height:244px;  padding:10px;  background-color:#ffffff;}
+#boxesex #submitex a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneex {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeex {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
+
+#maskexu { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesexu .windowexu {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesexu #submitexu {  width:508px;  height:244px;  padding:10px;  background-color:#ffffff;}
+#boxesexu #submitexu a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneexu {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeexu {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
+
+#maskexc { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesexc .windowexc {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesexc #submitexc {  width:508px;  height:244px;  padding:10px;  background-color:#ffffff;}
+#boxesexc #submitexc a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneexc {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeexc {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
 </style>
 <?php
 $user =& JFactory::getUser();
@@ -1084,4 +1229,60 @@ else{
 </form>
 </div>
   <div id="mask1"></div>
+</div>
+
+<div id="boxesexu" style="top:576px; left:582px;">
+<div id="submitexu" class="windowexu" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">BLOCKED</font></span>
+</div></div>
+<div style="text-align:justify"><p class="block_unvers">We're sorry, but <strong>UNVERIFIED</strong> Vendors have been BLOCKED from participating in this project.</p>
+</div>
+<div id="topborder_row_endbidding"></div>
+<div style="text-align:justify"><p class="block_unvers">NOTE: If you make the necessary changes to your account in order to qualify for this project, you will then be able to VIEW and ACCEPT participation.</p>
+</div>
+
+<div style="padding-top:25px;" align="center">
+<div id="cancelex" name="doneex" value="Ok" class="blockunveriifed_vendor"></div>
+</div>
+</div>
+  <div id="maskexu"></div>
+</div>
+
+<div id="boxesexc" style="top:576px; left:582px;">
+<div id="submitexc" class="windowexc" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">BLOCKED</font></span>
+</div></div>
+<div style="text-align:justify"><p class="block_unvers">We're sorry, but <strong>NON-COMPLIANT</strong> Vendors have been BLOCKED from participating in this project.</p>
+</div>
+<div id="topborder_row_endbidding"></div>
+<div style="text-align:justify"><p class="block_unvers">NOTE: If you make the necessary changes to your account in order to qualify for this project, you will then be able to VIEW and ACCEPT participation.</p>
+</div>
+
+<div style="padding-top:25px;" align="center">
+<div id="cancelex" name="doneex" value="Ok" class="blockunveriifed_vendor"></div>
+</div>
+</div>
+  <div id="maskexc"></div>
+</div>
+<div id="boxesex" style="top:576px; left:582px;">
+<div id="submitex" class="windowex" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">BLOCKED</font></span>
+</div></div>
+<div style="text-align:justify"><p class="block_unvers">We're sorry, but <strong>UNVERIFIED</strong> and <strong>NON-COMPLIANT</strong> Vendors have been BLOCKED from participating in this project.</p>
+</div>
+<div id="topborder_row_endbidding"></div>
+<div style="text-align:justify"><p class="block_unvers">NOTE: If you make the necessary changes to your account in order to qualify for this project, you will then be able to VIEW and ACCEPT participation.</p>
+</div>
+
+<div style="padding-top:25px;" align="center">
+<div id="cancelex" name="doneex" value="Ok" class="blockunveriifed_vendor"></div>
+</div>
+</div>
+  <div id="maskex"></div>
 </div>

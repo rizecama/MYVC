@@ -29,7 +29,7 @@ class vendorsignupViewvendorsignup extends Jview
 			$states = $model->getstates(); 
 			$this->assignRef('states',$states);
 			$fail = JRequest::getVar("fail",'');
-			if( $fail == 'logo' ){ 
+			if( $fail == 'logo' ){
 			$logofail = $model->getlogofailmsg(); 
 			$this->assignRef('logofail',$logofail);
 			}

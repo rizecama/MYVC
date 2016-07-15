@@ -33,17 +33,20 @@ $position = "select board_position FROM #__cam_board_mem where id='".$title."'";
 $db->setQuery($position);
 $position = $db->loadResult();
 
-
 ?>
 <script type="text/javascript" src="components/com_camassistant/skin/js/jquery-1.4.4.min.js"></script>
 
 <script type="text/javascript">
 G = jQuery.noConflict();
 
-function gobacktohome()
+function cancel()
 {
 window.location = "index.php?option=com_camassistant&controller=addproperty&Itemid=75"
 
+}
+function validate_data2()
+{
+G("#reg_form").submit();
 }
 </script>
 
@@ -77,6 +80,8 @@ window.location = "index.php?option=com_camassistant&controller=addproperty&Item
 <?php if($propertydetails->property_image)
 { ?>
 <img class="propertymanager_image" src="components/com_camassistant/assets/images/property_pictures/<?php echo $propertydetails->property_image; ?>"  />
+<?php } else { ?>
+<img width =99% height = 100% src="components/com_camassistant/assets/images/properymanager/no-property-image.jpg">
 <?php } ?>
 </span>
 </div>
@@ -96,17 +101,30 @@ $property_name = str_replace('_',' ',$pname)
 <div class="signup einumber">
 <div class="signup">
 <label style="padding: 15px 0 3px 0px;">EIN Number: </label>
-<input name="ein1" class="EIN-l" type="text" maxlength="2"  name="ein1" onclick="if(this.value == 'without spaces or dashes') this.value='';"  id="ein1" onkeyup="moveOnMax(this,'ein2')" value="<?php echo $tax_id[0];?>"/> &nbsp; - 
-<input name="ein2" class="EIN-r" type="text" id= "ein2" name="ein2" maxlength="7"  value="<?php echo $tax_id[1]?>"/>
+<input name="ein1" class="EIN-l" type="text" maxlength="2"  disabled="disabled" name="ein1" onclick="if(this.value == 'without spaces or dashes') this.value='';"  id="ein1" onkeyup="moveOnMax(this,'ein2')" value="<?php echo $tax_id[0];?>"/> &nbsp; - 
+
+<input name="ein2" class="EIN-r" type="text" id= "ein2" name="ein2" disabled="disabled" maxlength="7"  value="<?php echo $tax_id[1]?>"/>
 </div>
 
 </div>
 <div class="signup">
-<label style="padding: 15px 0 3px 0px;">Title (your relation to this property):</label>
-<select name="board_position"  disabled="disabled">
-<option value="<?php echo $position;?>"><?php echo $position;?></option>
 
+<label style="padding: 15px 0 3px 0px;">Title (your relation to this property):</label>
+<form action=""  method="post" name="reg_form" id='reg_form' enctype="multipart/form-data">
+<select name="board_position" >
+<option <?php if( $position == 'Owner' ){ echo "selected='selected'"; } ?> value="Owner">Owner</option>
+<option <?php if( $position == 'President' ){ echo "selected='selected'"; } ?> value="President">President</option>
+<option <?php if( $position == 'Vice President' ){ echo "selected='selected'"; } ?> value="Vice President">Vice President</option>
+<option <?php if( $position == 'Treasurer' ){ echo "selected='selected'"; } ?> value="Treasurer">Treasurer</option>
+<option <?php if( $position == 'Secretary' ){ echo "selected='selected'"; } ?> value="Secretary">Secretary</option>
+<option <?php if( $position == 'Director' ){ echo "selected='selected'"; } ?> value="Director">Director</option>
 </select>
+
+<input type="hidden" value="com_camassistant" name="option" />
+<input type="hidden" value="vendorscenter" name="controller" />
+<input type="hidden" value="saveboardposition" name="task" />
+<input type="hidden" name="bid" value="<?PHP echo $title; ?>"  />
+</form>
 </div>
 
 </div>
@@ -251,9 +269,13 @@ $detail = $this->county[$i];
   
 
 
-<div class="checktext">
-<a class="gobacktohome" href="javascript:gobacktohome();"></a>
-</div>
+<div align="right" id="topborder_row1"></div>
+<div class="checktextdetails">
+
+<a  href="javascript:void(0)" class="manager_cancel" onclick="cancel()"></a>
+<a  href="javascript:void(0)" class="manager_submit" onclick="validate_data2();"></a>
+ </div>
+
 </div>
 
 

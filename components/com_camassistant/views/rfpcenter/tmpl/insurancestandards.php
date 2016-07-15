@@ -53,6 +53,42 @@
 #boxestc #submittc a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
 #donetc {border:0 none;cursor:pointer;height:30px;padding:0; color:#000000; font-weight:bold; font-size:20px; float:right;}
 #closetc {border:0 none;cursor:pointer;height:30px;padding:3px 0 0;float:left;}
+
+#maskex { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesex .windowex {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesex #submitex {  width:551px;  height:335px;  padding:10px;  background-color:#ffffff;}
+#boxesex #submitex a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneex {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeex {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
+
+#maskexx { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesexx .windowexx {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesexx #submitexx {  width:551px;  height:335px;  padding:10px;  background-color:#ffffff;}
+#boxesexx #submitexx a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneexx {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeexx {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
+
+#maskexxx { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesexxx .windowexxx {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesexxx #submitexxx {  width:551px;  height:335px;  padding:10px;  background-color:#ffffff;}
+#boxesexxx #submitexxx a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneexxx {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeexxx {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
+
+#maskexxxx { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesexxxx .windowexxxx {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesexxxx #submitexxxx {  width:551px;  height:335px;  padding:10px;  background-color:#ffffff;}
+#boxesexxxx #submitexxxx a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneexxxx {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeexxxx {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
+
+#maskexxxxx { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesexxxxx .windowexxxxx {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesexxxxx #submitexxxxx {  width:551px;  height:335px;  padding:10px;  background-color:#ffffff;}
+#boxesexxxxx #submitexxxxx a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneexxxxx {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeexxxxx {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
+
 </style>
 <script type="text/javascript">
 var checkboxHeight = "25";
@@ -314,6 +350,15 @@ window.onload = Custom.init;
 				});
 	});
 	
+	N('.requirevendors').click(function(e) {
+	 var check = N(".requirevendors").is(':checked') ? 1 : 0;
+	 N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateacount_type", {value: ""+check+""}, function(data){
+				location.reload();
+				});
+	});
+	
+	
+	
 	N('#self').click(function(e) {
 		N('.yui-skin-sam').slideDown('slow');
 		N('.secondoptionshow_1').show();
@@ -537,6 +582,7 @@ window.onload = Custom.init;
 		});
 		
 		N('#editoption').live('click',function(){
+		
 		N('#aboutform').show();
 		N('.detailsextra').hide();
 		});
@@ -587,7 +633,182 @@ window.onload = Custom.init;
 
 	}
 	
+	function check_gliacounttype()
+	{
+	    H = jQuery.noConflict();
+	  var val = H("#gli").attr("checked") ? 1 : 0;
+	  var chked_value = H(".requirevendors").attr("checked") ? 1 : 0;
+	  if(val == 1 && chked_value != 1 ) {
+	    
+	    var maskHeight = H(document).height();
+		var maskWidth = H(window).width();
+		H('#maskex').css({'width':maskWidth,'height':maskHeight});
+		H('#maskex').fadeIn(100);
+		H('#maskex').fadeTo("slow",0.8);
+		var winH = H(window).height();
+		var winW = H(window).width();
+		H("#submitex").css('top',  winH/2-G("#submitex").height()/2);
+		H("#submitex").css('left', winW/2-G("#submitex").width()/2);
+		H("#submitex").fadeIn(2000);
+		H('.windowex #verifiedvendors_glicancel').click(function (e) {
+		H('input:checkbox[name=cert_holder_gli]').attr('checked',false);
+		e.preventDefault();
+		H('#maskex').hide();
+		H('.windowex').hide();
+		});
+		H('.windowex #verifiedvendors_gliadd').click(function (e) {
+	    H('input:checkbox[name=verified]').attr('checked',true);
+		H.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateacount_type", {value: ""+1+""}, function(data){
+		});
+		e.preventDefault();
+		H('#maskex').hide();
+		H('.windowex').hide();
+		});
+	}	
+	}
 	
+function check_autoacounttype()
+	{
+	    H = jQuery.noConflict();
+		var val = H("#auto").attr("checked") ? 1 : 0;
+		var chked_value = H(".requirevendors").attr("checked") ? 1 : 0;
+		
+	  if(val == 1 && chked_value != 1 ) {
+	    var maskHeight = H(document).height();
+		var maskWidth = H(window).width();
+		H('#maskexx').css({'width':maskWidth,'height':maskHeight});
+		H('#maskexx').fadeIn(100);
+		H('#maskexx').fadeTo("slow",0.8);
+		var winH = H(window).height();
+		var winW = H(window).width();
+		H("#submitexx").css('top',  winH/2-G("#submitexx").height()/2);
+		H("#submitexx").css('left', winW/2-G("#submitexx").width()/2);
+		H("#submitexx").fadeIn(2000);
+		H('.windowexx #verifiedvendors_autocancel').click(function (e) {
+		H('input:checkbox[name=cert_holder]').attr('checked',false);
+		e.preventDefault();
+		H('#maskexx').hide();
+		H('.windowexx').hide();
+		});
+		H('.windowexx #verifiedvendors_autoadd').click(function (e) {
+		 H('input:checkbox[name=verified]').attr('checked',true);
+		 H.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateacount_type", {value: ""+1+""}, function(data){
+		});
+		e.preventDefault();
+		H('#maskexx').hide();
+		H('.windowexx').hide();
+		});
+	  }	
+	}
+	
+	function check_workacounttype()
+	{
+	    H = jQuery.noConflict();
+		var val = H("#wrk").attr("checked") ? 1 : 0;
+	    var chked_value = H(".requirevendors").attr("checked") ? 1 : 0;
+		
+	  if(val == 1 && chked_value != 1 ) {
+	    
+	    var maskHeight = H(document).height();
+		var maskWidth = H(window).width();
+		H('#maskexxx').css({'width':maskWidth,'height':maskHeight});
+		H('#maskexxx').fadeIn(100);
+		H('#maskexxx').fadeTo("slow",0.8);
+		var winH = H(window).height();
+		var winW = H(window).width();
+		H("#submitexxx").css('top',  winH/2-G("#submitexxx").height()/2);
+		H("#submitexxx").css('left', winW/2-G("#submitexxx").width()/2);
+		H("#submitexxx").fadeIn(2000);
+		H('.windowexxx #verifiedvendors_wrkcancel').click(function (e) {
+		H('input:checkbox[name=certholder_work]').attr('checked',false);
+		e.preventDefault();
+		H('#maskexxx').hide();
+		H('.windowexxx').hide();
+		});
+		H('.windowexxx #verifiedvendors_wrkadd').click(function (e) {
+		 H('input:checkbox[name=verified]').attr('checked',true);
+		 H.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateacount_type", {value: ""+1+""}, function(data){
+		});
+		e.preventDefault();
+		H('#maskexxx').hide();
+		H('.windowexxx').hide();
+		});
+	  }	
+	}
+	
+	function check_umbacounttype()
+	{
+	    H = jQuery.noConflict();
+		var val = H("#umb").attr("checked") ? 1 : 0;
+	   var chked_value = H(".requirevendors").attr("checked") ? 1 : 0;
+		
+	  if(val == 1 && chked_value != 1 ) {
+	    
+	    var maskHeight = H(document).height();
+		var maskWidth = H(window).width();
+		H('#maskexxxx').css({'width':maskWidth,'height':maskHeight});
+		H('#maskexxxx').fadeIn(100);
+		H('#maskexxxx').fadeTo("slow",0.8);
+		var winH = H(window).height();
+		var winW = H(window).width();
+		H("#submitexxxx").css('top',  winH/2-G("#submitexxxx").height()/2);
+		H("#submitexxxx").css('left', winW/2-G("#submitexxxx").width()/2);
+		H("#submitexxxx").fadeIn(2000);
+		H('.windowexxxx #verifiedvendors_umbcancel').click(function (e) {
+		H('input:checkbox[name=certholder_umbrella]').attr('checked',false);
+		e.preventDefault();
+		H('#maskexxxx').hide();
+		H('.windowexxxx').hide();
+		});
+		H('.windowexxxx #verifiedvendors_umbadd').click(function (e) {
+		 H('input:checkbox[name=verified]').attr('checked',true);
+		 H.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateacount_type", {value: ""+1+""}, function(data){
+		});
+		e.preventDefault();
+		H('#maskexxxx').hide();
+		H('.windowexxxx').hide();
+		});
+	  }	
+	}
+	
+	function check_omiacounttype()
+	{
+	    H = jQuery.noConflict();
+		var val = H("#omi").attr("checked") ? 1 : 0;
+	    var chked_value = H(".requirevendors").attr("checked") ? 1 : 0;
+		
+	  if(val == 1 && chked_value != 1 ) {
+	    
+	    var maskHeight = H(document).height();
+		var maskWidth = H(window).width();
+		H('#maskexxxxx').css({'width':maskWidth,'height':maskHeight});
+		H('#maskexxxxx').fadeIn(100);
+		H('#maskexxxxx').fadeTo("slow",0.8);
+		var winH = H(window).height();
+		var winW = H(window).width();
+		H("#submitexxxxx").css('top',  winH/2-G("#submitexxxxx").height()/2);
+		H("#submitexxxxx").css('left', winW/2-G("#submitexxxxx").width()/2);
+		H("#submitexxxxx").fadeIn(2000);
+		H('.windowexxxxx #verifiedvendors_omicancel').click(function (e) {
+		H('input:checkbox[name=certholder_omi]').attr('checked',false);
+		e.preventDefault();
+		H('#maskexxxxx').hide();
+		H('.windowexxxxx').hide();
+		});
+		H('.windowexxxxx #verifiedvendors_omiadd').click(function (e) {
+		 H('input:checkbox[name=verified]').attr('checked',true);
+		 H.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateacount_type", {value: ""+1+""}, function(data){
+		});
+		e.preventDefault();
+		H('#maskexxxxx').hide();
+		H('.windowexxxxx').hide();
+		});
+	  }	
+	}
+	
+			
+	
+    
 
 </script>
 <script type='text/javascript'>
@@ -678,7 +899,33 @@ function getpopupbox(){
 		G = jQuery.noConflict();
 		G(function(){
 		G('#saveoption').click(function(){
-			G('body,html').animate({
+	     value = G("#check").is(':checked') ? 1 : 0;
+		if( value == 1 )
+			newpopup();
+		else
+		{
+			N('textarea[rel="editor"]').each(function(){
+					var n=N(this).attr('id');
+					document.getElementById(n).value = document.getElementById("wysiwyg" + n).contentWindow.document.body.innerHTML;
+					notesstrings = document.getElementById(n).value ;
+					notesstrings = notesstrings.replace("’", "'");
+					notesstrings = notesstrings.replace(/[^\u000A\u0020-\u007E]/g, ' ');
+					document.getElementById(n).value = notesstrings ;
+					});
+			G( "#aboutformsubmit" ).submit();
+		}	
+			G('.windowtc #closetc').click(function (e) {
+				e.preventDefault();
+				G('#masktc').hide();
+				G('.windowtc').hide();
+				location.reload();
+			});
+	
+		});
+		
+function newpopup()
+{
+G('body,html').animate({
 			scrollTop: 250
 			},800);
 			var maskHeight = G(document).height();
@@ -692,6 +939,8 @@ function getpopupbox(){
 			G("#submittc").css('left', winW/2-G("#submittc").width()/2);
 			G("#submittc").fadeIn(2000);
 			G('.windowtc #donetc').click(function (e) {
+			  x =1;
+              G('.vendormail').val(x);
 				e.preventDefault();
 				G('#masktc').hide();
 				G('.windowtc').hide();
@@ -703,16 +952,9 @@ function getpopupbox(){
 				notesstrings = notesstrings.replace(/[^\u000A\u0020-\u007E]/g, ' ');
 				document.getElementById(n).value = notesstrings ;
 				});
-				G( "#aboutformsubmit" ).submit();
+			 G( "#aboutformsubmit" ).submit();
 			});
-			G('.windowtc #closetc').click(function (e) {
-				e.preventDefault();
-				G('#masktc').hide();
-				G('.windowtc').hide();
-				location.reload();
-			});
-	
-		});
+}
 	
 });
 </script>
@@ -771,7 +1013,7 @@ if($masteruser){
 <?php if(($user->user_type == '13' && $user->accounttype == 'master') || $user->user_type == '16'){
 ?>
 <tr>
-<td width="10"><input style="margin-left:0px;" type="checkbox" <?php if($this->aboutus->termsconditions == '1') { ?> checked="checked" <?php }  ?> disabled="disabled" /></td><td>Require Vendors to agree to Terms & Conditions</td>
+<td width="10"><input style="margin-left:0px;"  type="checkbox" <?php if($this->aboutus->termsconditions == '1') { ?> checked="checked" <?php }  ?> disabled="disabled" /></td><td>Require Vendors to agree to Terms & Conditions</td>
 <td align="right">
 <a id="editoption" href="javascript:void(0);"><strong><img src="templates/camassistant_left/images/EditMini.png" /></strong></a></td>
 </tr>
@@ -792,7 +1034,7 @@ generate_wysiwyg('ctl00_CPHContent_txtComments');
 
  </td></tr>
  <tr height="5"></tr>
- <tr><td width="10"><input type="checkbox" value="1" style="margin-left:0px;" <?php if($this->aboutus->termsconditions == '1') { ?> checked="checked" <?php }  ?> name="termsconditions" /></td><td>Require Vendors to agree to Terms & Conditions</td><td align="right"><a href="javascript:void(0);" onClick="window.location.reload()" id="cancellink"><img src="templates/camassistant_left/images/CancelMini.png" /></a> <a id="saveoption" href="javascript:void(0);" style="font-weight:bold; color: #7ab800;"><img src="templates/camassistant_left/images/SaveMini.png" /></a></td></tr>
+ <tr><td width="10"><input type="checkbox" id ="check" value="1" style="margin-left:0px;" <?php if($this->aboutus->termsconditions == '1') { ?> checked="checked" <?php }  ?> name="termsconditions" /></td><td>Require Vendors to agree to Terms & Conditions</td><td align="right"><a href="javascript:void(0);" onClick="window.location.reload()" id="cancellink"><img src="templates/camassistant_left/images/CancelMini.png" /></a> <a id="saveoption" href="javascript:void(0);" style="font-weight:bold; color: #7ab800;"><img src="templates/camassistant_left/images/SaveMini.png" /></a></td></tr>
 <tr height="10"></tr>
 <tr><td style="color: #808080; font-size: 13px; padding-left: 9px; text-align: left;">
 <span id="charcount">
@@ -807,7 +1049,9 @@ generate_wysiwyg('ctl00_CPHContent_txtComments');
 <input type="hidden" value="com_camassistant" name="option">
 <input type="hidden" value="rfpcenter" name="controller">
 <input type="hidden" value="saveaboutus" name="task">
+<input type="hidden" value="" class="vendormail" name="vendormail">
 <input type="hidden" value="<?php echo $this->aboutus->id; ?>" name="id">
+
 </form>
 </div>
 
@@ -838,7 +1082,12 @@ $db->setQuery( $query );
 $perinfo = $db->loadObject();
 $weeks = $perinfo->weeks ;
 $permission = $perinfo->permission ;
+$acount_type = $this->acount_type ;
 
+if($acount_type == '1')
+$checked12 = 'checked="checked"';
+else
+$checked12 = '';
 if($weeks){
 	$checked = 'checked="checked"';
 }
@@ -867,15 +1116,20 @@ if($user->user_type == 16 )
 <tr height="5"></tr>
 <tr><td style="padding-bottom:17px;"><input id="self" <?php  echo $checked2; ?> type="radio" value="self" name="permission" class="second" style="margin-top:0px;" /></td><td><strong> - I would like to set specific Insurance and Licensing standards that automatically apply to every Request I create (Recommended)</strong></td></tr>
 
-<tr class="secondoptionshow_1"  style="display:<?php echo $disply; ?>"><td></td><td><p>NOTE: If this option is selected, you can apply varying Insurance and Licensing requirements to each industry or the same requirements to all industries.</p></td></tr>
+<tr class="secondoptionshow_1" style="display:<?php echo $disply; ?>"><td></td><td><p>NOTE: If this option is selected, you can apply varying Insurance and Licensing requirements to each industry or the same requirements to all industries.</p></td></tr>
 <tr height="10"></tr>
 <tr><td></td><td>
 
 </td></tr></table>
 <?php } else { ?>
-<tr><td><input id="notself" style="margin-top:0px;" <?php  echo $checked1; ?> type="radio" value="notself" name="permission" class="first" /></td><td> <strong>- Allow Managers to set their own Vendor Insurance Standards</strong> </td></tr>
+
+<tr><td><input type="checkbox" value="verified" name="verified" <?php  echo $checked12; ?> class ="requirevendors" style="margin-top:4px;" /></td><td><strong> - Require Vendors to have their insurance and licensing VERIFIED by MyVendorCenter (Recommended)</strong></td></tr>
+<tr class="secondoptionshow_1"><td></td><td><p style="padding-left:7px;">NOTE: Vendors can choose a verified account for a small annual fee to have any insurance policies or licenses they upload to their account reviewed for accuracy by MyVendorCenter's compliance team.  Also, only Verified Vendors can list MyVendorCenter as a certificate holder, allowing the compliance team to make any necessary revisions to their insurance based on updates from the Vendor's insurance agent or carrier. </p></td></tr>
+<tr height="10"></tr>
+
+<tr><td><input id="notself" style="margin-top:0px;" <?php  echo $checked1; ?> type="radio" value="notself" name="permission" class="first" /></td><td> <strong>- Allow Managers to set their own Vendor insurance and licensing standards per project</strong> </td></tr>
 <tr height="5"></tr>
-<tr><td><input id="self" <?php  echo $checked2; ?> type="radio" value="self" name="permission" class="second" style="margin-top:0px;" /></td><td><strong> - Choose company-wide Vendor Insurance Standards for your Managers (Recommended)</strong></td></tr>
+<tr><td><input id="self" <?php  echo $checked2; ?> type="radio" value="self" name="permission" class="second" style="margin-top:0px;" /></td><td><strong> - Choose company-wide Vendor insurance & licensing standards for your Managers (Recommended)</strong></td></tr>
 
 <tr class="secondoptionshow_1"  style="display:<?php echo $disply; ?>"><td></td><td><p style="padding-left:7px;">IMPORTANT: Any Vendors that do NOT meet the minimum standards set below will appear as "Non-Compliant" for all other users associated with your account.</p></td></tr>
 <tr height="10"></tr>
@@ -891,7 +1145,7 @@ if($user->user_type == 16 )
 if(!$per){
 $db=&JFactory::getDBO();
 $user=JFactory::getUser();
-$query5 = "INSERT INTO #__cam_master_compliancereport ( id , masterid , master, admin, dm, m, unverified, verified, nonc, compliant, report_switch, include_docs, how_docs, gli, api, wc, umb, omi, pln, oln, phone_number  ) VALUES (  '' , '".$user->id."', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0', '', '0', '0', '0', '0', '0', '0', '0', '0' );";
+$query5 = "INSERT INTO #__cam_master_compliancereport ( id , masterid , master, admin, dm, m, unverified, verified, nonc, compliant, report_switch, include_docs, how_docs, gli, api, wc, umb, omi, pln, oln, phone_number,acount_type  ) VALUES (  '' , '".$user->id."', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0', '', '0', '0', '0', '0', '0', '0', '0', '0','0' );";
 $db->setQuery( $query5 );
 $res5=$db->query();
 }
@@ -942,3 +1196,103 @@ else{
 </div>
   <div id="maskexwr"></div>
 </div>
+
+<div id="boxesex" style="top:576px; left:582px;">
+<div id="submitex" class="windowex" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">NOTICE</font></span>
+</div></div>
+<div style="text-align:justify"><p class="type_text">This option is only available if you require your Vendors to have their compliance documents <strong>VERIFIED</strong> (verified account) as part of your compliance standards.  Would you like to make this a requirement now?</p>
+</div>
+<div class="verifiedvendors_buttons">
+<a href="javascript:void(0);" class="verifiedvendors_cancel" id="verifiedvendors_glicancel"></a>
+<a href="javascript:void(0);" class="verifiedvendors_add" id="verifiedvendors_gliadd"></a>
+</div>
+<div id="verifiedvendors_row"></div>
+<div style="text-align:justify"><p class="type_textdiv">
+Note: Verified Vendors pay a small annual fee in order to have MyVendorCenter's compliance team verify their documents on an ongoing basis.  As a certificate holder, MyVendorCenter shall receive and update any changes to a Vendor's insurance policies, based on the information provided by their agent/carrier. </p>
+</div> 
+</div>
+  <div id="maskex"></div>
+</div>
+
+<div id="boxesexx" style="top:576px; left:582px;">
+<div id="submitexx" class="windowexx" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">NOTICE</font></span>
+</div></div>
+<div style="text-align:justify"><p class="type_text">This option is only available if you require your Vendors to have their compliance documents <strong>VERIFIED</strong> (verified account) as part of your compliance standards.  Would you like to make this a requirement now?</p>
+</div>
+<div class="verifiedvendors_buttons">
+<a href="javascript:void(0);" class="verifiedvendors_cancel" id="verifiedvendors_autocancel"></a>
+<a href="javascript:void(0);" class="verifiedvendors_add" id="verifiedvendors_autoadd"></a>
+</div>
+<div id="verifiedvendors_row"></div>
+<div style="text-align:justify"><p class="type_textdiv">
+Note: Verified Vendors pay a small annual fee in order to have MyVendorCenter's compliance team verify their documents on an ongoing basis.  As a certificate holder, MyVendorCenter shall receive and update any changes to a Vendor's insurance policies, based on the information provided by their agent/carrier. </p>
+</div> 
+</div>
+  <div id="maskexx"></div>
+</div>
+
+<div id="boxesexxx" style="top:576px; left:582px;">
+<div id="submitexxx" class="windowexxx" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">NOTICE</font></span>
+</div></div>
+<div style="text-align:justify"><p class="type_text">This option is only available if you require your Vendors to have their compliance documents <strong>VERIFIED</strong> (verified account) as part of your compliance standards.  Would you like to make this a requirement now?</p>
+</div>
+<div class="verifiedvendors_buttons">
+<a href="javascript:void(0);" class="verifiedvendors_cancel" id="verifiedvendors_wrkcancel"></a>
+<a href="javascript:void(0);" class="verifiedvendors_add" id="verifiedvendors_wrkadd"></a>
+</div>
+<div id="verifiedvendors_row"></div>
+<div style="text-align:justify"><p class="type_textdiv">
+Note: Verified Vendors pay a small annual fee in order to have MyVendorCenter's compliance team verify their documents on an ongoing basis.  As a certificate holder, MyVendorCenter shall receive and update any changes to a Vendor's insurance policies, based on the information provided by their agent/carrier. </p>
+</div> 
+</div>
+  <div id="maskexxx"></div>
+</div>
+<div id="boxesexxxx" style="top:576px; left:582px;">
+<div id="submitexxxx" class="windowexxxx" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">NOTICE</font></span>
+</div></div>
+<div style="text-align:justify"><p class="type_text">This option is only available if you require your Vendors to have their compliance documents <strong>VERIFIED</strong> (verified account) as part of your compliance standards.  Would you like to make this a requirement now?</p>
+</div>
+<div class="verifiedvendors_buttons">
+<a href="javascript:void(0);" class="verifiedvendors_cancel" id="verifiedvendors_umbcancel"></a>
+<a href="javascript:void(0);" class="verifiedvendors_add" id="verifiedvendors_umbadd"></a>
+</div>
+<div id="verifiedvendors_row"></div>
+<div style="text-align:justify"><p class="type_textdiv">
+Note: Verified Vendors pay a small annual fee in order to have MyVendorCenter's compliance team verify their documents on an ongoing basis.  As a certificate holder, MyVendorCenter shall receive and update any changes to a Vendor's insurance policies, based on the information provided by their agent/carrier. </p>
+</div> 
+</div>
+  <div id="maskexxxx"></div>
+</div>
+
+<div id="boxesexxxxx" style="top:576px; left:582px;">
+<div id="submitexxxxx" class="windowexxxxx" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">NOTICE</font></span>
+</div></div>
+<div style="text-align:justify"><p class="type_text">This option is only available if you require your Vendors to have their compliance documents <strong>VERIFIED</strong> (verified account) as part of your compliance standards.  Would you like to make this a requirement now?</p>
+</div>
+<div class="verifiedvendors_buttons">
+<a href="javascript:void(0);" class="verifiedvendors_cancel" id="verifiedvendors_omicancel"></a>
+<a href="javascript:void(0);" class="verifiedvendors_add" id="verifiedvendors_omiadd"></a>
+</div>
+<div id="verifiedvendors_row"></div>
+<div style="text-align:justify"><p class="type_textdiv">
+Note: Verified Vendors pay a small annual fee in order to have MyVendorCenter's compliance team verify their documents on an ongoing basis.  As a certificate holder, MyVendorCenter shall receive and update any changes to a Vendor's insurance policies, based on the information provided by their agent/carrier. </p>
+</div> 
+</div>
+  <div id="maskexxxxx"></div>
+</div>
+

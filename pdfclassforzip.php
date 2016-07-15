@@ -124,7 +124,7 @@ for($i=0;$i<=count($row);$i++)
 				 $arr = explode('/',$vendor_uploadsn[$r]->upload_doc);
 				 $cnt = count($arr);
 				 $vendor_uploadsn[$r]->title = $arr[$cnt-1];
-				 $link = '<a style="color:#7AB800; text-decoration:none;" href="http://vps54914.vps.ovh.ca/live/index.php?option=com_camassistant&controller=vendors&task=view_upld_cert&folder_type=uploaded_by_VENDOR&filename='.$vendor_uploadsn[$r]->upload_doc.'">'.$vendor_uploadsn[$r]->title.'</a>';
+				 $link = '<a style="color:#7AB800; text-decoration:none;" href="http://myvendorcenter.com/live/index.php?option=com_camassistant&controller=vendors&task=view_upld_cert&folder_type=uploaded_by_VENDOR&filename='.$vendor_uploadsn[$r]->upload_doc.'">'.$vendor_uploadsn[$r]->title.'</a>';
 				 $vendor_uploadsn[$r]->title = $link;
 			}
 		  $TASK_detailsn[$q]->vendor_uploadsn = $vendor_uploadsn;
@@ -158,7 +158,7 @@ for($i=0;$i<=count($row);$i++)
 				 $arr = explode('/',$vendor_uploads[$u]->upload_doc);
 				 $cnt = count($arr);
 				 $vendor_uploads[$u]->title = $arr[$cnt-1];
-				 $link = '<a style="color:#7AB800; text-decoration:none;" href="http://vps54914.vps.ovh.ca/live/index.php?option=com_camassistant&controller=vendors&task=view_upld_cert&folder_type=uploaded_by_VENDOR&filename='.$vendor_uploads[$u]->upload_doc.'">'.$vendor_uploads[$u]->title.'</a>';
+				 $link = '<a style="color:#7AB800; text-decoration:none;" href="http://myvendorcenter.com/live/index.php?option=com_camassistant&controller=vendors&task=view_upld_cert&folder_type=uploaded_by_VENDOR&filename='.$vendor_uploads[$u]->upload_doc.'">'.$vendor_uploads[$u]->title.'</a>';
 				 $vendor_uploads[$u]->title = $link;
 			}
 		  $TASK_details[$t]->vendor_uploads = $vendor_uploads;
@@ -272,7 +272,7 @@ for($i=0;$i<=count($row);$i++)
 			 $file=$tasks_list[$ab]->title;
 			  }
 			  $link = '<a style="color:#21314d; text-decoration:none" href="'.JURI::root().'index.php?option=com_camassistant&controller=popupdocs&task=open&title='.$file.'&path='.$file_link.'/'.$tasks_list[$ab]->taskuploads.'">'.$file.'</a>';
-			 //$link = '<a style="color:#21314d; text-decoration:none" href="http://vps54914.vps.ovh.ca/live/index.php?option=com_camassistant&controller=vendors&task=view_upld_cert&folder_type=uploaded_by_CAM&filename='.$tasks_list[$ab]->title.'">'.$tasks_list[$ab]->title.'</a>';
+			 //$link = '<a style="color:#21314d; text-decoration:none" href="http://myvendorcenter.com/live/index.php?option=com_camassistant&controller=vendors&task=view_upld_cert&folder_type=uploaded_by_CAM&filename='.$tasks_list[$ab]->title.'">'.$tasks_list[$ab]->title.'</a>';
 			 $tasks_list[$ab]->file_path = $link;
 		}
 	///13. RFPCREATOR TASKS COMPLETED////
@@ -538,13 +538,13 @@ for($i=0;$i<=count($row);$i++)
 					$aj=$OLN_folder_id;
 					$doc_type = 'OLN_'.$aj;
 					if($folder_type == 'uploaded_by_CAM')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/doc';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/doc';
 					else if($folder_type == 'uploaded_by_VENDOR')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/rfp/Tasks';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/assets/images/rfp/Tasks';
 					else
 					$path = 'vendorcompliances/'.$ven_name.'/'.$doc_type;
 					$doc_name = $path."/";
-					$OLN[$a] = '<a style="color:#7AB800; text-decoration:none;" href="http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/download.php?f='.$OLN[$a].'&base='.$doc_name.'">'.$OLN[$a].'</a>';
+					$OLN[$a] = '<a style="color:#7AB800; text-decoration:none;" href="http://myvendorcenter.com/live/components/com_camassistant/assets/images/download.php?f='.$OLN[$a].'&base='.$doc_name.'">'.$OLN[$a].'</a>';
 					/* anil_29-09-2011 */
 
 				}
@@ -568,13 +568,13 @@ for($i=0;$i<=count($row);$i++)
 					$ak=$PLN_folder_id;
 					$doc_type = 'PLN_'.$ak;
 					if($folder_type == 'uploaded_by_CAM')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/doc';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/doc';
 					else if($folder_type == 'uploaded_by_VENDOR')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/rfp/Tasks';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/assets/images/rfp/Tasks';
 					else
 					$path = 'vendorcompliances/'.$ven_name.'/'.$doc_type;
 					$doc_name = $path."/";
-					$PLN[$b] = '<a style="color:#7AB800; text-decoration:none;" href="http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/download.php?f='.$PLN[$b].'&base='.$doc_name.'">'.$PLN[$b].'</a>';
+					$PLN[$b] = '<a style="color:#7AB800; text-decoration:none;" href="http://myvendorcenter.com/live/components/com_camassistant/assets/images/download.php?f='.$PLN[$b].'&base='.$doc_name.'">'.$PLN[$b].'</a>';
 					/* anil_29-09-2011 */
 
 				}
@@ -598,13 +598,13 @@ for($i=0;$i<=count($row);$i++)
 					$al=$GLI_folder_id;
 					$doc_type = 'GLI_'.$al;
 					if($folder_type == 'uploaded_by_CAM')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/doc';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/doc';
 					else if($folder_type == 'uploaded_by_VENDOR')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/rfp/Tasks';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/assets/images/rfp/Tasks';
 					else
 					$path = 'vendorcompliances/'.$ven_name.'/'.$doc_type;
 					$doc_name = $path."/";
-					$GLI[$ad] = '<a style="color:#7AB800; text-decoration:none;" href="http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/download.php?f='.$GLI[$ad].'&base='.$doc_name.'">'.$GLI[$ad].'</a>';
+					$GLI[$ad] = '<a style="color:#7AB800; text-decoration:none;" href="http://myvendorcenter.com/live/components/com_camassistant/assets/images/download.php?f='.$GLI[$ad].'&base='.$doc_name.'">'.$GLI[$ad].'</a>';
 					/* anil_29-09-2011 */
 
 				}
@@ -632,13 +632,13 @@ for($i=0;$i<=count($row);$i++)
 					$am=$WCI_folder_id;
 					$doc_type = 'WCI_'.$am;
 					if($folder_type == 'uploaded_by_CAM')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/doc';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/doc';
 					else if($folder_type == 'uploaded_by_VENDOR')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/rfp/Tasks';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/assets/images/rfp/Tasks';
 					else
 					$path = 'vendorcompliances/'.$ven_name.'/'.$doc_type;
 					$doc_name = $path."/";
-					$WCI[$ae] = '<a style="color:#7AB800; text-decoration:none;" href="http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/download.php?f='.$WCI[$ae].'&base='.$doc_name.'">'.$WCI[$ae].'</a>';
+					$WCI[$ae] = '<a style="color:#7AB800; text-decoration:none;" href="http://myvendorcenter.com/live/components/com_camassistant/assets/images/download.php?f='.$WCI[$ae].'&base='.$doc_name.'">'.$WCI[$ae].'</a>';
 
 				}
 				$WCI = implode(',',$WCI);
@@ -656,13 +656,13 @@ for($i=0;$i<=count($row);$i++)
 					$folder_type = JRequest::getVar('folder_type','');
 					$doc_type = 'W9';
 					if($folder_type == 'uploaded_by_CAM')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/doc';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/doc';
 					else if($folder_type == 'uploaded_by_VENDOR')
-					$path = 'http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/rfp/Tasks';
+					$path = 'http://myvendorcenter.com/live/components/com_camassistant/assets/images/rfp/Tasks';
 					else
 					$path = 'vendorcompliances/'.$ven_name.'/'.$doc_type;
 					$doc_name = $path."/";
-					$W9 = '<a style="color:#7AB800; text-decoration:none;" href="http://vps54914.vps.ovh.ca/live/components/com_camassistant/assets/images/download.php?f='.$W9.'&base='.$doc_name.'">'.$W9.'</a>';
+					$W9 = '<a style="color:#7AB800; text-decoration:none;" href="http://myvendorcenter.com/live/components/com_camassistant/assets/images/download.php?f='.$W9.'&base='.$doc_name.'">'.$W9.'</a>';
 					$COM[$v]['W9'] = $W9;
 				}
 

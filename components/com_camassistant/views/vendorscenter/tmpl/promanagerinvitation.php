@@ -68,55 +68,6 @@ e.preventDefault();
        }
 		});
 		 }
-		/*if(email)
-		{
-		H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=usercheck", {mailid: ""+email+""}, function(data){
-		var res = Number(data);
-		if(data == 1){
-		alert("already email exists");
-		form.email.focus();
-		}
-		else
-{	
-if(ccemail.length > 0) {
-if(ccemail_split != '' && c>1){
-			for (var i =1; i < ccemail_split.length-1; i++)
-			 {		
-			   if(ccemail_split[i].charAt(0) != ";"){
-				 alert('Please separate the CC Emails with Semi colon(;)');
-				 form.ccemail.focus();
-				 return false;  
-				}
-				else{
-				form.submit();
-				}	
-			 }	
-			}
-}
-else
-{
-form.submit();
-}
-}
-		
-	});
-		}
-		*/
-		 
-		 
-		
-				 
-	});
-	
-H('.hidevendor').click(function(){
-
-	vendorid = H(this).attr('rel');
-	
-		H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=hideinvitation", {hideid: ""+vendorid+""}, function(data){
-		if(data){		
-		window.location.reload();
-		}
-	});
 	});
 });
 
@@ -152,19 +103,6 @@ H('#saveoption').live('click',function(){
 		}
 	});
 	
-function resendinvitation(emailid,id){
-	H('.resending_'+id).html('<img src="templates/camassistant_left/images/loading_icon.gif" />');
-	H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=resendinvitation", {email: ""+emailid+""}, function(data){
-		if(data){	
-		alert("Your invitation has been sent successfully.");			
-		window.location.reload();
-		}
-	});
-}	
-
-
-	
-
 	</script>
 
 <script type="text/javascript">

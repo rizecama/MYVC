@@ -67,8 +67,8 @@ var invite = frm.manager_invitecode.value ;
 	G.post("index2.php?option=com_camassistant&controller=vendorsignup&task=verfiryinvitecode", {invitecodegiven: ""+invite+""}, function(data){
 	
 	if(data == 'used'){
-		//wroncodeinfo();
-		alert("Invite code is not valid.");
+		wroncodeinfo();
+		//alert("Invite code is not valid.");
 	}
 	else{
 	 frm.submit();
@@ -102,7 +102,7 @@ else {
 <style>
 #maskexw { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
 #boxesexw .windowexw {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
-#boxesexw #submitexw {  width:567px;  height:190px;  padding:10px;  background-color:#ffffff;}
+#boxesexw #submitexw {  width:567px;  height:233px;  padding:10px;  background-color:#ffffff;}
 #boxesexw #submitexw a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
 #doneexw {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
 #closeexw {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
@@ -224,7 +224,11 @@ is awarded!</li>
 <?php } ?>
 
 <div id="boxesexw" style="top:576px; left:582px;">
-<div id="submitexw" class="windowexw" style="top:300px; left:582px; border:6px solid #77b800; position:fixed">
+<div id="submitexw" class="windowexw" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">ERROR</font></span>
+</div></div>
 <div style="text-align:justify"><p class="existcodemsg">The <strong>INVITE CODE</strong> you entered does not exist in our system.  Please ensure you have the proper code from your client and try again.  If you are trying to enter a <strong>PREFERRED VENDOR CODE</strong>, please do not enter it here.  Once you complete registration, you will click on “PREFERRED VENDOR CODES” and redeem your code on that page.  If you have further questions or technical issues, please contact us at <a href="mailto:support@myvendorcenter.com">support@myvendorcenter.com</a> or through our online LIVE CHAT.</p>
 </div>
 <div style="padding-top:8px;" align="center">

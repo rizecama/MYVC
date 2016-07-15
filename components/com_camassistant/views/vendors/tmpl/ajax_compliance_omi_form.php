@@ -29,7 +29,7 @@ $delid = $compliance;
       <div class="comm">
 	   <div class="in-pan">
         <label>Exp. Date:</label>
-        <input type="text" size="20" name="OMI_end_date[]" id="OMI_end_date<?PHP echo $OMI_title; ?>" value="" /><script type="text/javascript">G('#OMI_end_date<?PHP echo $OMI_title; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "-1y",maxDate: "+5y",changeMonth:true});</script>
+        <input type="text" size="20" name="OMI_end_date[]" id="OMI_end_date<?PHP echo $OMI_title; ?>" placeholder = "mm-dd-yyyy" value="" /><script type="text/javascript">G('#OMI_end_date<?PHP echo $OMI_title; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 		</div>
 		<div class="in-pan1">
 	<label>Each Claim:</label>

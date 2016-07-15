@@ -29,7 +29,7 @@
 		$this->SetFontSize(8);
 		$this->Cell(207, 0, 'Proposal Report Page '.$this->getAliasNumPage().' of '.$this->getAliasNbPages(), 0, 2, 'C');
 		$this->SetFontSize(7);
-		$this->Cell(0, 5, 'Copyright 2011 vps54914.vps.ovh.ca', 0, 0, 'C');
+		$this->Cell(0, 5, 'Copyright 2011 CAMassistant.com', 0, 0, 'C');
 	}
 	
 	public function Header() {
@@ -200,7 +200,7 @@ if (!file_exists($filename)) {
    $RFP_info->comp_logopath = 'noimage2.gif';
    } // End checking whether the file exists in the path or not anil_16-08-2011
 		$htmlcontent = '<table width="550px" border="0" cellspacing="0" cellpadding="0" align="center" style="padding-top:40px">';
-						$pdf->Image('http://vps54914.vps.ovh.ca/components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
+						$pdf->Image('https://camassistant.com/live/components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
 		$htmlcontent .= '<tr><td width="235px" height="50" align="left" ></td>
 							<td width="315px" align="right" style="text-align: right; font-size:21px;"><img width="50" height="14" src="templates/camassistant_left/images/mc_headicons.jpg" /><br/><strong><br/>'.$RFP_info->comp_name.'</strong><br />
 		'.$RFP_info->mailaddress.'<br />'.$RFP_info->comp_city.',  '.$state_name.' '.$RFP_info->comp_zip.'<br /><strong>P</strong>: ('.$com_phone[0].')'.$com_phone[1].'-'.$com_phone[2].'</td></tr>
@@ -287,7 +287,7 @@ if (!file_exists($filename)) {
 	//echo '<pre>'; print_r($BID_Vendors_info[$v]); exit;
 	//echo "<pre>"; print_r($BID_Vendors_info[$v]->company_phone); exit;
 	//echo $image; exit;
-		$rateimage= 'http://vps54914.vps.ovh.ca'.DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rating'.DS;
+		$rateimage= 'https://camassistant.com/live'.DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rating'.DS;
 			$db = JFactory::getDBO();
 			$rating = "SELECT rating_sum FROM #__content_rating where content_id =".$BID_Vendors_info[$v]->proposedvendorid;
 			$db->Setquery($rating);
@@ -801,7 +801,7 @@ if (!file_exists($filename)) {
 	//echo '<pre>'; print_r($BID_Vendors_info[$v]); exit;
 	//echo "<pre>"; print_r($BID_Vendors_info[$v]->company_phone); exit;
 	//echo $image; exit;
-	$rateimage= 'http://vps54914.vps.ovh.ca'.DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rating'.DS;
+	$rateimage= 'https://camassistant.com/live'.DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rating'.DS;
 			$db = JFactory::getDBO();
 			$rating = "SELECT rating_sum FROM #__content_rating where content_id =".$BID_Vendors_info[$v]->proposedvendorid;
 			$db->Setquery($rating);

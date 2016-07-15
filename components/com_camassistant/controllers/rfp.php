@@ -20,7 +20,6 @@ require_once ( JPATH_BASE .DS.'libraries'.DS.'tcpdf'.DS.'tcpdf.php' );
 
 class MYPDF extends TCPDF {
 
-
 		public function Footer() {
 			$this->SetY(-15);
 			//$this->SetFontSize(8);
@@ -798,7 +797,9 @@ function save_uploadfile()
 		$show=JRequest::getVar('show','');
 		$basicrequest = JRequest::getVar('basicrequest','');
 		$post = JRequest::get('post');
+		
 		$createrfptype = JRequest::getVar('rfptype','');
+		
 		if( $createrfptype == 'open' )
 		$post['create_rfptype'] = 'open';
 		else if( $createrfptype == 'both' )
@@ -1207,6 +1208,7 @@ function save_uploadfile()
 			}
 			// Insert vendors into proposals list
 			$vendorslist = JRequest::getVar('selected_vendors','');
+			
 			$from_list = JRequest::getVar('from','');
 			if( $from_list == '' ) {
 			$return_basic = $model->savebasicrequest($rfp_id,$vendorslist,'');
@@ -1252,11 +1254,12 @@ function save_uploadfile()
 			$itemid=JRequest::getVar('Itemid',0);
 			$show=JRequest::getVar('show','');
 			$post = JRequest::get('post');
-			//echo "<pre>"; print_r($post);
+			
 			$rfpid= JRequest::getVar('rfpid');
 			$select="SELECT rfp_type,property_id,cust_id,industry_id,industry_id2,choose_tasks, jobtype FROM #__cam_rfpinfo WHERE id='".$rfpid."'";
 			$db->Setquery($select);
 			$result = $db->loadObjectlist();
+			
 			//echo "<pre>"; print_r($result[0]->rfp_type); exit;
 			$property_id=$result[0]->property_id;
 			$industry_id=$result[0]->industry_id;
@@ -1343,7 +1346,70 @@ function save_uploadfile()
 	$db->Setquery($total_invites);
 	$totalinvites = $db->loadObjectList();
 	
-		
+	
+	foreach ($totalinvites  as $inv)
+	{
+	$selectdvendors[] = $inv->proposedvendorid;
+	}
+	
+	$query_in = "SELECT DISTINCT(vendorid) FROM #__invitations_personal where rfpid=".$rfpid." ";
+	$db->setQuery($query_in);
+	$totalprefers = $db->loadObjectList();
+	if($totalprefers){
+		foreach ( $totalprefers as $type )
+		{
+		$total_vendors[] = $type->vendorid;
+		}
+	}
+	else
+	$total_vendors[] = '';
+	
+	
+	$managerid =$model->getmasterfirmaccount($user->id);
+	$blok_vendor = "SELECT block, block_complinace FROM #__cam_master_block_users where masterid=".$managerid."";
+	$db->Setquery($blok_vendor);
+	$block = $db->loadObject();
+	
+	
+		if( $block->block_complinace == '1' && $block->block == '1'  )
+		   {
+				
+				$getblock_status =	$model->getblock_vendorstatus($selectdvendors );
+				if($getblock_status)
+				$getblock_status = $getblock_status;
+				else
+				 $getblock_status [] = '';
+				$getblock =	$model->getblock_vendors($selectdvendors );
+				if($getblock)
+				$getblock = $getblock;
+				else
+				 $getblock [] = '';
+				$finalblocks = array_unique(array_merge($selectdvendors,$getblock));
+			     $finalblock = array_values($finalblocks);
+				$blocked_vendors[] = array_values(array_diff($selectdvendors , $finalblock  ) );
+		   }
+		else if( $block->block == '1' && $block->block_complinace != '1' )
+			{
+				$getblock =	$model->getblock_vendors($selectdvendors );
+				
+				if($getblock)
+				$getblock = $getblock;
+				else
+				 $getblock [] = '';
+				$blocked_vendors[] = array_values(array_diff($selectdvendors , $getblock ) );
+			}
+		else if( $block->block_complinace == '1'&& $block->block != '1'  )
+			{
+				$getblock_status =	$model->getblock_vendorstatus($selectdvendors );
+				if($getblock_status)
+				$getblock_status = $getblock_status;
+				else
+				 $getblock_status [] = '';
+				$blocked_vendors[] = array_values(array_diff($selectdvendors , $getblock_status ) );
+			}         
+		else
+		   $blocked_vendors[] = $selectdvendors;
+		 
 	//permssions for rfp	
 	 $rfpapprovalper = "SELECT approval_p FROM #__cam_propertyowner_link where property_id=".$property_id."";
 	$db->Setquery($rfpapprovalper);
@@ -1361,7 +1427,6 @@ function save_uploadfile()
 	} 
 		
 	
-//	echo "<pre>"; print_r($totalinvites ); exit;
 	for( $v=0; $v<count($totalinvites); $v++ ){ 
 		$invite_type = "SELECT mail FROM #__rfp_invitations  where rfpid=".$rfpid." and vendorid=".$totalinvites[$v]->proposedvendorid." ";
 		$db->Setquery($invite_type);
@@ -1395,22 +1460,23 @@ function save_uploadfile()
 	//Completed
 	
     if($subscribe == 'yes'){
-		if( $rfpdetails->create_rfptype == 'open' || $rfpdetails->create_rfptype == 'both' )
-		$email_data = "SELECT introtext  FROM #__content where id='310' ";
+	    if(in_array($totalinvites[$v]->proposedvendorid,$total_vendors))
+		$email_data = "SELECT introtext  FROM #__content where id='248'";
 		else
-    	$email_data = "SELECT introtext  FROM #__content where id='248' ";
+    	$email_data = "SELECT introtext  FROM #__content where id='310'";
 	}
+	
 	else{
-		if( $rfpdetails->create_rfptype == 'open' || $rfpdetails->create_rfptype == 'both' )
-		$email_data = "SELECT introtext  FROM #__content where id='311' ";
-		else
+		if(in_array($totalinvites[$v]->proposedvendorid,$total_vendors))
 		$email_data = "SELECT introtext  FROM #__content where id='258' ";
+		else
+		$email_data = "SELECT introtext  FROM #__content where id='311' ";
 	}
 	
 	$db->Setquery($email_data);
 	$data = $db->loadResult();
-    
-	$proposalid = $model->getproposal($rfpid,$totalinvites[$v]->proposedvendorid);
+  
+	$proposalid = $model->getproposal_new($rfpid,$totalinvites[$v]->proposedvendorid);
 	            
     $body = str_replace('{VENDOR}',$v_companyname,$data);
 	$body = str_replace('[RFP #]',$rfpid,$body);
@@ -1430,16 +1496,16 @@ function save_uploadfile()
 	//$mailfrom = 'support@myvendorcenter.com';
 	$mailfrom = $manager_details->email ;
 	$fromname = $cust_coname;
-	if( $rfpdetails->create_rfptype == 'open' || $rfpdetails->create_rfptype == 'both' )
-	$mailsubject = "A new Project is available for your company";
-	else
+	if(in_array($totalinvites[$v]->proposedvendorid,$total_vendors))
 	$mailsubject = "You've received a Project Invitation";
+	else
+	$mailsubject = "A new Project is available for your company";
     $support='vendoremails@myvendorcenter.com';
         //Check is the vendor declines the project or not
 		$decline_not = "SELECT not_interested FROM #__cam_vendor_availablejobs  where rfp_id=".$rfpid." and user_id=".$totalinvites[$v]->proposedvendorid." ";
 		$db->Setquery($decline_not);
 		$decline_field = $db->loadResult();
-	if($decline_field != '2' && $vemail != '' && $rfpapprovalper !=1) {
+	if($decline_field != '2' && $vemail != '' && $rfpapprovalper != 1) {
 	JUtility::sendMail($mailfrom, $fromname, $vemail, $mailsubject, $body,$mode = 1);
 	$rize_support='rize.cama@gmail.com';
 	JUtility::sendMail($mailfrom, $fromname, $rize_support, $mailsubject, $body,$mode = 1);
@@ -1451,7 +1517,8 @@ function save_uploadfile()
 		if($listcc){
 		$res = JUtility::sendMail($mailfrom, $fromname, $listcc, $mailsubject, $body,$mode = 1);
 		}
-		} 
+		}
+		
 		//To send the FAX
 		/*$email_fax = "SELECT introtext  FROM #__content where id='309' ";
 		$db->Setquery($email_fax);
@@ -2234,12 +2301,15 @@ $db=JFactory::getDBO();
 	//Function to filter the preferred vendors
 	
 	function filtervendors(){
-	
+	//echo '<pre>';print_r($_REQUEST);exit;
 	$db=JFactory::getDBO();
 	$user=JFactory::getUser();
 	$post['rfpid']	= JRequest::getVar('rfpid','');
 	$closeinvite	= JRequest::getVar('var','');
 	$model = $this->getModel('rfp');
+	
+	$form_selcted_vendors = $_REQUEST['selectdvendors'] ;
+
 	
 	$personal_job = JRequest::getVar('personal','');
 	$open_job = JRequest::getVar('open','');
@@ -2248,9 +2318,10 @@ $db=JFactory::getDBO();
 	else if( $open_job == 'open' && $personal_job != 'personal' )
 		$rfp_type = 'open';
 	else
-		$rfp_type = 'personal';		
-
+		$rfp_type = 'personal';	
+			
 	$post['create_rfptype'] = $rfp_type;
+	
 	if( $rfp_type == 'both' || $rfp_type == 'open' ) {
 		$rfp_new = $model->getrfpinfo_new($post['rfpid']);
 		$eligible_vendors =	$model->getVendorspre($rfp_new->cust_id,$rfp_new->property_id,$post['rfpid']);
@@ -2258,7 +2329,11 @@ $db=JFactory::getDBO();
 		
 			for( $v=0; $v<count($vendors_bids); $v++ ){
 				$all_vendors[] = $vendors_bids[$v][0]->id;
+				
 			}	
+			
+		
+		
 		if( $_REQUEST['selectdvendors'] && $all_vendors )	
 		$total_vendors = array_merge($all_vendors, $_REQUEST['selectdvendors']);
 		else if( $all_vendors && !$_REQUEST['selectdvendors'] )
@@ -2276,10 +2351,55 @@ $db=JFactory::getDBO();
 		
 	$model = $this->getModel('rfp');
 	$update_rfptype = $model->updaterfptype($post['rfpid'],$post['create_rfptype']);
+	
+   
+	$managerid =$model->getmasterfirmaccount($user->id);
+	$blok_vendor = "SELECT block, block_complinace FROM #__cam_master_block_users where masterid=".$managerid."";
+	$db->Setquery($blok_vendor);
+	$block = $db->loadObject();
+	
 		
-		 
-		
-	$count = count($_REQUEST['selectdvendors']);
+		if( $block->block_complinace == '1' && $block->block == '1'  )
+		   {
+				
+				$getblock_status =	$model->getblock_vendorstatus($_REQUEST['selectdvendors']);
+				if($getblock_status)
+				$getblock_status = $getblock_status;
+				else
+				 $getblock_status [] = '';
+				$getblock =	$model->getblock_vendors($_REQUEST['selectdvendors']);
+				if($getblock)
+				$getblock = $getblock;
+				else
+				 $getblock [] = '';
+				$finalblocks = array_unique(array_merge($getblock_status,$getblock));
+			     $finalblock = array_values($finalblocks);
+				$blocked_vendors[] = array_values(array_diff($_REQUEST['selectdvendors'], $finalblock  ) );
+		   }
+		else if( $block->block == '1' && $block->block_complinace != '1' )
+			{
+				$getblock =	$model->getblock_vendors($_REQUEST['selectdvendors']);
+				
+				if($getblock)
+				$getblock = $getblock;
+				else
+				 $getblock [] = '';
+				$blocked_vendors[] = array_values(array_diff($_REQUEST['selectdvendors'], $getblock ) );
+			}
+		else if( $block->block_complinace == '1'&& $block->block != '1'  )
+			{
+				$getblock_status =	$model->getblock_vendorstatus($_REQUEST['selectdvendors']);
+				if($getblock_status)
+				$getblock_status = $getblock_status;
+				else
+				 $getblock_status [] = '';
+				$blocked_vendors[] = array_values(array_diff($_REQUEST['selectdvendors'], $getblock_status ) );
+			}         
+		else
+		   $blocked_vendors[] = $_REQUEST['selectdvendors'];
+   	
+   $count = count($_REQUEST['selectdvendors']);
+	
 	if($count > 0){ 
 	for($i=0; $i<$count; $i++){
 		$model = $this->getModel('rfp');
@@ -2297,6 +2417,16 @@ $db=JFactory::getDBO();
 		$check_uninvite = $model->checkproposalstatus($post['rfpid'],$post['vendorid']);
 		
 		if( $check_uninvite != 'uninvited' ){
+			if(in_array($post['vendorid'],$form_selcted_vendors))
+			 {
+			   $select_value = 'personal';
+			  $insert_sql1 = "insert into #__invitations_personal values ('','".$post['rfpid']."','".$post['vendorid']."','".$post['date']."','".$select_value."')";
+		       $db->SetQuery($insert_sql1);
+		       $db->query();
+			   
+			}
+			
+			
 		 $insert_sql = "insert into #__rfp_invitations values ('','".$post['rfpid']."','".$post['vendorid']."','".$post['publish']."','".$post['status']."','".$post['date']."','".$no."','')";
 		$db->SetQuery($insert_sql);
 		$db->query();
@@ -2361,13 +2491,13 @@ $db=JFactory::getDBO();
 	
 	
     if($subscribe == 'yes'){
-		if( $rfp_type == 'both' || $rfp_type == 'open' )
+		if(in_array($post['vendorid'],$form_selcted_vendors))
 			$email_data = "SELECT introtext  FROM #__content where id='310' ";
 		else
 			$email_data = "SELECT introtext  FROM #__content where id='248' ";
 	}
 	else{
-		if( $rfp_type == 'both' || $rfp_type == 'open' )
+		if(in_array($post['vendorid'],$form_selcted_vendors))
 		$email_data = "SELECT introtext  FROM #__content where id='311' ";
 		else
 		$email_data = "SELECT introtext  FROM #__content where id='258' ";
@@ -2377,7 +2507,7 @@ $db=JFactory::getDBO();
 	
 	
     //To get proposal id
-	$proposalid = $model->getproposal($post['rfpid'],$post['vendorid']); 
+	$proposalid = $model->getproposal_new($post['rfpid'],$post['vendorid']); 
 	           
     $body = str_replace('{VENDOR}',$v_companyname,$data);
 	$body = str_replace('[RFP #]',$post['rfpid'],$body);
@@ -2398,13 +2528,15 @@ $db=JFactory::getDBO();
 	$mailfrom = $manager_details->email ;
 	$fromname = $cust_coname;
 	
-	if( $rfp_type == 'both' || $rfp_type == 'open' )
+	if(in_array($post['vendorid'],$form_selcted_vendors))
 	$mailsubject = "A new Project is available for your company";
 	else
 	$mailsubject = "You've received a Project Invitation";
 	
     $support='rize.cama@gmail.com';
-   
+  
+	if( in_array($post['vendorid'],$blocked_vendors ))
+	 {
 	JUtility::sendMail($mailfrom, $fromname, $vemail, $mailsubject, $body,$mode = 1);
     JUtility::sendMail($mailfrom, $fromname, $support, $mailsubject, $body,$mode = 1);
 	//To send the mails to CC
@@ -2415,8 +2547,10 @@ $db=JFactory::getDBO();
 		$res = JUtility::sendMail($mailfrom, $fromname, $listcc, $mailsubject, $body,$mode = 1);
 		}
 		} 
-		
-	} //Close if condition
+	 }	
+	}
+	
+	 //Close if condition
 	//Completed	 
 	/*$mesg = 'Vendors invited successfully.';
 	$link = 'index.php?option=com_camassistant&controller=rfpcenter&task=dashboard&Itemid=125' ;

@@ -280,7 +280,7 @@ $hidecontent = 'none';
       <li>-</li>
       <li>Ability to receive &amp; respond to projects from new and existing clients</li>
       <li>-</li>
-      <li>Online profile page visible to your clients on and off of MyVendorCenter</li>
+      <li>Online profile page visible to your clients on add off of MyVendorCenter</li>
       <li>-</li>
       <li>Easily become a Preferred Vendor for clients through code redemptions</li>
 	  <li>&nbsp;</li>
@@ -327,7 +327,7 @@ $hidecontent = 'none';
       <li>-</li>
       <li>Ability to receive &amp; respond to projects from new and existing clients</li>
       <li>-</li>
-      <li>Online profile page visible to your clients on and off of MyVendorCenter</li>
+      <li>Online profile page visible to your clients on add off of MyVendorCenter</li>
       <li>-</li>
       <li>Easily become a Preferred Vendor for clients through code redemptions</li>
     </ul>
@@ -371,7 +371,7 @@ $hidecontent = 'none';
       <li>-</li>
       <li>Ability to receive &amp; respond to projects from new and existing clients who do not block <span class="green">UNVERIFIED</span> Vendors</li>
       <li>-</li>
-      <li>Online profile page visible to your clients on and off of MyVendorCenter</li>
+      <li>Online profile page visible to your clients on add off of MyVendorCenter</li>
       <li>-</li>
       <li>Become a Preferred Vendor for clients through code redemptions who do not block <span class="green">UNVERIFIED</span> Vendors</li>
 	  <li>&nbsp;</li>

@@ -61,7 +61,7 @@ var val = parseFloat(x).toFixed(2)+'',
       <div class="comm">
 	  <div class="in-pan">
         <label>Exp. Date:</label>
-    <input name="GLI_end_date[]" id="GLI_end_date<?PHP echo $GLI_title; ?>" type="text" class="t_field" size="10" value=""/><span style="color:red; font-size: 20px;">*</span><script type="text/javascript">G('#GLI_end_date<?PHP echo $GLI_title; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,maxDate: "+5y"});</script>
+    <input name="GLI_end_date[]" id="GLI_end_date<?PHP echo $GLI_title; ?>" type="text" class="t_field" size="10" placeholder = "mm-dd-yyyy" value=""/><span style="color:red; font-size: 20px;">*</span><script type="text/javascript">G('#GLI_end_date<?PHP echo $GLI_title; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,minDate: "0y",maxDate: "+5y"});</script>
 	</div>
 	<div class="in-pan1">
           <label>Med. Expenses:</label>

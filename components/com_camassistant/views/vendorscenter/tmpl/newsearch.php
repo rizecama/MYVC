@@ -27,7 +27,6 @@ $countofmngrs = count($this->managers_recs);
 H = jQuery.noConflict();
 function county(){
 H("#divStates").show();
-H("#newsearch").hide();
 var state = H("#stateid").val();
 H.post("index2.php?option=com_camassistant&controller=addproperty&task=ajaxcounty", {State: ""+state+""}, function(data){
 if(data.length >0) {
@@ -45,13 +44,13 @@ if(state != '' && county != '' && industry != ''){
 //H("#newsearch").show();
 }
 else{
-H("#newsearch").hide();
 }
 
 
 }
 function displayindustry(){
 	H("#divindustries").show();
+	
 }
 
 H(document).ready( function(){
@@ -132,7 +131,7 @@ if(state != '' && county != '' && industry != ''){
 H("#newsearch").show();
 }
 else{
-H("#newsearch").hide();
+
 }
 });
 
@@ -144,7 +143,6 @@ if(state != '' && county != '' && industry != ''){
 H("#newsearch").show();
 }
 else{
-H("#newsearch").hide();
 }
 });
 
@@ -153,6 +151,18 @@ H('#newsearch').click(function(){
 var state = H("#stateid").val();
 var county = H("#divcounty").val();
 var industry = H("#industry").val();
+if(state == '') {
+alert("please select the state");
+return false;
+}
+if(county == '') {
+alert("please select the County");
+return false;
+}
+if(industry == '') {
+alert("please select the industry");
+return false;
+}
 H('#results').addClass('loader');
 	H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=checknewsearch&state="+state+"&county="+county+"&ind="+industry+"", function(data){
 		if(data) {
@@ -253,6 +263,85 @@ else {
 //			alert(type);
 			H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=addvendor", {vendorid: ""+matchesb+"",actype: ""+type+""}, function(data){
 			if(data){
+			window.location = 'index.php?option=com_camassistant&controller=vendorscenter&task=mastermyvendors&Itemid=279';
+			}
+			});
+			}
+}
+
+}
+
+
+function sendpreferredvendor_invitation(type){
+//H('#companyid'+id).html('Adding...');
+var matchesc = [];
+var matchesb = [];
+var countc = 0 ;
+H(".coworkers:checked").each(function() {
+    matchesc.push(this.value);
+	countc++ ;
+});
+if(countc == '0'){
+	if(type == 'add'){
+		alert("Please make a selection to ADD the vendors.");
+	}
+	else{
+		alert("Please make a selection to EXCLUDE the vendors.");
+	}
+}
+else {
+	
+		if(type == 'exclude'){
+				H('body,html').animate({
+				scrollTop: 250
+				},800);
+				var maskHeight = H(document).height();
+				var maskWidth = H(window).width();
+				H('#maskes').css({'width':maskWidth,'height':maskHeight});
+				H('#maskes').fadeIn(100);
+				H('#maskes').fadeTo("slow",0.8);
+				var winH = H(window).height();
+				var winW = H(window).width();
+				//L("#submitv").css('top',  '300');
+				//L("#submitv").css('left', '582');
+				H("#submites").css('top',  winH/2-H("#submites").height()/2);
+				H("#submites").css('left', winW/2-H("#submites").width()/2);
+						
+				H("#submites").fadeIn(2000);
+				H('.windowes #donees').click(function (e) {
+				e.preventDefault();
+				H('#maskes').hide();
+				H('.windowes').hide();
+				H(".coworkers:checked").each(function() {
+				myString = this.value ;
+				var myArray = myString.split('-');
+				matchesb.push(myArray[1]);
+				});
+				matchesb = matchesb.join(',') ;
+				H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=addpreferredvendor", {vendorid: ""+matchesb+"",actype: ""+type+""}, function(data){
+				if(data){
+				location.reload();
+				}
+				});
+				});
+				
+				H('.windowes #closees').click(function (e) {
+				e.preventDefault();
+				H('#maskes').hide();
+				H('.windowes').hide();
+				});
+		}
+		else{ 
+			H(".coworkers:checked").each(function() {
+			myString = this.value ;
+			var myArray = myString.split('-');
+			matchesb.push(myArray[1]);
+			});
+			matchesb = matchesb.join(',') ;
+//			alert(type);
+			prevendors = 1;
+			H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=addpreferredvendor", {vendorid: ""+matchesb+"",actype: ""+type+"",prevendor: ""+prevendors+""}, function(data){
+			if(data){
 			window.location = 'index.php?option=com_camassistant&controller=vendorscenter&task=vendorscenter&view=vendorscenter&Itemid=242';
 			}
 			});
@@ -260,6 +349,7 @@ else {
 }
 
 }
+
 
 function sendinvitation(id,email){
 //H('#companyid'+id).html('Adding...');
@@ -623,64 +713,55 @@ $statelist = $this->statelist;
 $industries = $this->indus;
 ?>
 <BR />
-<div id="add-vendor">
-<div id="add-vendor-new">
-<h3>SEARCH BY NAME</h3>
-(enter company name below)
-<div class="new-search">
-
+<div id="add-findvendor">
+<div id="add-findvendor-new">
+<div class="newsearch_vendor">
+<h3>SEARCH BY COMPANY NAME</h3>
 <form method="post" id="searchofrm" name="searchform">
-<!--<img src="/dev/templates/camassistant_left/images/add-new-vendor-arrow.png"  alt="" />-->
-<input type="text" style="padding-left:3px;" onblur="if(this.value == '') this.value ='Enter Company Name';" onclick="if(this.value == 'Enter Company Name') this.value='';" value="Enter Company Name" id="companyname" name="companyname">
-<input type="submit" style="padding-left:4px; padding-right:3px;" id="searchcompany" class="go-button" value="SEARCH" name="">
+<div class="new-search">
+<input type="text" style="padding-left:3px; font-weight:normal;" onblur="if(this.value == '') this.value ='Enter Company Name';" onclick="if(this.value == 'Enter Company Name') this.value='';" value="Enter Company Name" id="companyname" name="companyname">
+</div>
+<div class="new-search"><input type="submit"  id="searchcompany"  value="SEARCH" name=""></div>
 </form>
 </div>
 <div class="clr"></div>
 
-<br>
 </div>
-<img src="templates/camassistant_left/images/or-bg.png" style="margin-left:30px;">
-<br /><p style="height:50px;"></p><br>
-<div id="add-vendor-new">
+<div id="add-vendor-newa">
+<div class="newsearch_vendor">
 <h3>SEARCH BY AREA + INDUSTRY</h3>
 <div class="new-search">
 
 <form method="post" id="newsearchofrm" name="newsearchform">
-<!--<img src="/dev/templates/camassistant_left/images/add-new-vendor-arrow.png"  alt="" />-->
-<select name="state" id="stateid" style="width:330px;" onchange="javascript:county();">
+<select name="state" id="stateid" style="width:260px; margin-bottom:20px;" onchange="javascript:county();">
 <option value="">Select State</option>
 <?php  foreach($statelist as $slist) {  ?>
 <option value="<?php echo $slist->state_id; ?>"><?php echo $slist->state_name; ?></option>
 <?php } ?>
 
 </select>
-<img src="templates/camassistant_left/images/1_state.png" style="float:left; margin-top:-1px;" />
-<p style="height:4px; border:none;"></p>
-<div id="divStates" style="display:none">
-<select name="state" style="width:330px;" id="divcounty" onchange="javascript:displayindustry();"><option value="">Select County</option></select>
-<img src="templates/camassistant_left/images/2_county.png" style="float:left; margin-top:-1px;" />
+<div id="divStates" >
+<select name="state" style="width:260px; margin-bottom:20px;" id="divcounty" onchange="javascript:displayindustry();"><option value="">Select County</option></select>
 </div>
-<p style="height:4px; border:none;"></p>
-<div id="divindustries" style="display:none">
-<select name="state" style="width:330px;" id="industry">
+
+<div id="divindustries">
+<select name="state" style="width:260px;" id="industry">
 <option value="">Select Industry</option>
 <?php  foreach($industries as $indus) {  ?>
 <option value="<?php echo $indus->id; ?>"><?php echo $indus->industry_name; ?></option>
 <?php } ?>
 </select>
-<img src="templates/camassistant_left/images/3_industry.png" style="float:left; margin-top:-1px;" />
 </div>
-<p style="height:4px; border:none;"></p>
-<p style="height:10px; border:none;"></p>
-<a id="newsearch" style="display:none; cursor:pointer;"><img src="templates/camassistant_left/images/search.gif"></a>
+<div class="new-search" id="newsearch"><input type="submit"  id="searchcompany"  value="SEARCH" name=""></div>
 </form>
+</div>
 </div>
 <div class="clr"></div>
 
 <br>
 </div>
 </div>
-
+<p style="height:45px;"></p>
 
 <div id="results" class="companies">
 </div>

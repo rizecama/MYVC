@@ -10,10 +10,10 @@ $from = JRequest::getVar('from','');
 <script type="text/javascript">
 G = jQuery.noConflict();
 	G(document).ready(function(){
-		G('#cancelpopup').click(function(){
+		G('#cancelpopupbasic_req').click(function(){
 			window.parent.document.getElementById( 'sbox-window' ).close();
 		});
-		G('#assignvendor').click(function(){
+		G('#assignvendorbasic_req').click(function(){
 			invites = G('#invitedvendors_hide').val();
 			rfpid = G('#rfpid').val();
 			if( !rfpid || rfpid == '0' ) {
@@ -67,8 +67,10 @@ echo '<option value="'.$basics[$b]->id.'">'. $basics[$b]->projectName .'</option
 <tr>
 <td align="center">
 <?php if( $basics )  { ?>
-<a id="cancelpopupbasic" href="javascript:void(0)"><img src="templates/camassistant_left/images/cancel.jpg"></a>
-<a id="assignvendorbasic" href="javascript:void(0)"><img src="templates/camassistant_left/images/submit.jpg"></a>
+<div>
+<a id="cancelpopupbasic_req" href="javascript:void(0)"></a>
+<a id="assignvendorbasic_req" href="javascript:void(0)"></a>
+ </div>
 <?php } else { ?>
 <a class="oknewsmall_nobasics" id="cancelpopup" href="javascript:void(0)"></a>
 <?php } ?>

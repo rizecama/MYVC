@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version		1.0.0 camassistant $
  * @package		camassistant
@@ -594,10 +595,12 @@ function PrintDiv() {
 	document.getElementById("footer").style.display = '';
 	document.getElementById("vender_right2").style.width = '673px';	
 	document.getElementById("vender_right2").style.marginTop = '';*/	
+	
 	var divToPrint = document.getElementById('vender_right2');
+	
 	document.getElementById("topborder_row").style.display = 'none';
     var popupWin = window.open('', '_blank', 'width=600,height=600');
-    popupWin.document.open();
+	popupWin.document.open();
     popupWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</html>');
 	document.getElementById("topborder_row").style.display = '';
     popupWin.document.close();
@@ -1059,7 +1062,7 @@ else{ ?>
 
  <?php } else {}
 ?>
-<div id="topborder_row" align="center"><a class="createnewrequest" href="javascript:;" onClick="history.go(-1)"><img src="templates/camassistant_left/images/goback.gif" vspace="15" alt="Go Back"  /></a></div>
+<div id="topborder_row" align="center"><a class="createnewrequest" href="javascript:;" onClick="history.go(-1)"><img src="templates/camassistant_left/images/goback.gif" vspace="15" alt="Go Back" style="padding-right:263px"; /></a></div>
 
 </div>
 <!-- eof line item pan -->

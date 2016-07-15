@@ -61,6 +61,7 @@ el='<?php  echo Juri::base(); ?>index2.php?option=com_camassistant&controller=ad
 var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 500, y:350}}"))
 SqueezeBox.fromElement(el,options);
 }
+
 function reasign()
 {
 	var chk = document.getElementsByName('chk1[]');

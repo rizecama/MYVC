@@ -373,6 +373,7 @@ class proposalsViewproposals extends Jview
 		$pagefrom	= JRequest::getVar('pagefrom','');
 		
 		if( $proposal_type == 'Draft' || $proposal_type == 'review' || $proposal_type == 'ITB'  ){
+		
 			if( $jobtype == 'yes' ) {
 				if($pagefrom == 'draftstatus')
 				$this->setLayout('vendor_proposal_form_draft_basic');
@@ -393,6 +394,7 @@ class proposalsViewproposals extends Jview
 			else{
 			$this->setLayout('vendor_proposal_preview_form_submit');
 			}
+		
 		
 		}
 		

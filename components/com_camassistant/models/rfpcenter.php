@@ -673,6 +673,139 @@ $query= "SELECT U.id,U.projectName,U.createdDate,U.proposalDueDate,U.proposalDue
 		
 		return  $dashboard_submit;
 	}
+	
+	
+	
+function awaitingclientapproval() 
+   {
+	  $db= JFactory::getDBO();
+		$user =& JFactory::getUser();
+	 	$user_id = $user->get('id');
+		$usertype = $user->get('user_type');
+		//$today = date('m-d-Y');
+
+
+		$query = "SELECT id FROM #__cam_camfirminfo WHERE cust_id=".$user_id;
+		$db->setQuery($query);
+		$comp_id = $db->loadResult();
+
+		$query_get = "SELECT cust_id FROM #__cam_customer_companyinfo WHERE comp_id=".$comp_id;
+		$db->setQuery($query_get);
+		$managers = $db->loadObjectList();
+		//echo count($managers);
+			$m= date("m"); // Month value
+			$de= date("d"); //today's date
+			$y= date("Y"); // Year value
+			$today = date('m-d-Y', mktime(0,0,0,$m,$de,$y));
+if($usertype ==13 && count($managers)!=0){
+for($i=0; $i<count($managers);$i++){
+$condition = $condition." OR U.cust_id='".$managers[$i]->cust_id."'";
+ $query = "SELECT U.id,U.projectName,U.proposalDueDate,U.proposalDueTime,V.property_name,U.cust_id,U.publish,V.timezone,U.jobtype FROM #__cam_rfpinfo as U LEFT JOIN #__cam_property as V ON U.property_id = V.id WHERE U.rfp_type = 'rfp' and U.publish!='2' and U.rfpapproval=1 and U.rfpapproval_decline !=2 and (U.cust_id='".$user_id."' ".$condition.")  ORDER BY STR_TO_DATE(U.proposalDueDate, '%m-%d-%Y') ASC ";
+		}
+		}
+		else{
+		$query = "SELECT U.id,U.projectName,U.proposalDueDate,U.proposalDueTime,V.property_name,U.publish,V.timezone,U.jobtype FROM #__cam_rfpinfo as U LEFT JOIN #__cam_property as V ON U.property_id = V.id WHERE U.rfp_type = 'rfp' and U.publish!='2' and U.rfpapproval=1 and U.rfpapproval_decline !=2 and U.cust_id='".$user_id."' ORDER BY STR_TO_DATE(U.proposalDueDate, '%m-%d-%Y') ASC ";
+		}
+//echo $query; exit;
+//If user property owner
+
+
+//If user district manager
+		if($user->dmanager == 'yes'){
+		$dmmanagers = "SELECT managerid FROM #__cam_invitemanagers WHERE dmanager=".$user->id;
+		$db->setQuery($dmmanagers);
+		$dm_managers = $db->loadObjectlist();
+		for($i=0; $i<count($dm_managers);$i++){
+$condition = $condition." OR U.cust_id='".$dm_managers[$i]->managerid."'";
+$query = "SELECT U.id,U.projectName,U.proposalDueDate,U.proposalDueTime,V.property_name,U.cust_id,U.publish,V.timezone,U.jobtype FROM #__cam_rfpinfo as U LEFT JOIN #__cam_property as V ON U.property_id = V.id WHERE U.rfp_type = 'rfp' and U.publish!='2' and U.rfpapproval=1 and U.rfpapproval_decline !=2 and (U.cust_id='".$user_id."' ".$condition.") ORDER BY STR_TO_DATE(U.proposalDueDate, '%m-%d-%Y') ASC ";
+		}
+		}
+//		Completed
+		// To get the query for master account
+	if($usertype ==13 && $user->accounttype == 'master')
+		{
+			$sql1 = "SELECT firmid from #__cam_masteraccounts where masterid=".$user->id." ";
+			$db->Setquery($sql1);
+			$subfirms = $db->loadObjectlist();
+			//echo "<pre>"; print_r($subfirms); echo "</pre>";
+	if($subfirms)
+		{
+			for( $a=0; $a<count($subfirms); $a++ )
+				{
+					$firmid1[] = $subfirms[$a]->firmid;
+					$sql = "SELECT id from #__cam_camfirminfo where cust_id=".$subfirms[$a]->firmid." ";
+					$db->Setquery($sql);
+					$companyid[] = $db->loadResult();
+											
+				}
+				//echo "<pre>"; print_r($firmid1); echo "</pre>";	
+        }
+			
+	if($companyid)
+		{
+         	for( $c=0; $c<count($companyid); $c++ )
+				{
+					$sql_cid = "SELECT cust_id from #__cam_customer_companyinfo where comp_id=".$companyid[$c]." ";
+					$db->Setquery($sql_cid);
+					$managerids = $db->loadObjectList();
+						if($managerids) {
+							foreach( $managerids as $last_mans){
+								$total_mangrs[] = $last_mans->cust_id ;
+							}
+						}
+               }
+        }
+		
+	if($firmid1 && $total_mangrs )
+		{
+            $total_mangrs = array_merge($total_mangrs,$firmid1); 
+        }
+	if($firmid1){
+            for( $d=0; $d<count($firmid1); $d++ ){
+        $query = "SELECT id FROM #__cam_camfirminfo WHERE cust_id=".$firmid1[$d];
+	$db->setQuery($query);
+	$comp_id = $db->loadResult();
+	$userid=array($user->id);
+	$query_mans = "SELECT cust_id from #__cam_customer_companyinfo where comp_id = ".$comp_id." ";
+	$db->setQuery($query_mans);
+        $Managers_list1 = $db->loadObjectList();
+                if($Managers_list1) {
+                        foreach( $Managers_list1 as $Managers_list2){
+                                $Managers_list[] = $Managers_list2->cust_id ;
+                        }
+                }
+            }
+        if($Managers_list){
+        $total_mangrs = array_merge($Managers_list,$firmid1);
+            } else {
+         $total_mangrs = $firmid1;        
+            }
+        }		
+        $userid=array($user->id);
+        if($total_mangrs){
+        $total_mangrs = array_merge($userid,$total_mangrs); 
+		}
+		else{
+		$total_mangrs[] = $user->id; 
+		}
+		$totalcust_id1_arr = implode($total_mangrs,',');
+		$condition = " U.cust_id IN (".$totalcust_id1_arr.")";
+		
+$query= "SELECT U.id,U.projectName,U.createdDate,U.proposalDueDate,U.proposalDueTime,V.property_name,U.publish,U.rfp_type,V.timezone,U.jobtype FROM #__cam_rfpinfo as U LEFT JOIN #__cam_property  as V ON U.property_id = V.id WHERE (U.rfp_type = 'rfp' and U.publish != 2) and U.rfpapproval=1 and U.rfpapproval_decline !=2 and ".$condition." ORDER BY STR_TO_DATE(U.proposalDueDate, '%m-%d-%Y') ASC";
+
+//$query = "SELECT U.id,U.projectName,U.proposalDueDate,U.proposalDueTime,V.property_name,U.cust_id,U.publish FROM #__cam_rfpinfo as U LEFT JOIN #__cam_property as V ON U.property_id = V.id WHERE U.rfp_type = 'rfp' and U.publish!='2' and (U.cust_id='".$user_id."' ".$condition.") ORDER BY U.secondstime ASC ";
+
+		
+	}
+	//Completed
+		//echo $query; 	
+         $db->setQuery($query);
+		$dashboard_submit = $db->loadObjectlist();
+		
+		return  $dashboard_submit;
+	}
+	
+	
 
 function getallmanagerids()
 { 
@@ -3041,7 +3174,7 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 				}
 				
 				if($rfp_aip_data){
-					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' || !$vendor_aip_data[$ai]->aip_combined ) 		{
+					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1'  ) 		{
 						$occur_aip[] = 'no' ;
 						}
 					else
@@ -3816,7 +3949,7 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 				}
 				
 				if($rfp_aip_data){
-					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' || !$vendor_aip_data[$ai]->aip_combined ) 		{
+					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1'  ) 		{
 						$occur_aip[] = 'no' ;
 						}
 					else
@@ -4710,22 +4843,23 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 				$body = $this->getmessage();
 				$vendorinfo = $this->getvendordetails($vendors[$v]);
 				$rfpinfo = $this->getrfpdedatils($rfpid);
+				$property_name = str_replace('_',' ', $rfpinfo->property_name);
 				$managerinfo = $this->getmanagerinfo();
 				$body = str_replace('[Vendor Company Name]',$vendorinfo->company_name,$body);
 				$body = str_replace('(RFP#)',$rfpinfo->id,$body);
 				$body = str_replace('[reference name]',$rfpinfo->projectName,$body);
-				$body = str_replace('[Community Name]',$rfpinfo->property_name,$body);
+				$body = str_replace('[Community Name]',$property_name,$body);
 				$body = str_replace('[Reson given]',$reason,$body);
 				$body = str_replace('[Manager Full Name]',$manager_fullname,$body);
 				$body = str_replace('[Manager Company Name]',$managerinfo->comp_name,$body);
-				
+			
 				$to = $vendorinfo->email;
 				
 				$from = $user->email ;
 				if( $user->user_type == '16' )
 				$from_name = $managerinfo->comp_name;
 				else
-				$from_name = $user->name.'&nbsp;'.$user->lastname;
+				$from_name = $user->name.' '.$user->lastname;
 				$sub = "You have been uninvited from a request";
 				$successMail =JUtility::sendMail($from, $from_name, $to, $sub, $body,$mode = 1);
 				$to_support = 'vendoremails@myvendorcenter.com';
@@ -4891,7 +5025,8 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 		}
 		else
 		$whers_cond = 'U.userid='.$user->id.'';
-			
+	  
+		 		
   $query_preferred = "SELECT DISTINCT(U.v_id), V.company_name, V.company_phone,V.company_address,V.city,V.zipcode,W.id,W.subscribe_type, W.subscribe from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and W.block=0 and V.user_id=W.id and ".$whers_cond." and W.block=0 and W.search='' ".$where." order by V.company_name ASC "; 
 	$db->setQuery($query_preferred);
 	$preferred = $db->loadObjectList();
@@ -4973,7 +5108,127 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 			}
 		}
 		
-     	return $vendor_data;
+     	ksort($vendor_data);
+		return $vendor_data;
+	}
+	
+	
+	function getpreferredvendors_companylist(){
+	
+		$db = JFactory::getDBO();
+		$user = JFactory::getUser();
+		$vendortypes = $this->getvendortypes();
+	
+		if( $vendortypes->nonc == '0' && $vendortypes->compliant == '0' ) {
+			if( $vendortypes->unverified == '1' )
+				$where = " and W.subscribe_type = 'free' ";
+			if( $vendortypes->verified == '1' )
+				$where = " and W.subscribe_type != 'free' ";	
+			if( $vendortypes->verified == '1' && $vendortypes->unverified == '1' )
+				$where = "  ";	
+		}	
+		else{
+			$where = "  ";	
+		}
+        if($user->user_type =='16')
+		{
+		$mangerids = $this->getallmanageracounts();
+		$loggeduser[] = $user->id;
+
+	    if( $mangerids )
+		  $final_mans = array_merge($loggeduser,$mangerids);
+	    else
+		   $final_mans = $loggeduser;
+		$manager_ids = implode(',',$final_mans);
+		$whers_cond = 'U.userid IN ('.$manager_ids.')';
+		}
+		else
+		$whers_cond = 'U.userid='.$user->id.'';
+	  
+		 		
+  $query_preferred = "SELECT DISTINCT(U.v_id), V.company_name, V.company_phone,V.company_address,V.city,V.zipcode,W.id,W.subscribe_type, W.subscribe from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and W.block=0 and V.user_id=W.id and ".$whers_cond." and W.block=0 and W.search='' ".$where." order by V.company_name ASC "; 
+	$db->setQuery($query_preferred);
+	$preferred = $db->loadObjectList();
+   
+		for( $v=0; $v<count($preferred); $v++ ){
+			$vendor_industries = $this->getvendorindustries($preferred[$v]->id);//get all vendor industries		
+			for( $in=0; $in<count($vendor_industries); $in++ ){
+				$master = $this->getmasterfirmaccount();
+			
+				$checkglobal	=	$this->checkglobalstandards($vendor_industries[$in]->industry_id,$master);
+				if( $checkglobal == 'success' )	{
+				$totalprefers_new_w9=$this->checknewspecialrequirements_w9_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_gli=$this->checknewspecialrequirements_gli_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_aip=$this->checknewspecialrequirements_aip_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_wci=$this->checknewspecialrequirements_wci_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_umb=$this->checknewspecialrequirements_umb_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_pln=$this->checknewspecialrequirements_pln_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_occ=$this->checknewspecialrequirements_occ_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_omi=$this->checknewspecialrequirements_omi_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				
+					if($totalprefers_new_w9 == 'success' && $totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success'  && $totalprefers_new_omi == 'success' )
+					{
+						$c_status = 'Compliant'.'green';
+						$terms_exist = $this->gettermsandconditions($master);//get vendor terms and conditions
+						if($terms_exist == '1'){				
+						$db =& JFactory::getDBO();
+						$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE masterid=".$master." and vendorid=".$preferred[$v]->id." ";
+						$db->setQuery($sql);
+						$terms = $db->loadResult();
+						if($terms == '1'){
+						$c_status = 'Compliant'.'green';
+						$cstatus = 'complianct';
+						}
+						else{
+						$c_status = 'Non-Compliant'.'red';
+						$cstatus = 'noncomplianct';
+						}
+					}
+					else{
+						$c_status = 'Compliant'.'green';
+						$cstatus = 'complianct';
+					}
+					
+					}
+					else
+					{
+						$c_status = 'Non-Compliant'.'red';
+						$cstatus = 'noncomplianct';
+					}
+					//echo $cstatus.':';
+					if( $preferred[$v]->subscribe == 'yes' && $preferred[$v]->subscribe_type == 'free' )
+					$account_type = 'Unverified'.'red';
+					else if( $preferred[$v]->subscribe == 'yes' && $preferred[$v]->subscribe_type != 'free' )
+					$account_type = 'Verified'.'green';
+					
+					$vendor_documents = $this->getexpired_documents($preferred[$v]->id);
+					$docs_permission = $this->getpermission_cdocs();
+					//echo "<pre>"; print_r($docs_permission);exit;
+					if( $vendortypes->compliant == '1' && $vendortypes->nonc == '1' ){
+					$vendor_data[$preferred[$v]->company_name][] = $c_status.'MYVC'.$account_type .'MYVC' . $preferred[$v]->company_name .'MYVC'.$vendor_documents.'MYVC' . $preferred[$v]->company_phone ;	
+					}
+					else 
+					{
+					if( $vendortypes->nonc == '1' ){
+						if( $cstatus == 'noncomplianct' )
+						$vendor_data[$preferred[$v]->company_name][] = $c_status.'MYVC'.$account_type .'MYVC' . $preferred[$v]->company_name.'MYVC'.$vendor_documents.'MYVC'. $preferred[$v]->company_phone ;	
+					}
+					else if( $vendortypes->compliant == '1' ){
+						if( $cstatus == 'complianct' )
+						$vendor_data[$preferred[$v]->company_name][] = $c_status.'MYVC'.$account_type .'MYVC' . $preferred[$v]->company_name.'MYVC'.$vendor_documents.'MYVC' . $preferred[$v]->company_phone ;	
+						}
+					else if( $vendortypes->nonc == '0' && $vendortypes->compliant == '0' ){
+						$vendor_data[$preferred[$v]->company_name][] = $c_status.'MYVC'.$account_type .'MYVC' . $preferred[$v]->company_name.'MYVC'.$vendor_documents.'MYVC' . $preferred[$v]->company_phone ;	
+					
+					}
+					}
+					
+				}
+			}
+		}
+		ksort($vendor_data);
+     	
+		return $vendor_data;
 	}
 	
 	function getpreferredvendors_list_pdf(){
@@ -5007,13 +5262,16 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 		else
 		$whers_cond = 'U.userid='.$user->id.'';
 		
-    $query_preferred = "SELECT DISTINCT(U.v_id), V.company_name, V.company_phone,V.company_address,V.city,V.zipcode,S.state_id,W.id,W.name,W.lastname,W.subscribe_type, W.subscribe from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__state as S, #__users as W where LOWER(U.inhousevendors) = (W.email) and W.block=0 and V.user_id=W.id and ".$whers_cond." and S.id = V.state and W.block=0 and W.search='' ".$where." order by V.company_name ASC "; 
+     
+	  $query_preferred = "SELECT DISTINCT(U.v_id), V.company_name, V.company_phone,V.company_address,V.city,V.zipcode,S.state_id,W.id,W.name,W.lastname,W.subscribe_type, W.subscribe from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__state as S, #__users as W where LOWER(U.inhousevendors) = (W.email) and W.block=0 and V.user_id=W.id and ".$whers_cond." and S.id = V.state and W.block=0 and W.search='' ".$where." order by V.company_name ASC"; 
 	$db->setQuery($query_preferred);
 	$preferred = $db->loadObjectList();
 	//echo '<pre>';print_r($preferred);exit;
-	
 		for( $v=0; $v<count($preferred); $v++ ){
 			$vendor_industries = $this->getvendorindustries($preferred[$v]->id);//get all vendor industries		
+			
+			//echo '<pre>';print_r($vendor_industries);exit;
+			//echo count($vendor_industries);
 			for( $in=0; $in<count($vendor_industries); $in++ ){
 				$master = $this->getmasterfirmaccount();
 				$checkglobal	=	$this->checkglobalstandards($vendor_industries[$in]->industry_id,$master);
@@ -5087,17 +5345,131 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 				}
 			}
 		}
-		
-		
-		//$table_end = '</table>';
-//		$cdata = '<tr><td></td><td></td><td></td></tr>';
-		//echo '<pre>';print_r($vendor_data);exit;
-		
-		//$comp_stand = $table_start.$only_content.$table_end ;
-		//echo $only_content; exit;
+		ksort($vendor_data);
 		
 		return $vendor_data;
 	}
+	
+	
+	function getpreferredvendors_company(){
+		$db = JFactory::getDBO();
+		$user = JFactory::getUser();
+		$vendortypes = $this->getvendortypes();
+		
+		if( $vendortypes->nonc == '0' && $vendortypes->compliant == '0' ) {
+			if( $vendortypes->unverified == '1' )
+				$where = " and W.subscribe_type = 'free' ";
+			if( $vendortypes->verified == '1' )
+				$where = " and W.subscribe_type != 'free' ";	
+			if( $vendortypes->verified == '1' && $vendortypes->unverified == '1' )
+				$where = "  ";	
+		}	
+		else{
+			$where = "  ";	
+		}
+	    if($user->user_type =='16')
+		{
+		$mangerids = $this->getallmanageracounts();
+		$loggeduser[] = $user->id;
+
+	    if( $mangerids )
+		  $final_mans = array_merge($loggeduser,$mangerids);
+	    else
+		   $final_mans = $loggeduser;
+		$manager_ids = implode(',',$final_mans);
+		$whers_cond = 'U.userid IN ('.$manager_ids.')';
+		}
+		else
+		$whers_cond = 'U.userid='.$user->id.'';
+		
+     
+	  $query_preferred = "SELECT DISTINCT(U.v_id), V.company_name, V.company_phone,V.company_address,V.city,V.zipcode,S.state_id,W.id,W.name,W.lastname,W.subscribe_type, W.subscribe from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__state as S, #__users as W where LOWER(U.inhousevendors) = (W.email) and W.block=0 and V.user_id=W.id and ".$whers_cond." and S.id = V.state and W.block=0 and W.search='' ".$where." order by V.company_name ASC"; 
+	$db->setQuery($query_preferred);
+	$preferred = $db->loadObjectList();
+	//echo '<pre>';print_r($preferred);exit;
+		for( $v=0; $v<count($preferred); $v++ ){
+			$vendor_industries = $this->getvendorindustries($preferred[$v]->id);//get all vendor industries		
+			
+			//echo '<pre>';print_r($vendor_industries);exit;
+			//echo count($vendor_industries);
+			for( $in=0; $in<count($vendor_industries); $in++ ){
+				$master = $this->getmasterfirmaccount();
+				$checkglobal	=	$this->checkglobalstandards($vendor_industries[$in]->industry_id,$master);
+				if( $checkglobal == 'success' )	{
+				$totalprefers_new_w9=$this->checknewspecialrequirements_w9_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_gli=$this->checknewspecialrequirements_gli_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_aip=$this->checknewspecialrequirements_aip_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_wci=$this->checknewspecialrequirements_wci_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_umb=$this->checknewspecialrequirements_umb_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_pln=$this->checknewspecialrequirements_pln_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_occ=$this->checknewspecialrequirements_occ_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				$totalprefers_new_omi=$this->checknewspecialrequirements_omi_indus($preferred[$v]->id,$vendor_industries[$in]->industry_id,$master);
+				
+					if($totalprefers_new_w9 == 'success' && $totalprefers_new_gli == 'success' && $totalprefers_new_aip == 'success' && $totalprefers_new_wci == 'success' && $totalprefers_new_umb == 'success' && $totalprefers_new_pln == 'success' && $totalprefers_new_occ == 'success'  && $totalprefers_new_omi == 'success' )
+					{
+						$c_status = 'Compliant';
+						$terms_exist = $this->gettermsandconditions($master);//get vendor terms and conditions
+						if($terms_exist == '1'){				
+						$db =& JFactory::getDBO();
+						$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE masterid=".$master." and vendorid=".$preferred[$v]->id." ";
+						$db->setQuery($sql);
+						$terms = $db->loadResult();
+						if($terms == '1'){
+						$c_status = 'Compliant';
+						$cstatus = 'complianct';
+						}
+						else{
+						$c_status = 'Non-Compliant';
+						$cstatus = 'noncomplianct';
+						}
+					}
+					else{
+						$c_status = 'Compliant';
+						$cstatus = 'complianct';
+					}
+					
+					}
+					else
+					{
+						$c_status = 'Non-Compliant';
+						$cstatus = 'noncomplianct';
+					}
+					//echo $cstatus.':';
+					if( ( $preferred[$v]->subscribe == 'yes' && $preferred[$v]->subscribe_type == 'free' ) || $preferred[$v]->subscribe == 'no' || $preferred[$v]->subscribe == '') 
+					$account_type = 'Unverified';
+					else if( $preferred[$v]->subscribe == 'yes' && $preferred[$v]->subscribe_type != 'free' )
+					$account_type = 'Verified';
+					
+					$vendor_documents = $this->getexpired_documents_pdf($preferred[$v]->id);
+					$docs_permission = $this->getpermission_cdocs();
+					//echo "<pre>"; print_r($docs_permission);
+					if( $vendortypes->compliant == '1' && $vendortypes->nonc == '1' ){
+					$vendor_data[$preferred[$v]->company_name][] = $c_status.'MYVC'.$account_type .'MYVC' . $preferred[$v]->company_name .'MYVC'.$vendor_documents.'MYVC' . $preferred[$v]->company_phone.'MYVC'.$preferred[$v]->company_address .'MYVC'.$preferred[$v]->city .'MYVC'. $preferred[$v]->zipcode .'MYVC'. $preferred[$v]->state_id .'MYVC'. $preferred[$v]->name.'&nbsp;'.$preferred[$v]->lastname;	
+					}
+					else 
+					{
+					if( $vendortypes->nonc == '1' ){
+						if( $cstatus == 'noncomplianct' )
+						$vendor_data[$preferred[$v]->company_name][] = $c_status.'MYVC'.$account_type .'MYVC' . $preferred[$v]->company_name.'MYVC'.$vendor_documents.'MYVC'. $preferred[$v]->company_phone.'MYVC'.$preferred[$v]->company_address .'MYVC'.$preferred[$v]->city .'MYVC'. $preferred[$v]->zipcode .'MYVC'. $preferred[$v]->state_id .'MYVC'. $preferred[$v]->name.'&nbsp;'.$preferred[$v]->lastname ;	
+					}
+					else if( $vendortypes->compliant == '1' ){
+						if( $cstatus == 'complianct' )
+						$vendor_data[$preferred[$v]->company_name][] = $c_status.'MYVC'.$account_type .'MYVC' . $preferred[$v]->company_name.'MYVC'.$vendor_documents.'MYVC' . $preferred[$v]->company_phone .'MYVC'.$preferred[$v]->company_address .'MYVC'.$preferred[$v]->city .'MYVC'. $preferred[$v]->zipcode .'MYVC'. $preferred[$v]->state_id .'MYVC'. $preferred[$v]->name.'&nbsp;'.$preferred[$v]->lastname ;	
+						}
+					else if( $vendortypes->nonc == '0' && $vendortypes->compliant == '0' ){
+						$vendor_data[$preferred[$v]->company_name][] = $c_status.'MYVC'.$account_type .'MYVC' . $preferred[$v]->company_name.'MYVC'.$vendor_documents.'MYVC' . $preferred[$v]->company_phone.'MYVC'.$preferred[$v]->company_address .'MYVC'.$preferred[$v]->city .'MYVC'. $preferred[$v]->zipcode .'MYVC'. $preferred[$v]->state_id .'MYVC'. $preferred[$v]->name.'&nbsp;'.$preferred[$v]->lastname ;	
+					
+					}
+					}
+					
+				}
+			}
+		}
+	    ksort($vendor_data);
+		//echo '<pre>';print_r($vendor_data);exit;
+		return $vendor_data;
+	}
+	
 	
 	//Function to count of the document
 	function countenableddocs(){
@@ -5125,11 +5497,12 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 		}
 		return $total;
 	}
+	
 	//Function to get vendor types what master selected
 	function getvendortypes(){
 		$db = JFactory::getDBO();
-		$master = $this->getmasterfirmaccount();
-		$sql_vendortypes = "SELECT unverified, verified, nonc, compliant FROM #__cam_master_compliancereport WHERE masterid=".$master." ";
+		$user =& JFactory::getUser();
+		$sql_vendortypes = "SELECT unverified, verified, nonc, compliant FROM #__cam_master_compliancereport WHERE masterid=".$user->id." ";
 		$db->setQuery( $sql_vendortypes );
 		$vendortypes = $db->loadObject();
 		return $vendortypes;
@@ -5137,9 +5510,10 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 	//Function to get vendor industries
 	function getvendorindustries($vendorid){
 		$db = JFactory::getDBO();
-		$v_inds = "SELECT U.industry_id, V.industry_name FROM `jos_cam_vendor_industries` as U, jos_cam_industries as V where U.industry_id=V.id and U.user_id=".$vendorid." order by V.industry_name ASC " ;
+		 $v_inds = "SELECT U.industry_id, V.industry_name FROM `jos_cam_vendor_industries` as U, jos_cam_industries as V where U.industry_id=V.id and U.user_id=".$vendorid." order by V.industry_name ASC " ;
 		$db->Setquery($v_inds);
 		$vendor_industries = $db->loadObjectList();
+		//echo '<pre>';print_r($vendor_industries);exit;
 		return $vendor_industries;
 	}
 	
@@ -5216,13 +5590,50 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 	function sendmailtovendor(){
 		$db =& JFactory::getDBO();
 		$user = JFactory::getUser();
-		$sql_terms = "SELECT vendorid FROM #__cam_vendor_terms WHERE masterid=".$user->id." "; 
-		$db->setQuery($sql_terms);
-		$vendors_accepted = $db->loadObjectList();
+		$vendors_accepted = $this->getindiualvendors();
 			for( $v=0; $v<count($vendors_accepted); $v++ ){
-				$sendmail = $this->mailtovendor($vendors_accepted[$v]->vendorid);
+				$sendmail = $this->mailtovendor($vendors_accepted[$v]->id);
 			}
 		return $sendmail;
+	}
+	function getindiualvendors(){
+		$managertype = JRequest::getVar( 'managertype','');
+ 		$industrytype = JRequest::getVar( 'industrytype','');
+ 		$state = JRequest::getVar( 'state','');	
+ 		$county = JRequest::getVar( 'divcounty','');
+		$compliance_filter = JRequest::getVar( 'compliance','');
+		$verification = JRequest::getVar( 'verification','');
+			
+		if(!$state){
+		$county = '';
+		}		
+		else{
+		$county = $county;
+		}		
+ 		//echo '<pre>'; print_r($_REQUEST); 
+		$post = JRequest::get('request');
+		$db = & JFactory::getDBO();
+		$user =& JFactory::getUser();
+		$usercreator = $user->id;
+		
+		if($user->user_type == '16')
+		{
+		
+		$mangerids = $this->getallmanageracounts();
+		if($mangerids)
+		{
+		$manager_ids = implode(',',$mangerids);
+		$whers_cond = 'U.userid IN ('.$manager_ids.')';
+		}
+		}
+		else
+		$whers_cond = 'U.userid='.$usercreator.'';
+		
+$query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax_id,V.tax_id,U.vendortype,U.vid,U.v_id,U.status,U.inhousevendors,U.userid,W.name, W.lastname, W.id, W.subscribe, W.ccemail, W.subscribe_type from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and W.block='0' AND U.exclude!='yes' and U.search!='yes'and W.search='' and ".$whers_cond." ".$where." ";
+		//echo $query; exit;
+		$db->setQuery($query);
+		$result = $db->loadObjectList();
+		return $result;
 	}
 	//Function mail sendin
 	function mailtovendor($vendorid){
@@ -5240,7 +5651,6 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 		$from_name = 'MyVendorCenter Team';
 		$to = $vendorsinfo->email;
 		$sub = 'Please accept new Terms & Conditions for '.$masterinfo ;
-		
 		$successMail =JUtility::sendMail($from, $from_name, $to, $sub, $body,$mode = 1);
 		$to_support = 'vendoremails@myvendorcenter.com';
 		$successMail =JUtility::sendMail($from, $from_name, $to_support, $sub, $body,$mode = 1);
@@ -5502,11 +5912,28 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 		$oln_expdate = $this->olnexpdate($vendorid);
 		$pln_expdate = $this->plnexpdate($vendorid);
 		$wc_expdate = $this->wcexpdate($vendorid);
-		$expired_dates = $gli_expdate.'MYVC'.$aip_expdate.'MYVC'.$wci_expdate.'MYVC'.$umb_expdate.'MYVC'.$omi_expdate.'MYVC'.$oln_expdate.'MYVC'.$pln_expdate.'MYVC'.$wc_expdate ;
+		$w9_expdate = $this->w9expdate($vendorid);
+		$expired_dates = $gli_expdate.'MYVC'.$aip_expdate.'MYVC'.$wci_expdate.'MYVC'.$umb_expdate.'MYVC'.$omi_expdate.'MYVC'.$oln_expdate.'MYVC'.$pln_expdate.'MYVC'.$wc_expdate.'MYVC'.$w9_expdate ;
 		//echo $expired_dates; exit;
 		return $expired_dates;
 		
 	}
+	
+	
+	function w9expdate($vendorid){
+		$db =& JFactory::getDBO();
+		$today = date('Y-m-d');
+		$user = JFactory::getUser();
+		$sql = "SELECT w9_upld_cert FROM #__cam_vendor_compliance_w9docs  where vendor_id=".$vendorid." order by id ASC";
+		$db->Setquery($sql);
+		$w9_doc = $db->loadResult();
+		if($w9_doc)
+		$W9_final = 'Provided';
+		else
+		$W9_final = 'None';
+		return $W9_final;
+	}
+	
 	function gliexpdate($vendorid){
 		$db =& JFactory::getDBO();
 		$today = date('Y-m-d');
@@ -5684,9 +6111,17 @@ $sql_award= "SELECT awardeddate,id FROM #__cam_rfpinfo WHERE rfp_type='Awarded' 
 		return $WC_final.$wc_color;
 	}
 	function getpermission_cdocs(){
-		$masteraccount = $this->getmasterfirmaccount();
 		$db =& JFactory::getDBO();
-		$sql = "SELECT * FROM #__cam_master_compliancereport where masterid=".$masteraccount." ";
+		$user =& JFactory::getUser();
+		$sql = "SELECT * FROM #__cam_master_compliancereport where masterid=".$user->id."";
+		$db->Setquery($sql);
+		$docpermission = $db->loadObject();
+		return $docpermission;
+	}
+	function getpermission_cdocs_webpage(){
+		$db =& JFactory::getDBO();
+		$user =& JFactory::getUser();
+		$sql = "SELECT include_docs, how_docs,w9,gli, api, umb, wc, omi, pln, oln, phone_number,documenttype,industryorder FROM #__cam_master_compliancereport where masterid=".$user->id."";
 		$db->Setquery($sql);
 		$docpermission = $db->loadObject();
 		return $docpermission;
@@ -6822,7 +7257,7 @@ function checknewspecialrequirements_aip1($vendorid,$industryid,$managerid){
 				}
 				
 				if($rfp_aip_data){
-					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' || !$vendor_aip_data[$ai]->aip_combined ) 		{
+					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' ) 		                        {
 						$occur_aip[] = 'no' ;
 						}
 					else
@@ -7240,6 +7675,25 @@ function checknewspecialrequirements_aip1($vendorid,$industryid,$managerid){
 				
 			
 	}
+	
+	function reportmessage()
+	{
+		$db	= JFactory::getDBO();
+		$query = "SELECT introtext  FROM #__content where id='322'";
+		$db->setQuery( $query );
+		$body = $db->loadResult();
+		return $body; 
+	}
+  function getacount_type()
+	{
+		$db	= JFactory::getDBO();
+		$user	= JFactory::getUser();
+		$sql12_vendor = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$user->id."'";
+		$db->Setquery($sql12_vendor);
+		$acount_type = $db->loadResult();
+		return $acount_type; 
+	}	
+	
 	
 }
 ?>

@@ -979,7 +979,7 @@ else
 		  $color = 'red';
 		  }
 		  ?>
-         <span style="color:<?php echo $color; ?>; margin-left:170px; margin-top:-18px; display:block;" id="GLI_certhide1"><?php echo $glioccur; ?></span>
+         <span style="color:<?php echo $color; ?>; margin-left:170px; margin-top:-14px; display:block;" id="GLI_certhide1"><?php echo $glioccur; ?></span>
 		 <p style="height:10px;"></p>
 		 <label>Additional Insured:</label>
 		 <?php 
@@ -989,9 +989,9 @@ else
 		 $add_company = $db->loadResult();
 		 ?>
 		 <?php if(!$add_company) { ?>
-		 <span class="companyadditional" style="color:red;" id="GLI_addhide1"><?php echo "None"; ?></span>
+		 <span class="companyadditional" style="color:red; margin-top:-14px;" id="GLI_addhide1"><?php echo "None"; ?></span>
 		 <?php } else { ?>
-		 <span class="companyadditional" id="GLI_addhide1"><?php echo $add_company; ?></span>
+		 <span class="companyadditional" id="GLI_addhide1" style="margin-top:-14px;"><?php echo $add_company; ?></span>
 		 <?php } ?>
         </div>
         
@@ -1187,7 +1187,7 @@ else
 		  ?>
 		  
           <p id="GLI_cert<?PHP echo $k+1; ?>" style="display:none;"><input type="radio" <?php echo $gli_chekcedf; ?> value="yes" name="GLI_certholder<?php echo $k; ?>"  style="margin-left:0px;" />&nbsp;YES &nbsp;<input type="radio" <?php echo $gli_chekceds; ?> value="no" name="GLI_certholder<?php echo $k; ?>"  style="margin-left:0px;" />&nbsp;No</p>
-         <span style="color:<?php echo $color; ?>; margin-left:170px; display:block; margin-top:-18px;" id="GLI_certhide<?PHP echo $k+1; ?>"><?php echo $glioccur; ?></span>
+         <span style="color:<?php echo $color; ?>; margin-left:170px; display:block; margin-top:-14px;" id="GLI_certhide<?PHP echo $k+1; ?>"><?php echo $glioccur; ?></span>
 		 <p style="height:10px;"></p>
 		  <label>Additional Insured:</label>
 		   <p id="GLI_add<?PHP echo $k+1; ?>" style="display:none;"><select name="GLI_additional<?PHP echo $k; ?>">
@@ -1209,9 +1209,9 @@ else
 		 $add_company = $db->loadResult();
 		 ?>
 		 <?php if(!$add_company) { ?>
-		 <span class="companyadditional" style="color:red;" id="GLI_addhide<?PHP echo $k+1; ?>"><?php echo "None"; ?></span>
+		 <span class="companyadditional" style="color:red;margin-top:-14px;" id="GLI_addhide<?PHP echo $k+1; ?>"><?php echo "None"; ?></span>
 		 <?php } else { ?>
-		 <span class="companyadditional" id="GLI_addhide<?PHP echo $k+1; ?>"><?php echo $add_company; ?></span>
+		 <span class="companyadditional" style="margin-top:-14px;"id="GLI_addhide<?PHP echo $k+1; ?>"><?php echo $add_company; ?></span>
 		 <?php } ?>
 		 
         </div>
@@ -1362,7 +1362,7 @@ else
 		  $color="red";
 		  }
 		  ?>
-        <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-18px;" id="aip_certhide1"><?php echo $aipoccur; ?></span>
+        <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-14px;" id="aip_certhide1"><?php echo $aipoccur; ?></span>
 		
 		 <label style="padding-top:11px;">Additional Insured:</label>
 		 <?php 
@@ -1372,9 +1372,9 @@ else
 		 $add_company = $db->loadResult();
 		 ?>
 		 <?php if(!$add_company){ ?>
-		 <span class="companyadditional" style="color:red;" id="aip_addhide1"><?php echo "None"; ?></span>
+		 <span class="companyadditional" style="color:red;margin-top:-14px;" id="aip_addhide1"><?php echo "None"; ?></span>
 		 <?php } else { ?>
-		 <span class="companyadditional" id="aip_addhide1"><?php echo $add_company; ?></span>
+		 <span class="companyadditional"  style="margin-top:-14px;"id="aip_addhide1"><?php echo $add_company; ?></span>
 		 <?php } ?>
 		 <p style="height:30px;"></p>
 		 <?php 
@@ -1533,7 +1533,7 @@ else
 		  $color = 'red';
 		  }
 		  ?>
-         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-18px;" id="aip_certhide<?PHP echo $mj+1; ?>"><?php echo $aipoccur; ?></span>
+         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-14px;" id="aip_certhide<?PHP echo $mj+1; ?>"><?php echo $aipoccur; ?></span>
 		 <p style="height:10px;"></p>
 		 <label>Additional Insured:</label>
 		 <?php 
@@ -1543,9 +1543,9 @@ else
 		 $add_company = $db->loadResult();
 		 ?>
 		 <?php if(!$add_company){ ?>
-		 <span class="companyadditional" style="color:red;" id="aip_addhide<?PHP echo $mj+1; ?>"><?php echo "None"; ?></span>
+		 <span class="companyadditional" style="color:red;margin-top:-14px;" id="aip_addhide<?PHP echo $mj+1; ?>"><?php echo "None"; ?></span>
 		 <?php } else { ?>
-		 <span class="companyadditional" id="aip_addhide<?PHP echo $mj+1; ?>"><?php echo $add_company; ?></span>
+		 <span class="companyadditional" style="margin-top:-14px;" id="aip_addhide<?PHP echo $mj+1; ?>"><?php echo $add_company; ?></span>
 		 <?php } ?>
 		 <p style="height:28px;"></p>
 		 <?php 
@@ -1708,7 +1708,7 @@ else
 		  $color = 'red';
 		  }
 		  ?>
-         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-18px;" id="WCI_certhide1"><?php echo $wcioccur; ?></span>
+         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-14px;" id="WCI_certhide1"><?php echo $wcioccur; ?></span>
         </div>
         
         <div class="clear"></div>
@@ -1850,7 +1850,7 @@ else
 		  $color = 'red';
 		  }
 		  ?>
-         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-18px;" id="WCI_certhide<?PHP echo $m+1; ?>"><?php echo $wcioccurp; ?></span>
+         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-14px;" id="WCI_certhide<?PHP echo $m+1; ?>"><?php echo $wcioccurp; ?></span>
         </div>
         <div class="clear"></div>
       </div>
@@ -1974,7 +1974,7 @@ else
 		  $color = 'red';
 		  }
 		  ?>
-         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-18px;" id="UMB_certhide1"><?php echo $umboccur; ?></span>
+         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-14px;" id="UMB_certhide1"><?php echo $umboccur; ?></span>
         </div>
 		</div>
 </div>
@@ -2084,7 +2084,7 @@ else
 		  $color = 'red';
 		  }
 		  ?>
-         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-18px;" id="UMB_certhide<?PHP echo $i+1; ?>"><?php echo $umboccurs; ?></span>
+         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-14px;" id="UMB_certhide<?PHP echo $i+1; ?>"><?php echo $umboccurs; ?></span>
         </div>
 		</div>
       
@@ -2840,7 +2840,7 @@ else
 		  $color = 'red';
 		  }
 		  ?>
-         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-18px;" id="OMI_certhide1"><?php echo $omioccur; ?></span>
+         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-14px;" id="OMI_certhide1"><?php echo $omioccur; ?></span>
         </div>
 		</div>
 </div>
@@ -2950,7 +2950,7 @@ else
 		  $color = 'red';
 		  }
 		  ?>
-         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-18px;" id="OMI_certhide<?PHP echo $i+1; ?>"><?php echo $omioccurs; ?></span>
+         <span style="color:<?php echo $color; ?>; display:block; margin-left:170px; margin-top:-14px;" id="OMI_certhide<?PHP echo $i+1; ?>"><?php echo $omioccurs; ?></span>
         </div>
 		</div>
       

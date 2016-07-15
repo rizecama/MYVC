@@ -21,6 +21,7 @@ class customer_detailVIEWcustomer_detail extends JView
 		$this->setLayout('form');
 		$lists = array();
 		$detail	=& $this->get('Data');
+		
 		//$model = $this->getModel('customer_detail');
 		$cdata = & $this->get('companylist');
 		
@@ -68,6 +69,7 @@ class customer_detailVIEWcustomer_detail extends JView
 			$states1[0]->value = "";
 			$states1[0]->text = " Select State ";
 			$states=array_merge($states1,$states);
+			
 			$this->assignRef('states', $states);
 		$this->assignRef('lists',			$lists);
 		$this->assignRef('detail',		$detail[0]);

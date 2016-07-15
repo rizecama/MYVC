@@ -511,7 +511,7 @@ function inhousevendors()
 	
 	$model = $this->getModel('vendorscenter');
 	// To get all corporate vendors
-	$corporate_vendors = $model->corporatevendors();
+	$corporate_vendors = $model->corporatevendors_star();
 
 		$star_vendors = $corporate_vendors ;
 		if($star_vendors){
@@ -580,9 +580,24 @@ function inhousevendors()
 			$totalcompanies[$s]->block_nonc = 'show' ;
 				
 		//Completed
-	
+		$masterid = $model->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		$subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$totalcompanies[$s]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		if( $act_type == '1' && ( $subscribe_type == 'free' || $subscribe_type == '' ) )
+			$totalcompanies[$s]->acount_type = 'show' ;
+		else	
+			$totalcompanies[$s]->acount_type = 'hide' ;
+		
+		
+		
 		}
 		
+	
+	
 	?>
 	
 	<?php 
@@ -602,7 +617,7 @@ function inhousevendors()
 	
 	
 	<div id="heading_vendors_search">
-<div class="checkbox_vendor_search"><input type="checkbox" value="" name="selectall" id="selectall_preferredvendors" />SELECT</div> 
+<div class="checkbox_vendor_search"><input type="checkbox" value="" name="selectall" id="selectall_preferredvendors" />ADD</div> 
 <div class="company_vendor_search"><?php echo $anvhor_tag; ?></div>
 <div class="apple_vendor_search">APPLE RATING</div>
 <div class="compliant_vendor_search">COMPLIANCE STATUS</div>
@@ -617,6 +632,9 @@ function inhousevendors()
 	$background = '#EBF5DA';
 	else
 	$background = '';
+	
+
+	
 	
 ?>
 
@@ -813,7 +831,7 @@ function inhousevendors()
 					$id = 'nostandards';
 				}
 				else{
-					if($totalcompanies[$t]->final_status == 'fail') {
+					if($totalcompanies[$t]->final_status == 'fail' ||  $totalcompanies[$t]->acount_type == 'show' ) {
 					//$text = "NON-COMPLIANT";
 					$id = 'noncompliant';
 					$title = 'Non-Compliant';
@@ -831,7 +849,7 @@ function inhousevendors()
 				}	
 			?>
 			
-	<div class="search-panel-image_rfp compliant_vendor_search" style="width:157px;">
+	<div class="search-panel-image_rfp compliant_vendor_search" style="width:117px;">
 	  	  <p align="center" style="color:; display:block; margin-bottom:7px; font-weight:bold;">
 		 <?php  if($globe != 'fail'){ ?>
 			<a onclick="javascript:getcompstatus(<?php echo $totalcompanies[$t]->id; ?>,'<?php echo $set_globals; ?>','<?php echo $title; ?>');" href="javascript:void(0);" id="<?php echo $id; ?>" title="<?php echo $title; ?>"><?php echo $text; ?></a>
@@ -871,10 +889,10 @@ else{
 ?>
 </div>
 <?php 
-	if($user->user_type == '13' && $user->accounttype == 'master') 
-	$textshows_co =  "Add to Corporate Preferred Vendors";
-	else
-	$textshows_co =  "Add to My Preferred Vendors";
+if($user->user_type == '13' && $user->accounttype  == 'master' )
+$pre_vendor = '';
+else
+$pre_vendor = 'none';
 	
 	
 $listbasicjobs = $model->getallbasicjobs();
@@ -886,10 +904,11 @@ if( count($listbasicjobs) > '0' )
 if($totalcompanies){ ?>
 	<div align="center" style="margin-top:17px; display:<?php echo $disp;?>" >
 	
-	<a title="<?php echo $textshows_co; ?>" class="addicon" href="javascript:sendinvitationcorporate('add');"></a>
+	<a title="Add to My Vendors" class="addicon" href="javascript:sendinvitationcorporate('add');"></a>
 	<a href="javascript:vendor_mails();" class="vendor_mails" title="Email Vendor(s)"></a>
 	<a title="Create a new Basic Request" class="basicrequest" href="javascript:basicrequest('pre');"></a>
 	<a title="Invite Vendor(s) to existing Basic Request" class="basicrequest_invite" href="javascript:inviteto_basicrequest('pre','<?php echo $basics; ?>');"></a>
+	<a style = "display:<?php echo $pre_vendor; ?>" title="Add to Corporate Preferred Vendors" class="addpreferredvendoricon" href="javascript:sendpreferredvendor_invitation();"></a>
 	<a title="Recommend to Co-Workers" class="vendor_recommend" href="javascript:vendor_recommend();"></a>
 	<?php 
 	$user =& JFactory::getUser();
@@ -909,7 +928,6 @@ if($totalcompanies){ ?>
 	$model = $this->getModel('vendorscenter');	
 	$db =& JFactory::getDBO();
 	$vendorid = JRequest::getVar( 'vendorid','');
-	
 	$action_type = JRequest::getVar( 'actype','');
 	$user	= JFactory::getUser();
 	$vendors = explode(',',$vendorid);
@@ -921,6 +939,10 @@ if($totalcompanies){ ?>
 	$exist = $db->loadResult();
 
 	if($exist){
+		$query1 = "UPDATE #__vendor_inviteinfo SET myvendors = 'yes' WHERE vid ='".$exist."'"; 
+		$db->setQuery($query1);
+		$db->query();
+		
 		if($action_type == 'exclude'){
 			$query = "UPDATE #__vendor_inviteinfo SET search = 'yes' WHERE vid ='".$exist."'"; 
 			$db->setQuery($query);
@@ -961,9 +983,7 @@ if($totalcompanies){ ?>
 		$post['exclude'] = '';
 		}
 		$save = $model->store_add($post);
-			if( $user->user_type == '13' && $user->accounttype == 'master'){
-				$sendmail = $model->sendmailtovendor($post['v_id']);
-			}
+			
 		if($save){
 		echo "added" ;
 		}
@@ -981,10 +1001,10 @@ if($totalcompanies){ ?>
 	$user	= JFactory::getUser();
 	$db =& JFactory::getDBO();
 	$vendorid = JRequest::getVar( 'vendorid','');
-	
 	$query_delete = "DELETE FROM #__vendor_inviteinfo WHERE vid IN (".$vendorid.") and userid=".$user->id." " ;
 	$db->setquery($query_delete);
-	if($db->query()) {
+	$del = $db->query();
+	if($del) {
 	echo "1";
 	}
 	else{
@@ -992,6 +1012,7 @@ if($totalcompanies){ ?>
 	}		
 	exit;
 	}
+	
 	//function to exclude vendor
 	function excludevendor(){
 	$user	= JFactory::getUser();
@@ -1000,10 +1021,10 @@ if($totalcompanies){ ?>
 	$query_exclude = "UPDATE #__vendor_inviteinfo SET exclude = 'yes' WHERE vid IN (".$vendorid.") and userid=".$user->id." "; 
 	$db->setquery($query_exclude);
 	if($db->query()) {
-	echo "removed";
+	echo "1";
 	}
 	else{
-	echo "notremoved";
+	echo "0";
 	}		
 	exit;
 	}
@@ -1194,6 +1215,19 @@ if($totalcompanies){ ?>
 		$totalcompanies[$s]->block_nonc = 'show' ;	
 //Completed	
 			
+	$masterid = $model->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		$subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$totalcompanies[$s]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		if( $act_type == '1' && ( $subscribe_type == 'free' || $subscribe_type == '' ) )
+			$totalcompanies[$s]->acount_type = 'show' ;
+		else	
+			$totalcompanies[$s]->acount_type = 'hide' ;	
+		
+		
 		}
 		
 		
@@ -1201,7 +1235,8 @@ if($totalcompanies){ ?>
 <?php 
 // To get all corporate vendors
 		$model = $this->getModel('vendorscenter');
-		$corporate_vendors = $model->corporatevendors();
+		$corporate_vendors = $model->corporatevendors_star();
+		
 		$star_vendors = $corporate_vendors ;
 		if($star_vendors){
 			foreach($star_vendors as $star){
@@ -1240,6 +1275,8 @@ if($totalcompanies){ ?>
 	$background = '#EBF5DA';
 	else
 	$background = '';
+	
+	
 	
 ?>
 
@@ -1429,7 +1466,7 @@ if($totalcompanies){ ?>
 					$id = 'nostandards';
 				}
 				else{
-					if($totalcompanies[$t]->final_status == 'fail') {
+					if($totalcompanies[$t]->final_status == 'fail' || $totalcompanies[$t]->acount_type == 'show'  ) {
 					//$text = "NON-COMPLIANT";
 					$id = 'noncompliant';
 					$title = 'Non-Compliant';
@@ -1446,8 +1483,9 @@ if($totalcompanies){ ?>
 					}
 				}				
 			?>
+		
 			
-	<div class="search-panel-image_rfp compliant_vendor_search" style="width:157px;">
+	<div class="search-panel-image_rfp compliant_vendor_search" style="width:117px;">
 	  	  <p align="center" style="color:; display:block; margin-bottom:7px; font-weight:bold;">  
 		 <?php  if($globe != 'fail'){ ?>
 			<a onclick="javascript:getcompstatus(<?php echo $totalcompanies[$t]->id; ?>,'<?php echo $set_globals; ?>','<?php echo $title; ?>');" href="javascript:void(0);" id="<?php echo $id; ?>" title="<?php echo $title; ?>"><?php echo $text; ?></a>
@@ -1486,10 +1524,10 @@ $item = '217';
 ?>
 </div>
 <?php 
-	if($user->user_type == '13' && $user->accounttype == 'master') 
-	$textshows_co =  "Add to Corporate Preferred Vendors";
-	else
-	$textshows_co =  "Add to My Preferred Vendors";
+if($user->user_type == '13' && $user->accounttype  == 'master' )
+$pre_vendor = '';
+else
+$pre_vendor = 'none';	
 
 $listbasicjobs = $model->getallbasicjobs();
 if( count($listbasicjobs) > '0' )
@@ -1501,10 +1539,11 @@ if( count($listbasicjobs) > '0' )
 	
 if($totalcompanies){ ?>
 	<div align="center" style="margin-top:17px; display:<?php echo $disp;?>">
-	<a title="<?php echo $textshows_co; ?>" class="addicon" href="javascript:sendinvitationcorporate('add');"></a>
+	<a title="Add to My Vendors" class="addicon" href="javascript:sendinvitationcorporate('add');"></a>
 	<a href="javascript:vendor_mails();" class="vendor_mails" title="Email Vendor(s)"></a>
 	<a title="Create a new Basic Request" class="basicrequest" href="javascript:basicrequest('pre');"></a>
 	<a title="Invite Vendor(s) to existing Basic Request" class="basicrequest_invite" href="javascript:inviteto_basicrequest('pre','<?php echo $basics; ?>');"></a>
+	<a style= "display:<?php echo $pre_vendor;?>" title="Add to Corporate Preferred Vendors" class="addpreferredvendoricon" href="javascript:sendpreferredvendor_invitation();"></a>
 	<a title="Recommend to Co-Workers" class="vendor_recommend" href="javascript:vendor_recommend();"></a>
 	<?php 
 	$user =& JFactory::getUser();
@@ -1744,7 +1783,7 @@ if($totalcompanies){ ?>
 					$success_gli_exp[] = $success_arr_exp[$exp];
 				}
 			}
-			if(!$success_gli_exp) {
+			if(!$success_gli_exp && $success_gli_file) {
 			$redlabel = 'red';
 			 ?>
 			<li><span style="color:red;">Expired</span></li>
@@ -2325,7 +2364,7 @@ if($totalcompanies){ ?>
 						}
 				}
 				
-			if(!$success_aip_exp) {
+			if(!$success_aip_exp && $success_aip_file ) {
 			$redlabel = 'red';
 			 ?>
 			<li><span style="color:red;">Expired</span></li>
@@ -2965,7 +3004,7 @@ if($totalcompanies){ ?>
 					$success_wci_exp[] = $success_arr_exp[$exp];
 				}
 			}
-			if(!$success_wci_exp) { 
+			if(!$success_wci_exp && $success_wci_file ) { 
 			$redlabel = 'red';
 			?>
 			<li><span style="color:red;">Expired</span></li>
@@ -3214,7 +3253,7 @@ if($totalcompanies){ ?>
 					$success_umb_exp[] = $success_arr_exp[$exp];
 				}
 			}
-			if(!$success_umb_exp) {
+			if(!$success_umb_exp && $success_umb_file ) {
 			$redlabel = 'red';
 			 ?>
 			<li><span style="color:red;">Expired</span></li>
@@ -3383,7 +3422,7 @@ if($totalcompanies){ ?>
 					$success_omi_exp[] = $success_arr_exp[$exp];
 				}
 			}
-			if(!$success_omi_exp) {
+			if(!$success_omi_exp && $success_omi_file ) {
 			$redlabel = 'red';
 			 ?>
 			<li><span style="color:red;">Expired</span></li>
@@ -4392,7 +4431,7 @@ $licdata = '';
 				echo $final_pdate[1].'-'.$final_pdate[2].'-'.$final_pdate[0];
 				 ?>
 				</td>				<td valign="middle" align="center" width="150">
-				<?php if($codes_purchased[$i]->renewal_date == 'none') echo ucfirst($codes_purchased[$i]->renewal_date) ; 
+				<?php if($codes_purchased[$i]->renewtype  == 'none') echo 'None' ; 
 				else{
 					$renpdate = explode(' ',$codes_purchased[$i]->renewal_date) ;
 					$final_rendate = explode('-',$renpdate[0]);
@@ -4677,22 +4716,29 @@ $licdata = '';
 	$accept = JRequest::getVar('accept');
 	$db  = JFactory::getDBO();
 	$user = JFactory::getUser();
+	$today = date('Y-m-d');
 	$subject = JRequest::getVar('subject','');
     $data['vendoremailid'] = JRequest::getVar('email','');
 	$data['accept'] = JRequest::getVar('accept');
 	$data['propertyid'] = JRequest::getVar('property_name');
-	
 	$chceckclient = "SELECT id FROM #__cam_board_mem where email='".$data['vendoremailid']."' AND property_name='".$data['propertyid']."' AND user_id='".$user->id."'";
 	$db->setQuery( $chceckclient );
 	$chceckclient = $db->loadResult();
-	if(!$chceckclient)
+	if( $chceckclient)
 	{
-	$model = $this->getModel('vendorscenter');
-	$save = $model->getsavedetails($data);
-    }
+		$query = "UPDATE #__cam_board_mem SET date = '".$today."' WHERE id ='".$data['boardmemeberid']."'"; 
+		$db->setQuery($query);
+		$db->query();
+	}
+	else
+	{
+		$model = $this->getModel('vendorscenter');
+		$save = $model->getsavedetails($data);
+    
+	}
 	$redirect = '<a href="'.JURI::root().'index.php">CLICK HERE </a>';
 	//To get the manager company name
-	$companyname = "SELECT comp_name  FROM #__cam_customer_companyinfo where cust_id=".$user->id." ";
+	$companyname = "SELECT comp_name  FROM #__cam_customer_companyinfo where cust_id=".$user->id."";
 	$db->setQuery( $companyname );
 	$c_name = $db->loadResult();
 	//Completed
@@ -4826,45 +4872,62 @@ function checktoallemails()
 			echo $msg; 
 			exit;
 	}
-	function resendinvitation(){
-	$db= JFactory::getDBO();
-	$user=JFactory::getUser();
-	//To get the manager company name
-	$companyname = "SELECT comp_name  FROM #__cam_customer_companyinfo where cust_id=".$user->id." ";
-		$db->setQuery( $companyname );
-		$c_name = $db->loadResult();
-	//Completed
-	$body ="SELECT introtext  FROM #__content where id='315' ";
-		$db->setQuery( $body );
-		$body = $db->loadResult();
-		$body = str_replace('[Manager’s Full Name]',$user->name.' '.$user->lastname,$body);
-		$body = str_replace('[Manager’s Primary Phone Number]',$user->phone,$body);
-		$body = str_replace('[Management Company]',$c_name,$body);
-
-		$mailfrom = $user->email;
-		$fromname = $user->name.' '. $user->lastname;
-		$assignuseremail = 'rize.cama@gmail.com';
-		$assignuseremail = 'support@myvendorcenter.com';
-		$mailsubject = 'Property Owner Invitation';
-		$assignuseremail = JRequest::getVar('email','');
+	
 		
-		$mailfrom = $user->email ;
-		$res = JUtility::sendMail($mailfrom, $fromname, $assignuseremail, $mailsubject, $body, $mode = 1);
-		$ccemail = 'vendoremails@myvendorcenter.com';
-		$res = JUtility::sendMail($mailfrom, $fromname, $ccemail, $mailsubject, $body, $mode = 1);
-		//Completed
-		//Completed
-		$update_hide = "UPDATE #__cam_board_mem SET date='".date('Y-m-d H:i')."' where email ='".$assignuseremail."' and user_id=".$user->id." ";
-		$db->setQuery($update_hide);
-		$hide = $db->query();
-		echo "success";
-		exit;
-		//$msg="Vendor Invitation has been sent successfully.";
-		//$this->setRedirect( $link,$msg );
-	}
+	function resendinvitation()
+	{
+		$db= JFactory::getDBO();
+		$user=JFactory::getUser();
+		$assignuseremail = JRequest::getVar('email','');
+		$redirect = '<a href="'.JURI::root().'index.php">CLICK HERE </a>';
+			//To get the manager company name
+			$companyname = "SELECT comp_name  FROM #__cam_customer_companyinfo where cust_id=".$user->id." ";
+			$db->setQuery( $companyname );
+			$c_name = $db->loadResult();
+			//Completed
+			$managerid ="SELECT managerid FROM #__cam_manager_emailtext where managerid=".$user->id."";
+			$db->setQuery( $managerid );
+			$managerid = $db->loadResult();
+			if($managerid)
+			$body ="SELECT email_text FROM #__cam_manager_emailtext where managerid=".$user->id."";
+			else
+			$body ="SELECT introtext  FROM #__content where id='316'";
+			$db->setQuery( $body );
+			$body = $db->loadResult();
+			$body = html_entity_decode($body);
+			$body = str_replace("[Manager's Full Name]",$user->name.' '.$user->lastname,$body);
+			$body = str_replace("[Manager's Primary Phone Number]",$user->phone,$body);
+			$body = str_replace('[Management Company]',$c_name,$body);
+			$body = str_replace('CLICK HERE',$redirect,$body);
+			$fromname = $user->name.' '. $user->lastname;
+			$rizeemail = 'rize.cama@gmail.com';
+			//$assignuseremail = 'support@myvendorcenter.com';
+			$mailsubject = 'Registration Invitation From Manager';
+			$mailfrom = $user->email ;
+			$res = JUtility::sendMail($mailfrom, $fromname, $rizeemail, $mailsubject, $body, $mode = 1);
+			$res = JUtility::sendMail($mailfrom, $fromname, $assignuseremail, $mailsubject, $body, $mode = 1);
+			//To send the mail to CC
+			$cc = JRequest::getVar('ccemail','');
+			$cclist = explode(';',$cc);
+			for($c=0; $c<=count($cclist); $c++){
+			$listcc = $cclist[$c];
+			if($listcc){
+			$res = JUtility::sendMail($mailfrom, $fromname, $listcc, $mailsubject, $body, $mode = 1);
+			}
+			}
+			//To CC
+			$ccemail = 'vendoremails@myvendorcenter.com';
+			//$res = JUtility::sendMail($mailfrom, $fromname, $ccemail, $mailsubject, $body, $mode = 1);
+			$link = "index.php?option=com_camassistant&controller=boardmembers&task=listboardmembers&Itemid=151";
+			
+			$update_hide = "UPDATE #__cam_board_mem SET date='".date('Y-m-d H:i')."' where email ='".$assignuseremail."' and user_id=".$user->id." ";
+			$db->setQuery($update_hide);
+			$hide = $db->query();
+			echo "success";
+			exit;
+	 }
 	function save_permissions()
 	{
-	
 	$db = JFactory::getDBO();
 	$user = JFactory::getUser();
 	$proposals_p = JRequest::getVar('vendor_proposals','');
@@ -4872,20 +4935,18 @@ function checktoallemails()
 	$invite_p = JRequest::getVar('invite_vendors','');
 	$approval_p = JRequest::getVar('approval_request','');
 	$awarding_p = JRequest::getVar('approval_awarding','');
+    $board_position = JRequest::getVar('board_position','');
     $property_id = JRequest::getVar('pid','');
 	$bid = JRequest::getVar('bid','');
 	$per['user_id'] = $user->id;
 	$per['propertyowner_id']= JRequest::getVar('propertyowner_id','');	
-	
-    $query = "UPDATE #__cam_propertyowner_link SET proposals_p = '".$proposals_p."',vendors_p = '".$vendors_p."',invite_p = '".$invite_p."' ,approval_p = '".  $approval_p."', awarding_p = '".$awarding_p."' WHERE boardmem_id ='".$bid."'"; 
+   $query = "UPDATE #__cam_propertyowner_link SET proposals_p = '".$proposals_p."',vendors_p = '".$vendors_p."',invite_p = '".$invite_p."' ,approval_p = '".       $approval_p."', awarding_p = '".$awarding_p."' WHERE boardmem_id ='".$bid."'"; 
 	$db->setQuery($query);
 	$db->query();
-	 
-	 $query = "UPDATE #__cam_board_mem SET enablemail='yes' where id ='".$bid."'"; 
-	$db->setQuery($query);
+	$query1 = "UPDATE #__cam_board_mem SET enablemail='yes',board_position='".$board_position."' where id ='".$bid."'"; 
+	$db->setQuery($query1);
 	$db->query();
-	
-	$msg= 'Sucess fully updated';
+	$msg= 'Client information has updated successfully';
 	$url="index.php?option=com_camassistant&controller=boardmembers&task=listboardmembers&Itemid=151";;
 	$this->setRedirect($url,$msg);
 	
@@ -4963,7 +5024,6 @@ function checktoallemails()
 		$emailtest = htmlentities($_REQUEST['mailtext'], ENT_QUOTES);
 		$emailtest = str_replace('\&quot','&quot',$emailtest);
 		$emailtest = str_replace('\\','',$emailtest);
-		
 		$mailbody = $emailtest;
 		$mailtext['email_text'] = $mailbody;
 		$model = $this->getModel('vendorscenter');
@@ -4973,7 +5033,6 @@ function checktoallemails()
 		else
 		$mailtext['id'] = '';
 		$model->store_mailtext($mailtext);
-		
 		$url ='index.php?option=com_camassistant&controller=vendorscenter&task=promanagerinvitation&Itemid=151&accept=yes';
 		$this->setRedirect($url);
 		
@@ -5052,18 +5111,30 @@ function checktoallemails()
 		$accept = JRequest::getVar('accept');
 		$db  = JFactory::getDBO();
 		$user = JFactory::getUser();
+		$today = date('Y-m-d');
 		$data['email'] = JRequest::getVar('email','');
 		$data['propertyid'] = JRequest::getVar('propertyid','');
 		$data['boardmemeberid'] = JRequest::getVar('bid','');
 		$subject = JRequest::getVar('subject','');
-	    $chceckid = "SELECT id FROM #__cam_propertyowner_link where property_id='".$data['propertyid'] ."' AND user_id='".$user->id."'  AND boardmem_id='".$data['boardmemeberid']."'";
+		$model = $this->getModel('vendorscenter');
+	    $chceckid = "SELECT id FROM #__cam_propertyowner_link where boardmem_id='".$data['boardmemeberid']."'";
 		$db->setQuery(  $chceckid );
 		$chceckid = $db->loadResult();
-		if(!$chceckid)
-        {  		
-	    $model = $this->getModel('vendorscenter');
-	    $save = $model->saveinvitationdetails($data);
+	
+		if( $chceckid )
+        { 
+			$query = "UPDATE #__cam_board_mem SET date = '".$today."' WHERE id ='".$data['boardmemeberid']."'"; 
+			$db->setQuery($query);
+			$db->query();
+		}
+		else
+		{
+		  $save = $model->saveinvitationdetails($data);
         }
+		
+		$upadte = "UPDATE #__cam_board_mem SET accept = 'yes' WHERE id ='".$data['boardmemeberid']."'"; 
+		$db->setQuery($upadte);
+		$db->query();
 		$redirect = '<a href="'.JURI::root().'index.php">CLICK HERE </a>';
 		//To get the manager company name
 		$companyname = "SELECT comp_name  FROM #__cam_customer_companyinfo where cust_id=".$user->id." ";
@@ -5076,7 +5147,7 @@ function checktoallemails()
 		if($managerid)
 		$body ="SELECT email_text FROM #__cam_manager_emailtext where managerid=".$user->id."";
 		else
-	    $body ="SELECT introtext  FROM #__content where id='315'";
+	    $body ="SELECT introtext  FROM #__content where id='316'";
 		$db->setQuery( $body );
 		$body = $db->loadResult();
 		$body = html_entity_decode($body);
@@ -5084,7 +5155,6 @@ function checktoallemails()
 		$body = str_replace("[Manager's Primary Phone Number]",$user->phone,$body);
 		$body = str_replace('[Management Company]',$c_name,$body);
 		$body = str_replace('CLICK HERE',$redirect,$body);
-        
 		$fromname = $user->name.' '. $user->lastname;
 		$rizeemail = 'rize.cama@gmail.com';
 		//$assignuseremail = 'support@myvendorcenter.com';
@@ -5094,8 +5164,6 @@ function checktoallemails()
 		$mailfrom = $user->email ;
 		$res = JUtility::sendMail($mailfrom, $fromname, $rizeemail, $mailsubject, $body, $mode = 1);
 		$res = JUtility::sendMail($mailfrom, $fromname, $assignuseremail, $mailsubject, $body, $mode = 1);
-		
-	
 		//To send the mail to CC
 		$cc = JRequest::getVar('ccemail','');
 		$cclist = explode(';',$cc);
@@ -5113,7 +5181,328 @@ function checktoallemails()
 		$this->setRedirect( $link,$msg );
 	}
 	
+	function saveboardposition()
+	{
+		$db  = JFactory::getDBO();
+		$board_position = JRequest::getVar('board_position','');
+		$id = JRequest::getVar('bid','');
+		 $query = "UPDATE #__cam_board_mem SET board_position = '".$board_position."' WHERE id ='".$id."'"; 
+		$db->setQuery($query);
+		$db->query();
+		$link = "index.php?option=com_camassistant&controller=addproperty&Itemid=75";
+		$msg="";
+		$this->setRedirect( $link,$msg );
+	}
 	
+	function addpreferredvendor(){
+	$model = $this->getModel('vendorscenter');	
+	$db =& JFactory::getDBO();
+	$vendorid = JRequest::getVar( 'vendorid','');
+	
+	$action_type = JRequest::getVar( 'actype','');
+	$prevendor = JRequest::getVar( 'prevendor','');
+	$user	= JFactory::getUser();
+	$vendors = explode(',',$vendorid);
+	
+	for( $i=0; $i<count($vendors); $i++ ){
+	// To check if is there any pre invitations to same user
+	$checkvendor = "SELECT vid FROM #__vendor_inviteinfo where userid =".$user->id." and v_id=".$vendors[$i]." ";
+	$db->setQuery($checkvendor);
+	$exist = $db->loadResult();
+    if($exist){
+	if( $prevendor == 1 ){
+	   $query1 = "UPDATE #__vendor_inviteinfo SET invitation_type  = 'pre' where userid =".$user->id." and v_id=".$vendors[$i].""; 
+			$db->setQuery($query1);
+			$db->query();
+	 if( $user->user_type == '13' && $user->accounttype == 'master'){
+				$sendmail = $model->sendmailtovendor($vendors[$i]);
+			}
+	 
+	 }
+		if($action_type == 'exclude'){
+			$query = "UPDATE #__vendor_inviteinfo SET search = 'yes' WHERE vid ='".$exist."'"; 
+			$db->setQuery($query);
+			$db->query();
+		}
+	echo "already";
+	
+	}	
+	
+	else {
+		// To get the company id
+		$taxid = $model->getcompanyid($user->id,$user->user_type);
+		//Completed
+		//$email = JRequest::getVar( 'emailid',''); 
+		$checkvendor_email = "SELECT email FROM #__users where id =".$vendors[$i]." ";
+		$db->setQuery($checkvendor_email);
+		$email = $db->loadResult();
+		
+		
+		$from_email = $user->email;
+		$post['userid'] = $user->id ;
+		$post['v_id'] = $vendors[$i];
+		$post['taxid'] = $taxid;
+		$post['licenseno'] = '';
+		$post['vendortype'] = 'preferred';
+		$post['fei'] = '';
+		$post['inhousevendors'] = $email;
+		$post['inhouse'] = $email;
+		$post['subject'] = "Preferred invitation from camfirm";
+		$post['inhousetext'] = "Preferred invitation from camfirm";
+		$post['status'] = 1;
+		$post['invitation_type'] = 'pre';
+		$post['invitedate'] = date('Y-m-d h:i:m');;
+		if($action_type == 'exclude') {
+		$post['search'] = 'yes';
+		$post['exclude'] = 'yes';
+		}
+		else {
+		$post['search'] = '';
+		$post['exclude'] = '';
+		}
+		$save = $model->store_newadd($post);
+			if( $user->user_type == '13' && $user->accounttype == 'master'){
+				$sendmail = $model->sendmailtovendor($post['v_id']);
+			}
+		if($save){
+		echo "added" ;
+		}
+		else{
+		echo "fail";
+		}
+		
+		}
+		}
+		exit;
+	}
+	
+	
+	function addmyvendortopreferredvendor(){
+	$model = $this->getModel('vendorscenter');	
+	$db =& JFactory::getDBO();
+	$vendorid = JRequest::getVar( 'vendorid','');
+	
+	$action_type = JRequest::getVar( 'actype','');
+	$prevendor = JRequest::getVar( 'prevendor','');
+	$user	= JFactory::getUser();
+	$vendors = explode(',',$vendorid);
+	
+	for( $i=0; $i<count($vendors); $i++ ){
+	// To check if is there any pre invitations to same user
+	$checkvendor = "SELECT vid FROM #__vendor_inviteinfo where userid =".$user->id." and v_id=".$vendors[$i]." ";
+	$db->setQuery($checkvendor);
+	$exist = $db->loadResult();
+    if($exist){
+	if( $prevendor == 1 ){
+	   $query1 = "UPDATE #__vendor_inviteinfo SET invitation_type  = 'pre' where userid =".$user->id." and v_id=".$vendors[$i].""; 
+	   $db->setQuery($query1);
+	   $db->query();
+	   $query2 = "UPDATE #__vendor_inviteinfo SET myvendors = 'yes' WHERE vid ='".$exist."'"; 
+	   $db->setQuery($query2);
+	   $db->query();		
+			
+	 if( $user->user_type == '13' && $user->accounttype == 'master'){
+				$sendmail = $model->sendmailtovendor($vendors[$i]);
+			}
+	 
+	 }
+		if($action_type == 'exclude'){
+			$query = "UPDATE #__vendor_inviteinfo SET search = 'yes' WHERE vid ='".$exist."'"; 
+			$db->setQuery($query);
+			$db->query();
+		}
+	echo "already";
+	
+	}	
+	
+	else {
+		// To get the company id
+		$taxid = $model->getcompanyid($user->id,$user->user_type);
+		//Completed
+		//$email = JRequest::getVar( 'emailid',''); 
+		$checkvendor_email = "SELECT email FROM #__users where id =".$vendors[$i]." ";
+		$db->setQuery($checkvendor_email);
+		$email = $db->loadResult();
+		
+		
+		$from_email = $user->email;
+		$post['userid'] = $user->id ;
+		$post['v_id'] = $vendors[$i];
+		$post['taxid'] = $taxid;
+		$post['licenseno'] = '';
+		$post['vendortype'] = 'preferred';
+		$post['fei'] = '';
+		$post['inhousevendors'] = $email;
+		$post['inhouse'] = $email;
+		$post['subject'] = "Preferred invitation from camfirm";
+		$post['inhousetext'] = "Preferred invitation from camfirm";
+		$post['status'] = 1;
+		$post['invitation_type'] = 'pre';
+		$post['invitedate'] = date('Y-m-d h:i:m');;
+		if($action_type == 'exclude') {
+		$post['search'] = 'yes';
+		$post['exclude'] = 'yes';
+		}
+		else {
+		$post['search'] = '';
+		$post['exclude'] = '';
+		}
+		$save = $model->store_newadd($post);
+			if( $user->user_type == '13' && $user->accounttype == 'master'){
+				$sendmail = $model->sendmailtovendor($post['v_id']);
+			}
+		if($save){
+		echo "added" ;
+		}
+		else{
+		echo "fail";
+		}
+		
+		}
+		}
+		exit;
+	}
+	
+	
+	function removevendor_list(){
+	$user	= JFactory::getUser();
+	$db =& JFactory::getDBO();
+	$vendorid = JRequest::getVar( 'vendorid','');
+	$vendors = explode(',',$vendorid);
+	for( $i=0; $i<count($vendors); $i++ ){
+	// To check if is there any pre invitations to same user
+	$checkvendor = "SELECT vid FROM #__vendor_inviteinfo where userid =".$user->id." and v_id=".$vendors[$i]."  and invitation_type='pre'";
+	$db->setQuery($checkvendor);
+	$exist = $db->loadResult();
+	
+	$per_vendor = "SELECT id FROM #__cam_vendor_purchasedcodes where masterid ='".$user->id."' and vendorid =".$vendors[$i]." and publish=1";
+	$db->setQuery($per_vendor);
+	$per_vendor = $db->loadResult();
+   
+    if($exist || $per_vendor ){
+	
+	   $query2 = "UPDATE #__vendor_inviteinfo SET myvendors = 'no' WHERE userid =".$user->id." and v_id=".$vendors[$i]." "; 
+	   $db->setQuery($query2);
+	   $db->query();		
+	}
+	else {
+	$query_delete = "DELETE FROM #__vendor_inviteinfo WHERE  v_id=".$vendors[$i]."  and userid=".$user->id." " ;
+	$db->setquery($query_delete);
+	$del = $db->query();
+	}	
+	if($del) {
+	echo "1";
+	}
+	else{
+	echo "0";
+	}
+ }		
+	exit;
+	}
+	
+function removevendor_preferredlist(){
+	$user	= JFactory::getUser();
+	$db =& JFactory::getDBO();
+	$vendorid = JRequest::getVar( 'vendorid','');
+	$vendors = explode(',',$vendorid);
+	for( $i=0; $i<count($vendors); $i++ ){
+	// To check if is there any pre invitations to same user
+	$checkvendor = "SELECT v_id FROM #__vendor_inviteinfo where userid =".$user->id." and vid=".$vendors[$i]."  and myvendors='yes'";
+	$db->setQuery($checkvendor);
+	$exist = $db->loadResult();
+	
+    if($exist ){
+	   $query2 = "UPDATE #__vendor_inviteinfo SET invitation_type = '' WHERE userid =".$user->id." and v_id=".$exist.""; 
+	   $db->setQuery($query2);
+	   $db->query();		
+	}
+	else {
+	$query_delete = "DELETE FROM #__vendor_inviteinfo WHERE  vid=".$vendors[$i]."" ;
+	$db->setquery($query_delete);
+	$del = $db->query();
+	}	
+	if($del) {
+	echo "1";
+	}
+	else{
+	echo "0";
+	}
+ }		
+	exit;
+	}	
+	
+	
+function addtomyvendor(){
+	$user	= JFactory::getUser();
+	$db =& JFactory::getDBO();
+	$vendorid = JRequest::getVar( 'vendorid','');
+	$update = "UPDATE #__vendor_inviteinfo SET myvendors='yes' WHERE vid IN (".$vendorid.") and userid=".$user->id."" ;
+	$db->setquery($update);
+	$upd = $db->query();
+	if($upd) {
+	echo "1";
+	}
+	else{
+	echo "0";
+	}
+ 	
+	exit;
+	}	
+	
+	
+	function check_preferredvendor(){
+	$model = $this->getModel('vendorscenter');	
+	$db =& JFactory::getDBO();
+	$vendorid = JRequest::getVar( 'vendorid','');
+	$user	= JFactory::getUser();
+	$vendors = explode(',',$vendorid);
+	for( $i=0; $i<count($vendors); $i++ ){
+	// To check if is there any pre invitations to same user
+	$checkvendor = "SELECT vid FROM #__vendor_inviteinfo where userid =".$user->id." and v_id=".$vendors[$i]." and invitation_type='pre'";
+	$db->setQuery($checkvendor);
+	$exist = $db->loadResult();
+	if($exist){
+	$exist_array [] = $exist;
+	}
+	$per_vendor = "SELECT id FROM #__cam_vendor_purchasedcodes where masterid ='".$user->id."' and vendorid =".$vendors[$i]." and publish=1";
+	$db->setQuery($per_vendor);
+	$per_vendor = $db->loadResult();
+	if($per_vendor){
+	$per_vendor_array[] = $per_vendor;
+	}
+	}	
+    if(count($exist_array) >0 || count($per_vendor)>0 ){
+	echo '1';
+	}
+	else{
+	echo '0';
+	}
+	
+ exit;
+}	
+function check_myvendorlist(){
+	$model = $this->getModel('vendorscenter');	
+	$db =& JFactory::getDBO();
+	$vendorid = JRequest::getVar( 'vendorid','');
+	$user	= JFactory::getUser();
+	$vendors = explode(',',$vendorid);
+	for( $i=0; $i<count($vendors); $i++ ){
+	// To check if is there any pre invitations to same user
+	$checkvendor = "SELECT v_id FROM #__vendor_inviteinfo where userid =".$user->id." and vid=".$vendors[$i]." and myvendors='yes'";
+	$db->setQuery($checkvendor);
+	$exist = $db->loadResult();
+	if($exist){
+	$exist_array [] = $exist;
+	}
+	}
+	if( count($exist_array) >0 ){
+	echo '1';
+	}
+	else{
+	echo '0';
+	}
+ exit;
+}	
 	
 }
 ?> 

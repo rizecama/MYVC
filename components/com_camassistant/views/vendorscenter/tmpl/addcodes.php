@@ -11,7 +11,7 @@ $from = JRequest::getVar('from','');
 G = jQuery.noConflict();
 	G(document).ready(function(){
 		G('#current').val('');
-		G('#cancelpopup').click(function(){
+		G('#cancelpopup_vendor').click(function(){
 			window.parent.document.getElementById( 'sbox-window' ).close();
 		});
 		G('#savecode').click(function(){
@@ -121,7 +121,30 @@ G = jQuery.noConflict();
 		
 	}	
 </script>
-
+<script type="text/javascript">
+G = jQuery.noConflict();
+G('document').ready(function(){
+G('#code').keyup(function(){
+		if( G(this).val() == '' )
+		G( this ).prev().removeClass( 'active' );
+		else
+		G( this ).prev().addClass( 'active' );
+	});
+G('#cost').change(function(){
+if(G(this).val() != 'None' )
+G( this ).prev().addClass( 'active' );
+else
+G( this ).prev().removeClass( 'active' );
+	});
+G('#renewtype').change(function(){
+if(G(this).val() != '0' )
+G( this ).prev().addClass( 'active' );
+else
+G( this ).prev().removeClass( 'active' );
+	});
+	
+});
+</script>
 <style>
 #maskex { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
 #boxesex .windowex {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
@@ -139,12 +162,10 @@ G = jQuery.noConflict();
 <form action="#" method="post" id="addcodeform">
 <div class="addingcodesform">
 <ul class="adduls">
-<li><label>
-<div class="red-arrow-addcodes"><img src="templates/camassistant_left/images/arrow_preferred.png" alt=""></div>
+<li><label class="red-arrow-vendorcodes">
 <strong>Code</strong> (this will be entered by Vendor to purchase)</label><input type="text" name="code" id="code" value="" /></li>
 <li>
-<div class="red-arrow-addcodes"><img src="templates/camassistant_left/images/arrow_preferred.png" alt=""></div>
-<label><strong>Cost</strong> (how much the Vendor will pay)</label>
+<label class="red-arrow-vendorcodes"><strong>Cost</strong> (how much the Vendor will pay)</label>
 <select name="cost" id="cost" onchange="getchanges(this.value);">
 <option value="None">Select Cost</option>
 <option value="0.00">$0</option>
@@ -155,8 +176,8 @@ G = jQuery.noConflict();
 </select>
 </li>
 <li>
-<div class="red-arrow-addcodes"><img src="templates/camassistant_left/images/arrow_preferred.png" alt=""></div>
-<label><strong>Renewal Period</strong> (how often Vendor will charged)</label>
+
+<label class="red-arrow-vendorcodes"><strong>Renewal Period</strong> (how often Vendor will charged)</label>
 <select name="renewtype" id="renewtype" class="renewtype_price">
 <option value="0" class="default">Select Renewal Period</option>
 <option value="none" class="none">None</option>
@@ -165,8 +186,7 @@ G = jQuery.noConflict();
 </li>
 
 <li class="vendorcompliance">
-<div class="red-arrow-addcodes"><img src="templates/camassistant_left/images/arrow_preferred.png" alt=""></div>
-<label><strong>Vendor Purchasing Requirements</strong></label>
+<label class="green-arrow-addcodes"><strong>Vendor Purchasing Requirements</strong></label>
 <select name="reqs" id="reqs" class="purchase_reqs" style="font-size:13px;">
 <option value="0">None</option>
 <option value="1" style="font-size:13px;">Vendor must have Verified Compliance Documents</option>
@@ -175,7 +195,7 @@ G = jQuery.noConflict();
 
 
 <li id="buttons_uninvite">
-<a id="cancelpopup" href="#" class="cancel_pcode_edit"></a>
+<a id="cancelpopup_vendor" href="#" class="cancel_pcode_edit"></a>
 <a id="savecode" href="#" class="save_pcode_edit"></a>
 </li>
 </ul>

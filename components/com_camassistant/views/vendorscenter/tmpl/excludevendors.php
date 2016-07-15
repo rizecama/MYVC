@@ -441,7 +441,7 @@ foreach($items as $am ) {
 	$statea = $db->loadResult(); 
 	?>
         <li><?php echo $am->city; ?>,&nbsp;<?php echo strtoupper($statea); ?></li>
-        <li><a class="miniemails" href="mailto:<?php echo $am->inhousevendors; ?>?cc=support@camassistant.com">Email</a></li>
+        <li><a class="miniemails" href="mailto:<?php echo $am->inhousevendors; ?>">Email</a></li>
         </ul>
 	  <?php  }
 	  ?>
@@ -517,7 +517,7 @@ foreach($items as $am ) {
 	
 	<?php
 				
-				if($am->final_status == 'fail') {
+				if($am->final_status == 'fail'  || $am->acount_type == 'show' ) {
 				//$text = "NON-COMPLIANT";
 				$id = 'noncompliant';
 				$title = 'Non-Compliant';

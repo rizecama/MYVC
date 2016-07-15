@@ -483,8 +483,8 @@ Notification email address: &nbsp;&nbsp;<input name="email" type="text" style="w
 		<input type="hidden" name="hidden_image" value="<?php echo $this->details1->comp_logopath; ?>"
 		<?php /*?><input name="" type="file" style="width:275px;" value="www.website.com"/><?php */?>
 		<br/><br/><?php if ($this->details1->comp_logopath==''){ ?>
-		<span><img width="50" height="50" src="components/com_camassistant/assets/images/properymanager/noimage.gif" /></span><?php } else { ?>
-		<span><img width="<?php echo $thumb_width; ?>" height="<?php echo $thumb_height; ?>" src="components/com_camassistant/assets/images/properymanager/<?php echo $this->details1->comp_logopath ; ?>" /></span>
+		<span><img width="50" height="50" src="components/com_camassistant/assets/images/properymanager/noimage.gif" style="margin-top:15px;" /></span><?php } else { ?>
+		<span><img width="<?php echo $thumb_width; ?>" height="<?php echo $thumb_height; ?>" src="components/com_camassistant/assets/images/properymanager/<?php echo $this->details1->comp_logopath ; ?>" style="margin-top:15px;" /></span>
 		<?php } ?>
 		</div>
 		

@@ -11,7 +11,7 @@
 <script type="text/javascript">
 H = jQuery.noConflict();
 	H(document).ready( function(){
-		H('.decline').click(function(){
+		H('.decline_popup').click(function(){
 			H('.responce').val('dec');
 			if( H('.firstname').val() == '' || H('.lastname').val() == '' )
 				geterrorpopup();
@@ -19,7 +19,7 @@ H = jQuery.noConflict();
 				H('.termsform').submit();
 				
 		});
-		H('.accept').click(function(){
+		H('.accept_popup').click(function(){
 			H('.responce').val('acc');
 			if( H('.firstname').val() == '' || H('.lastname').val() == '' )
 				geterrorpopup();
@@ -46,6 +46,22 @@ function geterrorpopup(){
 		H('.windowex').hide();
 		});
 }	
+</script>
+<script type="text/javascript">
+H = jQuery.noConflict();
+	H(document).ready( function(){
+		H('#decline_popup').click(function(){
+			H('.responce').val('dec');
+				H('.termsform_accept').submit();
+				
+		});
+		H('#accept_popup').click(function(){
+			H('.responce').val('acc');
+				H('.termsform_accept').submit();
+		});
+		
+	});
+
 </script>	
 <style>
 #maskex { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
@@ -59,6 +75,7 @@ function geterrorpopup(){
 <?php 
 $cname = JRequest::getVar("cname",'');
 $status = JRequest::getVar("status",''); 
+
 ?>
 <div id="i_bar_terms" style="margin-bottom:0px; margin-left:19px; margin-top:15px; width:608px; text-align:center;">
 <div id="i_bar_txt_terms">
@@ -75,15 +92,26 @@ echo html_entity_decode($this->terms->aboutus); ?>
 <?php if( $status == 'acc' ) { ?>
    <div class="accept"><img src='templates/camassistant_left/images/right-icon_vendor.png'/><div class="aceprt2">ACCEPTED</div><br><br></div>
     <?php } if( $status == 'dec' ) { ?>
-     <div class="accept"><img src='templates/camassistant_left/images/close-icon_vendor.png'/><div class="aceprt3">DECLINED</div><br><br></div>
-     <?php } if( $status == 'no' ) { ?>
+      <form method="post" name="termsform_accept" class="termsform_accept">
+	 <div class="accept_decline">
+	 <a class="decline_popup" id = "decline_popup" rel="decline" href="javascript:void(0);"></a>
+     <a class="accept_popup" id = "accept_popup" rel="accept" href="javascript:void(0);"></a>
+	 </div>
+	 <input type="hidden" value="com_camassistant" name="option">
+	 <input type="hidden" value="invitations" name="controller">
+	 <input type="hidden" value="updatenewaccept" name="task">
+	 <input type="hidden" value="<?php echo $this->terms->vendorid; ?>" name="masterid">
+	 <input type="hidden" value="" name="responce" class="responce">
+	</form>
+
+	 <?php } if( $status == 'no' ) { ?>
 	 <form method="post" name="termsform" class="termsform">
 <table cellpadding="0" cellspacing="0" style="margin-right:21px;" width="100%" class="termspopup">
 <tr align="center"><td colspan="2"><label>Full Name</label>:&nbsp;&nbsp;<input type="text" placeholder="First" class="firstname" name="firstname">&nbsp;&nbsp;<input type="text" class="lastname" placeholder="Last" name="lastname"></td></tr>
 <tr height="20"></tr>
 <tr>
-<td align="right"><a class="decline" rel="decline" href="javascript:void(0);"><img src="templates/camassistant_left/images/del.png" /></a></td>
-<td align="left"><a class="accept" rel="accept" href="javascript:void(0);"><img src="templates/camassistant_left/images/acpt.png" /></a></td>
+<td align="right"><a class="decline_popup" rel="decline" href="javascript:void(0);"></a></td>
+<td align="left"><a class="accept_popup" rel="accept" href="javascript:void(0);"></a></td>
 </tr>
 <tr height="20"></tr>
 </table>

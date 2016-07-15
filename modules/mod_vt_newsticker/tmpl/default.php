@@ -94,7 +94,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
     var K=jQuery.noConflict();
     K('#slideshow').cycle({
     fx:    "scrollHorz",
-    speed: "2000",
+    speed: "5000",
     prev: '#previous', //#id of your previous button
     next: '#next' //#id of your next button
 });
@@ -109,7 +109,7 @@ KN(document).ready(function() {
 		timeout: 200,
 		pause: true,
         fx:    "scrollHorz",
-		speed: "2000",
+		speed: "5000",
 		paused: function(cont, opts, byHover) {
 			!byHover && toggle.html('<img src="components/com_camassistant/assets/images/play.gif">');
 

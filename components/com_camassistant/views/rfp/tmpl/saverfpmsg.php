@@ -51,6 +51,32 @@ H(document).ready( function(){
 		else
 			H(".rfp_type_personal").val('');	
 	});
+
+H('.block_unverified').click(function(){
+    if(H(this).is(":checked")){
+	  H(".rfp_type_open").val('open');
+		var maskHeight = H(document).height();
+		var maskWidth = H(window).width();
+		H('#maskex').css({'width':maskWidth,'height':maskHeight});
+		H('#maskex').fadeIn(100);
+		H('#maskex').fadeTo("slow",0.8);
+		var winH = H(window).height();
+		var winW = H(window).width();
+		H("#submitex").css('top',  winH/2-G("#submitex").height()/2);
+		H("#submitex").css('left', winW/2-G("#submitex").width()/2);
+		H("#submitex").fadeIn(2000);
+		H('.windowex #cancelex').click(function (e) {
+		e.preventDefault();
+		H('#maskex').hide();
+		H('.windowex').hide();
+		});
+
+	}
+	else
+    H(".rfp_type_open").val('');	
+	});
+
+
 });
 	
 function fn_submitvendorsform(){
@@ -294,11 +320,21 @@ function getpersonalpopuptext(){
 #boxesvrecdonee #submitvrecdonee a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
 #donevrecdonee {border:0 none; cursor:pointer; height:30px; margin-left:-17px; margin-top:-29px; width:474px; float:left; }
 
+#maskex { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesex .windowex {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesex #submitex {  width:567px;  height:217px;  padding:10px;  background-color:#ffffff;}
+#boxesex #submitex a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneex {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeex {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
+
 </style>
 <?php 
 $close = JRequest::getVar('var','');
 $rfpidc = JRequest::getVar('rfpid','');
-if($close != 'closeinvite'){ ?>
+if($close != 'closeinvite'){ 
+$blockedvendors = $this->blockedvendors;
+//print_r($blockedvendors);exit;
+?>
 <p style="height:40px;"></p>
 <div class="toppart_header">
 <ul class="toppart_ul">
@@ -306,7 +342,14 @@ if($close != 'closeinvite'){ ?>
 <li class="basic_heading">How would you like to invite Vendors to participate in your request?</li>
 </ul>
 <ul class="input_options">
-<li><input type="checkbox" name="open" value="open" class="open_request" <?php echo $selected_both; ?> <?php echo $selected_open; ?> /> - <span>Open Invitation:</span> I would like my request to be open to ALL interested Vendors<span> (<a href="javascript:void(0);" onclick="javascript:getopenpopuptext();">more info</a>)</span></li>
+<li>
+<?php if( $blockedvendors->block == 1 || $blockedvendors->block_complinace == 1 ) { ?>
+<input type="checkbox" name="open" value="open" class="block_unverified" <?php echo $selected_both; ?> <?php echo $selected_open; ?> /> - <span>Open Invitation:</span> I would like my request to be open to ALL interested Vendors<span> (<a href="javascript:void(0);" onclick="javascript:getopenpopuptext();">more info</a>)</span>
+<?php } else { ?> 
+<input type="checkbox" name="open" value="open" class="open_request" <?php echo $selected_both; ?> <?php echo $selected_open; ?> /> - <span>Open Invitation:</span> I would like my request to be open to ALL interested Vendors<span> (<a href="javascript:void(0);" onclick="javascript:getopenpopuptext();">more info</a>)</span>
+
+<?php } ?>
+</li>
 <li><input type="checkbox" name="personal" value="personal" class="personal_request" <?php echo $selected_both; ?> <?php echo $selected_open; ?> /> - <span>Personal Invitation:</span> I would like to select specific Vendors to invite to my request<span> (<a href="javascript:void(0);" onclick="javascript:getpersonalpopuptext();">more info</a>)</span> </li>
 </ul>
 </div>
@@ -605,13 +648,13 @@ $display = '';
 	$checkbox = '';
 	if( $am->unverified == 'hide' && $am->block_nonc == 'hide' )
 		{
-			if( $am->subscribe_type == 'free' && $am->special_requirements == 'fail' ){
+			if( ( $am->subscribe_type == 'free' || $am->subscribe_type == '' ) && $am->special_requirements == 'fail' ){
 			$args = 'both';
 			}
-			else if( $am->subscribe_type == 'free' && $am->special_requirements == 'success' ){
+			else if( ( $am->subscribe_type == 'free' || $am->subscribe_type == '' ) && $am->special_requirements == 'success' ){
 			$args = 'un';
 			}
-			else if( $am->subscribe_type != 'free' && $am->special_requirements == 'fail' ){
+			else if( ( $am->subscribe_type != 'free' || $am->subscribe_type != '' ) && $am->special_requirements == 'fail' ){
 			$args = 'nonc';
 			}
 			
@@ -622,7 +665,7 @@ $display = '';
 		}
 	else if( $am->unverified == 'hide' )
 		{
-			if( $am->subscribe_type == 'free' ){
+			if( $am->subscribe_type == 'free' || $am->subscribe_type == '' ){
 			$args = 'un';
 			}
 			else{
@@ -655,7 +698,7 @@ $display = '';
 ?>			 
 
 
- 	<div id="preferredvendorsinvitations" style="padding:6px; display:<?php echo $display; ?>">
+ 	<div id="preferredvendorsinvitations" style="display:<?php echo $display; ?>">
    <div class="search-panel-middlepre checkbox_vendor">
     <?php if($am->pre == 'yes'){ $checked = 'checked'; } else { $checked = ''; } ?>
    	  <?php if($am->vendorstatus == 'eligible' && $am->suspend != 'suspend'){ ?>
@@ -833,7 +876,7 @@ $ratecount = "SELECT V.apple FROM `#__cam_vendor_proposals` as U, `#__cam_rfpinf
 			}
 			else {
 			
-				if($am->special_requirements == 'fail') {
+				if($am->special_requirements == 'fail' || $am->acount_type == 'show' ) {
 				//$images_text = 'NON-COMPLIANT';
 				$compliant_id = "noncompliant";
 				$title = 'Non-Compliant';
@@ -929,7 +972,7 @@ foreach($corporate as $am ) {
 				  }
 			}
 ?> 
- 	<div id="preferredvendorsinvitations" style="padding:6px; display:<?php echo $display; ?>">
+ 	<div id="preferredvendorsinvitations" style="display:<?php echo $display; ?>">
    <div class="search-panel-middlepre checkbox_vendor">
 
 <?php
@@ -1141,7 +1184,7 @@ $ratecount = "SELECT V.apple FROM `#__cam_vendor_proposals` as U, `#__cam_rfpinf
 	
 	<div class="search-panel-image_rfp compliant_vendor">
 	<?php 
-			if($am->special_requirements == 'fail'){
+			if($am->special_requirements == 'fail' || $am->acount_type == 'show' ){
 			$compliant_id = "noncompliant";
 			//$images_text = 'NON-COMPLIANT';
 			$title = 'Non-Compliant';
@@ -1243,7 +1286,7 @@ foreach($items as $am ) {
 		}		  
 			}
 ?> 
- 	<div id="preferredvendorsinvitations" style="padding:6px; display:<?php echo $display; ?>">
+ 	<div id="preferredvendorsinvitations" style="display:<?php echo $display; ?>">
    <div class="search-panel-middlepre checkbox_vendor">
    
  <?php
@@ -1464,7 +1507,7 @@ $ratecount = "SELECT V.apple FROM `#__cam_vendor_proposals` as U, `#__cam_rfpinf
 				$images_text = 'N/A';
 			}
 			else {
-				if($am->special_requirements == 'fail'){
+				if($am->special_requirements == 'fail' || $am->acount_type == 'show' ){
 				$compliant_id = "noncompliant";
 				//$images_text = 'NON-COMPLIANT';
 				$title = 'Non-Compliant';
@@ -1613,7 +1656,7 @@ $background = '';
 	}	
 ?>	
 
- 	<div id="preferredvendorsinvitations" style="padding:6px; background:<?php echo $background; ?>; display:<?php echo $display; ?>">
+ 	<div id="preferredvendorsinvitations" style="background:<?php echo $background; ?>; display:<?php echo $display; ?>">
    <div class="search-panel-middlepre checkbox_vendor">
     <?php if($am->pre == 'yes'){ $checked = 'checked'; } else { $checked = ''; } ?>
     <?php if($am->vendorstatus == 'eligible' && $am->vendorstatus != 'suspend'){ ?>
@@ -1669,7 +1712,7 @@ $background = '';
 		} 
 		else {
 			
-			if($am->special_requirements == 'fail'){
+			if($am->special_requirements == 'fail' || $am->acount_type == 'show' ){
 			$onclick = 'getwarningpopup';
 			$class_other = "sponsored";
 			}
@@ -1789,7 +1832,7 @@ $background = '';
 			}
 			else {
 			
-				if($am->special_requirements == 'fail') { 
+				if($am->special_requirements == 'fail' || $am->acount_type == 'show'  ) { 
 				//$images_text = 'NON-COMPLIANT';
 				$compliant_id = "noncompliant";
 				$title = 'Non-Compliant';
@@ -1894,4 +1937,47 @@ if( $am->subscribe_type == 'free' ) { ?>
 </div>
 </div>
 <div id="maskvrecdonee"></div>
+</div>
+
+<?php 
+$db = & JFactory::getDBO();
+$user = & JFactory::getUser();
+$blockedvendors = $this->blockedvendors;
+if($user->user_type == 16 )
+{
+if( $blockedvendors->block == 1 && $blockedvendors->block_complinace != 1 )
+$block_content = 'Your account settings are BLOCKED all <strong>UNVERIFIED</strong> Vendors from participating in projects. Therefore, these Vendors will not receive a notice regarding this project and will not be able to provide a proposal.';
+else if( $blockedvendors->block_complinace == 1 && $blockedvendors->block != 1)
+$block_content = 'Your account settings are BLOCKED all <strong>NON-COMPLIANT</strong> Vendors from participating in projects. Therefore, these Vendors will not receive a notice regarding this project and will not be able to provide a proposal.';
+else if( $blockedvendors->block == 1 && $blockedvendors->block_complinace == 1 )
+$block_content = 'Your account settings are BLOCKED all <strong>UNVERIFIED</strong> and <strong>NON-COMPLIANT</strong> Vendors from participating in projects. Therefore, these Vendors will not receive a notice regarding this project and will not be able to provide a proposal.';
+else
+$block_content = '';
+}
+else
+{
+if( $blockedvendors->block == 1 && $blockedvendors->block_complinace != 1 )
+$block_content = 'Your Company has BLOCKED all <strong>UNVERIFIED</strong> Vendors from participating in projects. Therefore, these Vendors will not receive a notice regarding this project and will not be able to provide a proposal.';
+else if( $blockedvendors->block_complinace == 1 && $blockedvendors->block != 1)
+$block_content = 'Your Company has BLOCKED all  <strong>NON-COMPLIANT</strong> Vendors from participating in projects. Therefore, these Vendors will not receive a notice regarding this project and will not be able to provide a proposal.';
+else if( $blockedvendors->block == 1 && $blockedvendors->block_complinace == 1 )
+$block_content = 'Your Company has BLOCKED all <strong>UNVERIFIED</strong> and <strong>NON-COMPLIANT</strong> Vendors from participating in projects. Therefore, these Vendors will not receive a notice regarding this project and will not be able to provide a proposal.';
+else
+$block_content = '';
+}
+
+?>
+<div id="boxesex" style="top:576px; left:582px;">
+<div id="submitex" class="windowex" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">NOTICE</font></span>
+</div></div>
+<div style="text-align:justify"><p class="block_unver"><?php echo $block_content;?></p>
+</div>
+<div style="padding-top:30px;" align="center">
+<div id="cancelex" name="doneex" value="Ok" class="blockunveriifed_vendor"></div>
+</div>
+</div>
+  <div id="maskex"></div>
 </div>

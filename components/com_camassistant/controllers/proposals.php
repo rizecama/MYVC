@@ -58,7 +58,8 @@ function not_interested(){
 	$db = JFactory::getDBO();
 	$id= JRequest::getVar('id','');
 	$rfp_id= JRequest::getVar('rfpid','');
-	$type= JRequest::getVar('type','');
+	$type = JRequest::getVar('type','');
+	
 	$user = JFactory::getUser();
        
 	if($type == 'invitation'){

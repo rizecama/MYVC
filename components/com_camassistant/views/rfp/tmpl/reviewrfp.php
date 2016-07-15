@@ -213,6 +213,10 @@ el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=rfp
 	var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:700}}"))
 	SqueezeBox.fromElement(el,options);
 G("#sbox-window").addClass("newclasssate");	
+}
+function goback()
+{
+window.location ='index.php?option=com_camassistant&controller=rfpcenter&task=dashboard&Itemid=125';
 }	
 </script>
 <style type="text/css">
@@ -308,26 +312,55 @@ $property = $db->loadObject();
 $detail="SELECT name,lastname,phone,extension,email FROM #__users where id='".$rfpinfo->cust_id."'";
 $db->Setquery($detail);
 $user_detail = $db->loadObjectlist();
-?>
+$pdetail = "SELECT user_id FROM #__cam_propertyowner_link where propertyowner_id='".$user->id."' and property_id='".$property_id."'";
+$db->Setquery($pdetail);
+$p_detail = $db->loadResult();
+$query = "SELECT U.*, R.* FROM #__cam_customer_companyinfo  as R LEFT JOIN  #__users as U ON R.cust_id = U.id LEFT JOIN #__cam_camfirminfo as C ON C.id=R.comp_id where R.cust_id='".$p_detail."'";
+$db->setQuery($query);
+$managerinfo = $db->loadObject();
+
+$client = "SELECT cust_id FROM #__cam_rfpinfo where id='".$rfpid."'";
+$db->Setquery($client);
+$client = $db->loadResult();
+
+$client_type = "SELECT user_type FROM #__users where id='".$client."'";
+$db->Setquery($client_type);
+$client_type = $db->loadResult();
+if($user->user_type == '16')
+$style = 'none';
+else
+$style = '';
+		?>
+
+
     <div id="rpf_ifo_text">
-<?php if($user->user_type == '16') {
-$propertyowneryinfo = $this->propertyowneryinfo;
-?>	
-<h1 style="line-height:20px;">Property Owner:</h1>
-<?PHP echo $propertyowneryinfo->steetaddress;  ?><br />
-<?PHP echo $propertyowneryinfo->city;  ?>, <?PHP echo $propertyowneryinfo->state?> <?PHP echo $propertyowneryinfo->zipcode;  ?><br />
-P: <?PHP echo $user->phone;  ?><br />
-<?php if($user->cellphone !='--'){?>
-Alt. Phone: <?PHP echo $user->cellphone; } ?><br />
-<?php } else {?>
+<?php if ( $client_type !=16 && $managerinfo ) { ?>	
 <h1 style="line-height:20px;">Property Management Company:</h1>
+
+<span><?PHP echo $managerinfo->comp_name;  ?></span>
+<?PHP echo $managerinfo->mailaddress;  ?><br />
+<?PHP echo $managerinfo->comp_city;  ?>, <?PHP echo $state_name;  ?> <?PHP echo $managerinfo->comp_zip;  ?><br />
+P: <?PHP echo $managerinfo->comp_phno;  ?><br />
+<?php if($managerinfo->comp_alt_phno!='--')
+{?>
+Alt. Phone: <?PHP echo $managerinfo->comp_alt_phno; } ?><br />
+
+<a href="http://<?PHP echo $managerinfo->comp_website;  ?>" target="_blank"><?PHP echo $managerinfo->comp_website;  ?></a>
+<?php  } else {?>
+<div style="display:<?php echo $style;?>">
+<h1 style="line-height:20px;">Property Management Company:</h1>
+
 <span><?PHP echo $RFP->comp_name;  ?></span>
 <?PHP echo $RFP->mailaddress;  ?><br />
 <?PHP echo $RFP->comp_city;  ?>, <?PHP echo $state_name;  ?> <?PHP echo $RFP->comp_zip;  ?><br />
 P: <?PHP echo $RFP->comp_phno;  ?><br />
-Alt. Phone: <?PHP echo $RFP->comp_alt_phno;  ?><br />
-<?php }?>
+<?php if($RFP->comp_alt_phno!='--')
+{?>
+Alt. Phone: <?PHP echo $RFP->comp_alt_phno; } ?><br />
+
 <a href="http://<?PHP echo $RFP->comp_website;  ?>" target="_blank"><?PHP echo $RFP->comp_website;  ?></a>
+</div>
+<?php }?>
 <h1 style="line-height:20px; margin-top:10px;">Property Manager:</h1>
 <?PHP echo $user_detail[0]->name;  ?> <?PHP echo $user_detail[0]->lastname;  ?><br />
 P: <?PHP echo $user_detail[0]->phone;  ?> (x<?PHP echo $user_detail[0]->extension;  ?>)<br />
@@ -881,8 +914,12 @@ $exist_workers = $this->old_workers ;
 </div></div>
 <div class="lineitem_pan" style="border:none;">
 <?php 
-//echo "<pre>"; print_r($this->invitations); echo "</pre>";
+
 $items = $this->invitations ;
+//echo "<pre>"; print_r($items); echo "</pre>";
+
+$invitations_type = $this->invitations_type ;
+//echo "<pre>"; print_r($invitations_type); echo "</pre>";
  ?>
 <div id="heading_vendors_inv">
 <div class="company_vendor_inv">COMPANY</div>
@@ -891,7 +928,10 @@ $items = $this->invitations ;
 </div>
 <?php 
 if($items) {
-foreach($items as $am ) {  
+foreach($items as $am ) { 
+foreach($invitations_type  as $type ) { 
+     if( $am->vendorid == $type->vendorid ) {
+
 	if( $am->uninvited != 'uninvited' ) {
 ?>
 <div id="preferredvendorsinvitations" style="width:657px;">
@@ -1022,8 +1062,8 @@ if( $am->subscribe_type == 'free' ) { ?>
 	  
     <div class="clr"></div>
   </div>
-  <?php } 
-  	}
+  <?php }} 
+  	} }
   }
   ?>
 <?php 
@@ -1043,7 +1083,7 @@ echo "<strong>Company: </strong>".$invites->company_name.'<br />' ;
 <?php } ?>
 <?php if($_REQUEST['var'] == 'view'){ ?> 
 <td><a style="vertical-align:top" href="javascript:PrintDiv();"><img src="templates/camassistant_left/images/PRINT.gif" border="0" /></a></td>
-<td><a href="javascript:history.go(-1)">
+<td><a href="javascript:goback();">
 <img src="templates/camassistant_left/images/goback.gif" alt="Cancel" style="vertical-align:middle; padding-right:0px;"/>
 </a></td><?php } ?></tr>
 

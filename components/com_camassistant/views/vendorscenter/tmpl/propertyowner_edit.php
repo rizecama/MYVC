@@ -49,7 +49,7 @@ window.location="index.php?option=com_camassistant&controller=boardmembers&task=
 </script>
 
 <div class="acount_status">
-<div class="ttl1">Acount Status</div>
+<div class="ttl1">Account Status</div>
 <div class="newtopborder1"></div>
 <div class="property_linkask">
 <div class="client_linkask">
@@ -78,13 +78,20 @@ window.location="index.php?option=com_camassistant&controller=boardmembers&task=
 </span>
 </div>
 <div class="signup">
+<form enctype="multipart/form-data"  method="post" name="VendorForm2" id="VendorForm2">
 <label>Title:</label>
-<select name="board_position"  disabled="disabled">
-<option value="<?php echo $position;?>"><?php echo $position;?></option>
-
+<select name="board_position" >
+<option <?php if( $position == 'Owner' ){ echo "selected='selected'"; } ?> value="Owner">Owner</option>
+<option <?php if( $position == 'President' ){ echo "selected='selected'"; } ?> value="President">President</option>
+<option <?php if( $position == 'Vice President' ){ echo "selected='selected'"; } ?> value="Vice President">Vice President</option>
+<option <?php if( $position == 'Treasurer' ){ echo "selected='selected'"; } ?> value="Treasurer">Treasurer</option>
+<option <?php if( $position == 'Secretary' ){ echo "selected='selected'"; } ?> value="Secretary">Secretary</option>
+<option <?php if( $position == 'Director' ){ echo "selected='selected'"; } ?> value="Director">Director</option>
 </select>
+
 </div>
 <div class="signup">
+
 <label>Salutation:</label>
 <select name="salutation"  disabled="disabled">
 <option <?PHP if($this->details->salutation == 'Mr.'){?> selected="selected" <?PHP } ?>>Mr.</option>
@@ -173,9 +180,6 @@ $states = $this->states[$i];
  <input id="fax_2" name="fax_2" type="text" disabled="disabled" class="sm-input" value="<?PHP echo $fax[1]; ?>"  "/> - 
  <input id="fax_3" name="fax_3" type="text" disabled="disabled" class="sm-input" value="<?PHP echo $fax[2]; ?>"  "/>
 </div>
-
-<form enctype="multipart/form-data"  method="post" name="VendorForm2" id="VendorForm2">
-
 <div class="clear"></div>
 <div class="client_permissions">
 <div class="inner_client-heading">

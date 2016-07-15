@@ -1,6 +1,8 @@
 <?php
 $vendor_data = $this->message;
+
 $docs_permission= $this->docs_permission;
+
 define( '_JEXEC', 1 );
 define( 'DS', DIRECTORY_SEPARATOR );
 require_once ( JPATH_BASE .DS.'Classes'.DS.'PHPExcel.php' );
@@ -22,6 +24,11 @@ $objPHPExcel->setActiveSheetIndex(0);
     				$objPHPExcel->getActiveSheet()->setCellValue(chr($char).$j, 'Phone');
 				$char++;
 			}
+			if( $docs_permission->w9 == '1' || $docs_permission->how_docs == 'all') {
+	    			$objPHPExcel->getActiveSheet()->setCellValue(chr($char).$j, 'W9');
+				$char++;
+			}
+			
 			if( $docs_permission->gli == '1' || $docs_permission->how_docs == 'all') {
 	    			$objPHPExcel->getActiveSheet()->setCellValue(chr($char).$j, 'GL');
 				$char++;
@@ -82,9 +89,15 @@ $objPHPExcel->setActiveSheetIndex(0);
 					$char = '66'; //(Ascii value of B)
 			
 					if( $docs_permission->phone_number == '1' ) {
-						$objPHPExcel->getActiveSheet()->setCellValue(chr($char).$k, $exp[11]);
+						$objPHPExcel->getActiveSheet()->setCellValue(chr($char).$k, $exp[12]);
 						$char++;
 					}
+					if( $docs_permission->w9 == '1' || $docs_permission->how_docs == 'all') {
+						
+			    			$objPHPExcel->getActiveSheet()->setCellValue(chr($char).$k, $exp[11]);					
+						$char++;
+					}
+					
 					if( $docs_permission->gli == '1' || $docs_permission->how_docs == 'all') {
 						if (strpos($exp[3], 'red') !== FALSE)
 					   	{
@@ -182,10 +195,30 @@ $objPHPExcel->setActiveSheetIndex(0);
 				$i++;
 			$j = $i+1;
 		}
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-		$title = 'compliancereports.xlsx'; //set title
-		$objWriter->save(str_replace(__FILE__, '/var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/compliance_reports/'.$title ,__FILE__));
-		header('Location: http://myvendorcenter.com/components/com_camassistant/assets/compliance_reports/compliancereports.xlsx');
-	
+    $sendmail = JRequest::getVar('send');
+	$today = date('m-d-Y H:i:s');
+	$today_explode = explode(' ',$today);
+	$path =   $_SERVER['DOCUMENT_ROOT'].'/creports';
+	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+	$objWriter->save(str_replace(__FILE__,$path.'/compliancereports.xls',__FILE__));
+	if( $sendmail == 'mail' ){
+		$user	= JFactory::getUser();
+		$body =  $this->reportmessage;
+		$body = str_replace('[USER FULL NAME]',$user->name.'&nbsp;'.$user->lastname,$body);
+		$body = str_replace('[TIME]',date("h:i A", strtotime($today_explode[1])),$body);
+		$body = str_replace('[DATE]',$today_explode[0],$body);
+		$mailfrom = 'support@myvendorcenter.com';
+		$from = 'MyVendorCenter';
+		$to = $user->email;
+		//$to = "rize.cama@gmail.com";
+		$subject = 'Compliance Report Status';
+		//$body = 'Please find the attachment for compliance status report.';
+		$attachment = "/var/www/vhosts/myvendorcenter.com/httpdocs/creports/compliancereports.xlsx";
+		JUtility::sendMail($mailfrom, $from, $to, $subject, $body, $mode=1, $cc=null, $bcc=null, $attachment, $replyto=null, $replytoname=null);
+		header('Location: index.php?option=com_camassistant&controller=rfpcenter&task=compliance_status_report_webpage');
+		}
+	else
+	{
+	header('Location: /creports/compliancereports.xls');
+	}
 ?>

@@ -31,48 +31,71 @@ class vinvitationsController extends JController
 	$db= JFactory::getDBO();
 	$user=JFactory::getUser();
 	//To get the manager company name
-	$companyname = "SELECT comp_name  FROM #__cam_customer_companyinfo where cust_id=".$user->id." ";
+	   $companyname ="SELECT comp_name,comp_phno  FROM #__cam_customer_companyinfo where cust_id=".$user->id." ";
 		$db->setQuery( $companyname );
-		$c_name = $db->loadResult();
-	//Completed
-	$body ="SELECT introtext  FROM #__content where id='257' ";
-		$db->setQuery( $body );
+		$list = $db->loadObject();
+		
+		$invitecode ="SELECT manager_invitecode  FROM #__users where id=".$user->id." ";
+		$db->setQuery( $invitecode );
+		$invitecode = $db->loadResult();
+		
+		$managerid ="SELECT managerid FROM #__cam_vendorinviation_mail where managerid=".$user->id."";
+		$db->setQuery( $managerid );
+		$managerid = $db->loadResult();
+		if($managerid)
+		
+			$query_rejectedemail ="SELECT email_text FROM #__cam_vendorinviation_mail where managerid=".$user->id."";
+		else
+		    $query_rejectedemail ="SELECT introtext  FROM #__content where id='257'";
+		
+		$db->setQuery( $query_rejectedemail );
 		$body = $db->loadResult();
-		$body = str_replace('[Manager Name]',$user->name.' '. $user->lastname,$body);
-		$body = str_replace('[Management Firm Name]',$c_name,$body);
-
+		$body = html_entity_decode($body);
+	    $body = str_replace("[Manager's Full Name]",$user->name.' '.$user->lastname,$body);
+		$body = str_replace('[Management Company]',$list->comp_name,$body);
+		$body = str_replace("[Manager's Primary Phone Number]",$list->comp_phno,$body);
+		$body = str_replace("[Master Account Preferred Vendor Code]",$invitecode,$body);
+        
 		$mailfrom = $user->email;
 		$fromname = $user->name.' '. $user->lastname;
 		//$assignuseremail = 'rize.cama@gmail.com';
 		$assignuseremail = 'support@myvendorcenter.com';
 		$mailsubject = 'Vendor Invitation';
-		$assignuseremail = JRequest::getVar('email','');
+		$cc = JRequest::getVar('email','');
 		$mailsubject = JRequest::getVar('subject','');
-		$mailfrom = $user->email ;
-		$res = JUtility::sendMail($mailfrom, $fromname, $assignuseremail, $mailsubject, $body, $mode = 1);
-		//To send the mail to CC
-		$cc = JRequest::getVar('ccemail','');
 		$cclist = explode(';',$cc);
-		for($c=0; $c<=count($cclist); $c++){
+		
+		for($c=0; $c<count($cclist); $c++){
 		$listcc = $cclist[$c];
-		if($listcc){
-		$res = JUtility::sendMail($mailfrom, $fromname, $listcc, $mailsubject, $body, $mode = 1);
-		}
-		}
-		//To CC
-		$ccemail = 'vendoremails@myvendorcenter.com';
-		$res = JUtility::sendMail($mailfrom, $fromname, $ccemail, $mailsubject, $body, $mode = 1);
-		//Completed
-		//Completed
-		$data['vendoremailid'] = JRequest::getVar('email','');
+		$data['vendoremailid'] = $listcc;
 		$data['vendoremailid'] = str_replace(' ','',$data['vendoremailid']);
 		$model = $this->getModel('vinvitations');
 		$save = $model->getsavedetails($data);
-		$newURL = "index.php?option=com_camassistant&controller=vinvitations&Itemid=".$_REQUEST['Itemid']."";
-		header('Location: '.$newURL);
-		//$msg="Vendor Invitation has been sent successfully.";
-		//$this->setRedirect( $link,$msg );
-	}	
+		
+		 $vendor_id = "SELECT id FROM #__users WHERE username='".$data['vendoremailid']."'";
+		$db->setQuery($vendor_id);
+		$vendor_id = $db->loadResult();
+		
+		if( $vendor_id ) 
+		 {
+		
+		   $preferedvendors = $model->addvendor($vendor_id);
+		 }
+		else {
+		
+		$res = JUtility::sendMail($mailfrom, $fromname, $listcc, $mailsubject, $body, $mode = 1);
+		$ccemail = 'vendoremails@myvendorcenter.com';
+		$res = JUtility::sendMail($mailfrom, $fromname, $ccemail, $mailsubject, $body, $mode = 1);
+		    }
+		}
+	
+	    $update_hide = "DELETE FROM #__cam_vendorinviation_mail  where managerid=".$user->id."";
+		$db->setQuery($update_hide);
+		$hide = $db->query();
+		
+		$msg='Vendor(s) invited successfully';
+		$this->setRedirect( "index.php?option=com_camassistant&controller=vinvitations&Itemid=".$_REQUEST['Itemid']."",$msg);
+		 }	
 	
 	function hideinvitation(){
 			$db =& JFactory::getDBO();
@@ -94,16 +117,27 @@ class vinvitationsController extends JController
 	function resendinvitation(){
 	$db= JFactory::getDBO();
 	$user=JFactory::getUser();
+	$managerid = JRequest::getVar('managerid','');
 	//To get the manager company name
-	$companyname = "SELECT comp_name  FROM #__cam_customer_companyinfo where cust_id=".$user->id." ";
+	    $companyname ="SELECT comp_name,comp_phno  FROM #__cam_customer_companyinfo where cust_id=".$user->id." ";
 		$db->setQuery( $companyname );
-		$c_name = $db->loadResult();
+		$list = $db->loadObject();
+		
+		$invitecode ="SELECT manager_invitecode  FROM #__users where id=".$user->id." ";
+		$db->setQuery( $invitecode );
+		$invitecode = $db->loadResult();
+		if($invitecode)
+		$invitecode = $invitecode;
+		else
+		$invitecode ='Please contact us for Invite Code';
 	//Completed
-	$body ="SELECT introtext  FROM #__content where id='257' ";
+	   $body ="SELECT introtext  FROM #__content where id='257' ";
 		$db->setQuery( $body );
 		$body = $db->loadResult();
-		$body = str_replace('[Manager Name]',$user->name.' '. $user->lastname,$body);
-		$body = str_replace('[Management Firm Name]',$c_name,$body);
+		$body = str_replace("[Manager's Full Name]",$user->name.' '.$user->lastname,$body);
+		$body = str_replace('[Management Company]',$list->comp_name,$body);
+		$body = str_replace("[Manager's Primary Phone Number]",$list->comp_phno,$body);
+		$body = str_replace("[Master Account Preferred Vendor Code]",$invitecode,$body);
 
 		$mailfrom = $user->email;
 		$fromname = $user->name.' '. $user->lastname;
@@ -118,7 +152,7 @@ class vinvitationsController extends JController
 		$res = JUtility::sendMail($mailfrom, $fromname, $ccemail, $mailsubject, $body, $mode = 1);
 		//Completed
 		//Completed
-		$update_hide = "UPDATE #__cam_newvendorinvitations SET date='".date('Y-m-d H:i')."' where vendoremailid ='".$assignuseremail."' and managerid=".$user->id." ";
+		$update_hide = "UPDATE #__cam_newvendorinvitations SET date='".date('Y-m-d H:i')."' where vendoremailid ='".$assignuseremail."' and managerid=".$managerid." ";
 		$db->setQuery($update_hide);
 		$hide = $db->query();
 		echo "success";
@@ -126,5 +160,83 @@ class vinvitationsController extends JController
 		//$msg="Vendor Invitation has been sent successfully.";
 		//$this->setRedirect( $link,$msg );
 	}
+	function saveinvitationmail()
+	{
+	
+		
+		$db =&JFactory::getDBO();
+		$user = &JFactory::getUser();
+		$mailtext['managerid'] = $user->id;
+		$emailtest = JRequest::getVar('mailtext','');
+		$mailtext['email_new'] = JRequest::getVar('email_new','');
+		$mailtext['subject_new'] = JRequest::getVar('subject_new','');
+		$mailtext['status'] = '1';
+		$emailtest = htmlentities($_REQUEST['mailtext'], ENT_QUOTES);
+		$emailtest = str_replace('\&quot','&quot',$emailtest);
+		$emailtest = str_replace('\\','',$emailtest);
+		$mailbody = $emailtest;
+		$mailtext['email_text'] = $mailbody;
+	   $model = $this->getModel('vinvitations');
+		$preid = $model->getexistingid($mailtext['managerid']);
+		if($preid->id)
+		$mailtext['id'] = $preid->id;
+		else
+		$mailtext['id'] = '';
+		$res = $model->store_mailtext($mailtext);
+		exit;
+	}
+	
+	
+	
+  function checktoallemails()
+	{
+	$db =& JFactory::getDBO();
+	$mail = JRequest::getVar('mailid','');
+	$query_email = "SELECT username FROM #__users WHERE  username='".$mail."' AND ( user_type='16' OR user_type='12' OR user_type='13' )";
+	$db->setQuery( $query_email );
+	$result_email = $db->loadResult();
+	if($result_email)
+	$msg=1;
+	else
+	$msg=0;
+	
+	echo $msg; 
+	exit;
+	
+	}
+//invite venodor codes
+
+	function savevendorcode()
+		{
+			$db =& JFactory::getDBO();
+			$user =& JFactory::getUser();
+			$newcode = JRequest::getVar('invitecode','');
+			$query = "UPDATE #__users SET manager_invitecode='".$newcode."' where id='".$user->id."' ";
+			$db->setQuery( $query );
+			$res = $db->query();
+			if($res)
+				{
+					$msg='Invitation code updated successfully';
+					$this->setRedirect( "index.php?option=com_camassistant&controller=vinvitations&task=invitevendorcode&Itemid=".$_REQUEST['Itemid']."",$msg);
+				}
+		}
+	
+	function checkcode(){
+		$db =& JFactory::getDBO();
+		$user =& JFactory::getUser();
+		$code = JRequest::getVar('newcode','');
+		$id = "SELECT id FROM #__users WHERE  manager_invitecode='".$code."' and id !='".$user->id."'";
+		$db->setQuery( $id );
+		$result = $db->loadResult();
+		if($result)
+		$msg=1;
+		else
+		$msg=0;
+		echo $msg; 
+		exit;
+	}	
+//	
+
+
 }
 ?>

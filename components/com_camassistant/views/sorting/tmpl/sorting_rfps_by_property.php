@@ -200,7 +200,7 @@ if ($user->user_type=='12') { ?>
 		if(count($this->RFP_list_by_Prp)==0) {
 	?>
 	<tr class="table_blue_rowdots">
-   <td align="center" valign="middle" colspan="3">No Results Found</td>
+   <td align="center" valign="middle" style="margin-top:10px; font-weight:bold;" colspan="5">You don't have any requests</td>
  </tr>
  <?PHP } ?>
 

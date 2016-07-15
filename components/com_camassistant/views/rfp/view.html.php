@@ -83,6 +83,8 @@ class rfpViewrfp extends Jview
 		$rfpid = JRequest::getVar('rfpid','');
 		$rfp_data = $model->getrfpinfo($rfpid); 
 		$this->assignRef('rfp_data',$rfp_data);
+		$blockedvendors = $model->getblockedvendors();
+		$this->assignRef('blockedvendors',$blockedvendors);
 		if( $user->user_type == '16' )
 		$this->setLayout('propertywoner_saverfpmsg');
 		else
@@ -336,7 +338,8 @@ $email = JHTML::_('select.radiolist', $options, 'email', 'class="inputbox"', 'va
 			//To get the invite vendors
 			$invitations = $model->getinvitevendor($rfpinfo->id);
 			$this->assignRef('invitations',$invitations);
-			
+			$invitations_type = $model->getinvitevendor_type($rfpinfo->id);
+			$this->assignRef('invitations_type',$invitations_type);
 			//Completed
 			$this->assignRef('userinfo',$userinfo);
 			
@@ -547,6 +550,9 @@ $email = JHTML::_('select.radiolist', $options, 'email', 'class="inputbox"', 'va
 		else if($task == 'invited_basicrfp' ){
 		$properties = $model->getallproperties();
 		$this->assignRef('properties',$properties);
+		if( $user->user_type == '16' )
+		$this->setLayout('propertywoner_creation_basic');
+		else
 		$this->setLayout('creation_basic');
 		$getindustires = $model->getallindustries(); 
 		$this->assignRef('industries',$getindustires);

@@ -396,9 +396,13 @@ h6 {
 
 #forgot {
 
-	float:right; color:#FFF; font-size:14px; margin-top:2px;
+	float:right; color:#FFF; font-size:14px; margin-top:2px; text-decoration:none;
 
 }
+#forgot:hover {
+text-decoration:underline;
+}
+
 
 #forgot a {
 
@@ -3281,7 +3285,7 @@ left: 0;}
 .imges-side_owner-1 {
   margin: 0 auto;
   max-width: 401px;
-  padding: 20px 0;
+  margin: 20px auto;
   text-align: center;
   width: 100%;
 }
@@ -3419,7 +3423,7 @@ float:left;
 .text-side_owner a:hover{
   text-decoration:underline;
 }
-.property_owner:hover {
+.imges-side_owner-1:hover .property_owner {
   background: #2c3349 none repeat scroll 0 0;
   cursor: pointer;
 }
@@ -3441,6 +3445,29 @@ float:left;
 .text-side_owner > p sup {
   font-size: 7px;
   margin-left: -2px;
+}
+#supportcallnumber .material-icons {
+  float: left;
+  line-height: 16px;
+  padding-right: 2px;
+  font-size: 16px;
+}
+.left-pan.login-pan .login button#logibtn {
+  background: #77b800 none repeat scroll 0 0;
+  border: 4px solid #ffffff;
+  box-shadow: 0 0 15px #5a9400 inset;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  height: 44px;
+  width: 100%;
+}
+
+ .login-pan .or-bg {
+  clear: both;
+}
+.left-pan.login-pan .login button#logibtn:hover {
+  background: #6aa401 none repeat scroll 0 0;
 }
 /* Rotating background */
 .fakeBG {

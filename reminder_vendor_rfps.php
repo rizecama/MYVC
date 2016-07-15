@@ -11,20 +11,21 @@ require_once ( JPATH_BASE .DS.'libraries'.DS.'joomla'.DS.'factory.php' );
 $mainframe =& JFactory::getApplication('site');
 
 $db =& JFactory::getDBO();
-$sql_openrfps = "SELECT id, update_date, property_id, cust_id, industry_id, projectName from `#__cam_rfpinfo` where rfp_type='rfp' and publish='1' ";
+ $sql_openrfps = "SELECT id, createdDate, update_date, property_id, cust_id, industry_id, projectName from `#__cam_rfpinfo` where rfp_type='rfp' and publish='1'";
 $db->setQuery($sql_openrfps);
 $rfps = $db->loadObjectList();
 //echo "<pre>"; print_r($rfps); exit;
 for( $r=0; $r<count($rfps); $r++ ){
 	$today = date('Y-m-d');
 	//calculate days in between present and db date
-	$dbdate = explode('-',$rfps[$r]->update_date);
+	$dbdate = explode('-',$rfps[$r]->createdDate);
 	$rfpdate = $dbdate[2] . '-' . $dbdate[0] . '-' . $dbdate[1] ;
-	$date_difference = strtotime($today) - strtotime($rfpdate) ;
-	$days = $date_difference / 86400 ;
-	$reminder = ($days % 3);
 	
-	if($reminder == '0'){
+	$date_difference = strtotime($today) - strtotime($rfpdate) ;
+	
+	$days = $date_difference / 86400 ;
+	
+	if($days == '2' || $days == '4' || $days == '7' ||  $days == '14'){
 		$sql_invites = "SELECT user_id from `#__cam_vendor_availablejobs` where rfp_id=".$rfps[$r]->id." and status = '0' and not_interested = '0' ";
 		$db->setQuery($sql_invites);
 		$invitations = $db->loadObjectList();
@@ -81,14 +82,14 @@ for( $r=0; $r<count($rfps); $r++ ){
 				if($invited) {	
 					if($subscribe == 'yes') {
 					$successMail =JUtility::sendMail($from, $from_name, $to_rize, $sub, $body,$mode = 1);
-					$successMail =JUtility::sendMail($from, $from_name, $to_eric, $sub, $body,$mode = 1);
-					$successMail =JUtility::sendMail($from, $from_name, $vendormail, $sub, $body,$mode = 1);
+					//$successMail =JUtility::sendMail($from, $from_name, $to_eric, $sub, $body,$mode = 1);
+					//$successMail =JUtility::sendMail($from, $from_name, $vendormail, $sub, $body,$mode = 1);
 					//To send the mail to CC
 					$cclist = explode(';',$vendorccmail);
 					for($c=0; $c<=count($cclist); $c++){
 					$listcc = $cclist[$c];
 					if($listcc){
-					$successMail =JUtility::sendMail($from, $from_name, $listcc, $sub, $body,$mode = 1);
+					//$successMail =JUtility::sendMail($from, $from_name, $listcc, $sub, $body,$mode = 1);
 					}
 					} 
 					}

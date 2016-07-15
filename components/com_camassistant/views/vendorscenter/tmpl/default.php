@@ -80,7 +80,20 @@ error_reporting(0);
 #boxesvrecdone #submitvrecdone a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
 #donevrecdone {border:0 none; cursor:pointer; height:30px; margin-left:-17px; margin-top:-29px; width:474px; float:left; }
 
+#maskex { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesex .windowex {  position:absolute;  left:0;  top:0;  width:350px;  height:150px;  display:none;  z-index:9999;  padding:20px;}
+#boxesex #submitex {  width:372px;  height:164px;  padding:10px;  background-color:#ffffff;}
+#boxesex #submitex a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#doneex {border:0 none;cursor:pointer;padding:0; color:#000000; font-weight:bold; font-size:20px; margin:0 auto; margin-top:6px;}
+#closeex {border:0 none;cursor:pointer;height:30px;margin-left:59px;padding:0;float:left;}
 
+
+#maskvm {  position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
+#boxesvm .windowvm {  position:absolute;  left:0;  top:0;  width:1300px;  height:150px;  display:none;  z-index:9999;  padding:38px 10px 3px 10px;}
+#boxesvm #submitvm {  width:345px;  height:144px;  padding:10px;  background-color:#ffffff;}
+#boxesvm #submitvm a{ text-decoration:none; color:#000000; font-weight:bold; font-size:20px;}
+#donevm {border:0 none; cursor:pointer; height:30px; margin-left:-17px; margin-top:-29px; width:474px; float:left; }
+#closevm {  margin: -2px -4px 7px 158px;;  width:167px;}
 
 </style>
 <link href="cam.css" rel="stylesheet" type="text/css" />
@@ -148,6 +161,92 @@ else {
 			matchesb = matchesb.join(',') ;
 			
 H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=addvendor", {vendorid: ""+matchesb+""}, function(data){
+	
+	if(data){
+	location.reload();
+	}
+});
+}
+}
+
+//To add the master myvendors 
+function addtomastermyvendors()
+{
+var matchesc = [];
+var matchesb = [];
+var countc = 0 ;
+H(".preferredvendors:checked").each(function() {
+    matchesc.push(this.value);
+	countc++ ;
+});
+if(countc == '0'){
+alert("Please make a selection to ADD the vendors.");
+}
+else {
+	H(".preferredvendors:checked").each(function() {
+			
+			matchesb.push(this.value);
+			});
+			matchesb = matchesb.join(',') ;
+			
+H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=check_myvendorlist",{vendorid: ""+matchesb+""}, function(data){
+		if(data==1)
+		geterror_popup();
+else {
+H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=addtomyvendor", {vendorid: ""+matchesb+""}, function(data){
+	
+	if(data){
+	window.location ="index.php?option=com_camassistant&controller=vendorscenter&task=mastermyvendors&Itemid=279";
+	}
+});
+}
+});
+}
+
+}
+
+function geterror_popup(){
+        H= jQuery.noConflict();
+		var maskHeight = H(document).height();
+		var maskWidth = H(window).width();
+		H('#maskex').css({'width':maskWidth,'height':maskHeight});
+		H('#maskex').fadeIn(100);
+		H('#maskex').fadeTo("slow",0.8);
+		var winH = H(window).height();
+		var winW = H(window).width();
+		H("#submitex").css('top',  winH/2-G("#submitex").height()/2);
+		H("#submitex").css('left', winW/2-G("#submitex").width()/2);
+		H("#submitex").fadeIn(2000);
+		H('.windowex #cancelex').click(function (e) {
+		e.preventDefault();
+		H('#maskex').hide();
+		H('.windowex').hide();
+		});
+
+	}
+
+//To add the vendor as preferred vendor
+function sendpreferredvendor_invitation(){
+//H('#companyid'+id).html('Adding...');
+var matchesc = [];
+var matchesb = [];
+var countc = 0 ;
+H(".coworkers:checked").each(function() {
+    matchesc.push(this.value);
+	countc++ ;
+});
+if(countc == '0'){
+alert("Please make a selection to ADD the vendors.");
+}
+else {
+	H(".coworkers:checked").each(function() {
+			myString = this.value ;
+			var myArray = myString.split('-');
+			matchesb.push(myArray[1]);
+			});
+			matchesb = matchesb.join(',') ;
+			
+H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=addpreferredvendor", {vendorid: ""+matchesb+""}, function(data){
 	
 	if(data){
 	location.reload();
@@ -286,6 +385,41 @@ else {
 		
 	}
 }
+//To delete vendor from preferred vendors list
+function deletereferredvendors_list(){
+L = jQuery.noConflict();
+var matches = [];
+var matchesa = [];
+var countp = 0 ;
+L(".preferredvendors:checked").each(function() {
+    matches.push(this.value);
+	countp++ ;
+});
+if(countp == '0'){
+alert("Please make a selection to REMOVE the vendors.");
+}
+else {
+		
+		L(".preferredvendors:checked").each(function() {
+				matchesa.push(this.value);
+			});
+		matchesa = matchesa.join(',') ;
+		H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=checkvendorpre", {vendorid: ""+matchesa+""}, function(datares){
+		datas = datares.trim();
+		
+		
+			if( datas == 'cannot' ) {
+				geterrorpopuptodelete();
+			}	
+			else{
+				getnormalpopup_master(matchesa);
+			}
+		});
+		
+		
+	}
+}
+
 function geterrorpopuptodelete(){
 		var maskHeight = L(document).height();
 		var maskWidth = L(window).width();
@@ -323,7 +457,8 @@ function getnormalpopup(matchesa){
 		e.preventDefault();
 		L('#maskv').hide();
 		L('.windowv').hide();
-				H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=removevendor", {vendorid: ""+matchesa+""}, function(data){
+		
+		L.post("index2.php?option=com_camassistant&controller=vendorscenter&task=removevendor", {vendorid: ""+matchesa+""}, function(data){
 				if(data==1){
 				location.reload(); 
 				}
@@ -337,6 +472,40 @@ function getnormalpopup(matchesa){
 		e.preventDefault();
 		L('#maskv').hide();
 		L('.windowv').hide();
+		});
+}
+
+function getnormalpopup_master(matchesa){
+		var maskHeight = L(document).height();
+		var maskWidth = L(window).width();
+		L('#maskvm').css({'width':maskWidth,'height':maskHeight});
+		L('#maskvm').fadeIn(100);
+		L('#maskvm').fadeTo("slow",0.8);
+		var winH = L(window).height();
+		var winW = L(window).width();
+		//L("#submitv").css('top',  '300');
+		//L("#submitv").css('left', '582');
+		L("#submitvm").css('top',  winH/2-L("#submitv").height()/2);
+		L("#submitvm").css('left', winW/2-L("#submitv").width()/2);
+		L("#submitvm").fadeIn(2000);
+		L('.windowvm .continue_delpre').click(function (e) {
+		e.preventDefault();
+		L('#maskvm').hide();
+		L('.windowvm').hide();
+		L.post("index2.php?option=com_camassistant&controller=vendorscenter&task=removevendor_preferredlist", {vendorid: ""+matchesa+""}, function(data){
+				if(data){
+				location.reload(); 
+				}
+				else{
+				alert("Not able to delete the vendor. Please contact support team. ");
+				}
+				
+			});
+		});
+		L('.windowvm .cancel_delpre').click(function (e) {
+		e.preventDefault();
+		L('#maskvm').hide();
+		L('.windowvm').hide();
 		});
 }
 
@@ -378,7 +547,8 @@ else {
 			});
 			matchese = matchese.join(',') ;
 		H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=excludevendor", {vendorid: ""+matchese+""}, function(data){
-		if(data==' removed'){
+		
+		if(data==1){
 		location.reload();
 		}
 		else{
@@ -747,7 +917,7 @@ function vendor_mails(){
 			});
 		matchesar = matchesar.join(',') ;
 		el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=vendorscenter&task=sendmail_vendors&vendors='+matchesar;
-		var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y: 530}}"))
+		var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y: 480}}"))
 		SqueezeBox.fromElement(el,options);
 	}
 }
@@ -796,12 +966,14 @@ function addEventa2(id2)
 	
 	H(document).ready( function(){
 	H('.rejectrecommendations').click(function(){
+		H(this).addClass('loader');
 		var recid = H(this).attr('rel');
 				H.post("index2.php?option=com_camassistant&controller=vendorscenter&task=rejectrecs", {Id: ""+recid+""}, function(data){
 					location.reload();
 				});	
 	});
 	H('.acceptrecommendations').click(function(){
+		H(this).addClass('loader');
 		var totalid = H(this).attr('rel');
 		var bothids = totalid.split('-');
 		// To check the vendor is already in his list
@@ -1088,7 +1260,7 @@ echo "<font style='font-weight:bold;'>MY VENDORS</font>";
 <?php
 
 
-$star_vendors = $this->corporate ;
+$star_vendors = $this->corporatevendors_star ;
 
 if($star_vendors){
 	foreach($star_vendors as $star){
@@ -1104,12 +1276,12 @@ if($star_vendors){
 <?php 
 $items = $this->items;
 $firmids = $this->firmids ;
-//echo "<pre>"; print_r($firmids ); echo "</pre>";exit;
+//echo "<pre>"; print_r($items ); echo "</pre>";exit;
 $count_corporate = 0;
 if($items) {
 foreach($items as $am ) {  
 
-		if($user->user_type == '13' && $user->accounttype == 'master' || $user->user_type == '16') {
+		if(($user->user_type == '13' && $user->accounttype == 'master') || $user->user_type == '16') {
 			if( $am->subscribe_type == 'free' && $am->unverified == 'hide' )
 				$display_block = 'none';
 			else
@@ -1119,10 +1291,19 @@ foreach($items as $am ) {
 				$display_nonc = 'none';
 			else
 				$display_nonc = '';
+				
+			if( $am->per_vendor == 'hide' && $am->star_vendor == 'hide' )
+				$display_pre = 'none';
+			else
+				$display_pre = '';
+			
+				
 		}
 		else{
 			$display_nonc = '';
 			$display_block = '';
+			$display_pre ='';
+				
 		}
 
 	if( $compliance_filter == 'comp' )
@@ -1140,7 +1321,7 @@ foreach($items as $am ) {
 			$display_noncomp = 'none';
 		}
 			
-if( $display_block == 'none' || $display_comp == 'none' ||  $display_noncomp == 'none' || $display_nonc == 'none'){		
+if( $display_block == 'none' || $display_comp == 'none' ||  $display_noncomp == 'none' || $display_nonc == 'none' || $display_pre == 'none' ){		
 	$final_display = 'none';
 	$count_corporate ++ ;
 	}
@@ -1153,13 +1334,13 @@ else{
 	$checkbox = '';
 	if( $am->unverified == 'hide' && $am->block_nonc == 'hide' )
 		{
-			if( $am->subscribe_type == 'free' && ( $am->final_status == 'fail' || $am->final_status == 'medium') ){
+			if( ( $am->subscribe_type == 'free' || $am->subscribe_type == '' ) && ( $am->final_status == 'fail' || $am->final_status == 'medium') ){
 			$args = 'both';
 			}
-			else if( $am->subscribe_type == 'free' && $am->final_status == 'success' ){
+			else if( ( $am->subscribe_type == 'free' || $am->subscribe_type == '' ) && $am->final_status == 'success' ){
 			$args = 'un';
 			}
-			else if( $am->subscribe_type != 'free' && ( $am->final_status == 'fail' || $am->final_status == 'medium') ){
+			else if( ( $am->subscribe_type != 'free' || $am->subscribe_type != '' )&& ( $am->final_status == 'fail' || $am->final_status == 'medium') ){
 			$args = 'nonc';
 			}
 			else{
@@ -1169,7 +1350,7 @@ else{
 		}
 	else if( $am->unverified == 'hide' )
 		{
-			if( $am->subscribe_type == 'free' ){
+			if( $am->subscribe_type == 'free' || $am->subscribe_type == '' ){
 			$args = 'un';
 			}
 			else{
@@ -1312,7 +1493,7 @@ else{
 					$id = 'nostandards';
 				}
 				else{
-					if($am->final_status == 'fail' || $am->termsandc == 'fail') {
+					if($am->final_status == 'fail' || $am->termsandc == 'fail' || $am->acount_type == 'show' ) {
 					//$text = "NON-COMPLIANT";
 					$id = 'noncompliant';
 					$title = 'Non-Compliant';
@@ -1375,19 +1556,26 @@ if( $am->subscribe_type == 'free'  || $am->subscribe_type=='' ) { ?>
 	</div>
 	
 	<?php 
-	if($user->user_type == '13' && $user->accounttype == 'master') 
+	if($user->user_type == '13' && $user->accounttype == 'master') {
 	$textshows =  "Remove from Corporate Preferred Vendors";
-	else
+	$addmyvendors ='';
+	}
+	else{
 	$textshows =  "Remove from My Vendors ";
-
+	$addmyvendors ='none';
+    }
 	
 	if($items) { ?>
 	<div align="center" style="margin-top:17px;">
 	<?php if($user->user_type!= '16')
 	{?>
+	<?php if($user->user_type == '13' && $user->accounttype == 'master') { ?>
+	<a title="<?php echo $textshows; ?>" class="delete_list" href="javascript:deletereferredvendors_list();"></a>
+	<?php } else {?>
 	<a title="<?php echo $textshows; ?>" class="delete" href="javascript:deletevendor();"></a>
+	<?php }?>
+	<a title="Add to My Vendors"  style="display:<?php echo $addmyvendors;?>" class="addicon" href="javascript:addtomastermyvendors();"></a>
 	<a title="Email Vendor(s)" class="vendor_mails" href="javascript:vendor_mails();"></a>
-	
 	<a title="Create a new Basic Request" class="basicrequest" href="javascript:basicrequest('pre');"></a>
 	<a title="Invite Vendor(s) to existing Basic Request" class="basicrequest_invite" href="javascript:inviteto_basicrequest('pre','<?php echo $basics; ?>');"></a>
 	<a title="Recommend to Co-Workers" class="vendor_recommend" href="javascript:vendor_recommend(<?php echo $height; ?>);"></a>
@@ -1459,8 +1647,9 @@ if($vendor_first){
 }
 
 //echo "<pre>"; print_r($first_vendors); echo "<pre>";
-//echo "<pre>"; print_r($this->corporate); echo "<pre>";
+
 $corporate = $this->corporate ;
+//echo "<pre>"; print_r($corporate); echo "<pre>";
 $count_c_mgr = 0;
  if($corporate) {
 foreach($corporate as $am ) {  
@@ -1494,7 +1683,10 @@ foreach($corporate as $am ) {
 	else
 		$display_nonc = '';
 
-
+     if( $am->per_vendor == 'hide' && $am->star_vendor == 'hide' )
+				$display_pre = 'none';
+			else
+				$display_pre = '';
 
 	if( $compliance_filter == 'comp' )
 		{
@@ -1512,7 +1704,7 @@ foreach($corporate as $am ) {
 		}
 		
 				
-		if( $display == 'none' || $display_block1 == 'none' || $display_comp == 'none' || $display_noncomp == 'none' || $display_nonc =='none' ){
+		if( $display == 'none' || $display_block1 == 'none' || $display_comp == 'none' || $display_noncomp == 'none' || $display_nonc =='none' || $display_pre =='none' ){
 			$final_disp = 'none';
 			$count_c_mgr ++;
 		}
@@ -1626,7 +1818,7 @@ foreach($corporate as $am ) {
 					$id = 'nostandards';
 				}
 				else{
-					if($am->final_status == 'fail' || $am->termsandc == 'fail') {
+					if($am->final_status == 'fail' || $am->termsandc == 'fail' || $am->acount_type == 'show' ) {
 					//$text = "NON-COMPLIANT";
 					$id = 'noncompliant';
 					$title = 'Non-Compliant';
@@ -1723,7 +1915,14 @@ if( $am->subscribe_type == 'free' ) { ?>
 	}
 	?>
 
-	  
+<?php
+if($user->user_type == '13' && $user->accounttype == 'master') 
+	$dis_cowrker =  'none';
+	else
+	$dis_cowrker =  '';
+	
+?>	  
+<div style="display:<?php echo $dis_cowrker;?>">	  
 	  <div id="i_bar">
 <div id="i_icon">
 <a href="index2.php?option=com_content&amp;view=article&amp;id=250&amp;Itemid=113" rel="{handler: 'iframe', size: {x: 680, y: 530}}" class="modal" title="Click here" mce_style="text-decoration: none;" style="text-decoration: none;"><img src="templates/camassistant_left/images/info_icon2.png" style="float:right;"> </a>
@@ -1739,8 +1938,8 @@ if( $am->subscribe_type == 'free' ) { ?>
 <div class="apple_vendor">APPLE RATING</div>
 <div class="compliant_vendor" style="padding-left:3px;">COMPLIANCE STATUS</div>
 </div>
-
-<div class="totalvendorspre_preferred"> 
+</div>
+<div class="totalvendorspre_preferred" style="display:<?php echo $dis_cowrker;?>"> 
 
   <?php //echo "<pre>"; print_r($firmids); exit; ?>
 	  <?php
@@ -1967,7 +2166,7 @@ foreach($firmids as $am ) {
 					$id = 'nostandards';
 				}
 				else{
-					if($am->final_status == 'fail' || $am->termsandc == 'fail') {
+					if($am->final_status == 'fail' || $am->termsandc == 'fail' || $am->acount_type == 'show' ) {
 					//$text = "NON-COMPLIANT";
 					$id = 'noncompliant';
 					$title = 'Non-Compliant';
@@ -2027,15 +2226,17 @@ if( $am->subscribe_type == 'free' ) { ?>
 	?> 
 	</div>
 	<?php
-	if($user->user_type == '13' && $user->accounttype == 'master') 
-	$textshows_co =  "Add to Corporate Preferred Vendors";
-	else
-	$textshows_co =  "Add to My Vendors";
-	
+	if($user->user_type == '13' && $user->accounttype == 'master') {
+	$dis_pre =  '';
+	}
+	else{
+	$dis_pre =  'none';
+	}
 	 if($firmids) { ?>
-	<div align="center" style="margin-top:17px;">
+	<div align="center" style="margin-top:17px; display:<?php echo $dis_cowrker;?>">
 	<?php if($user->user_type != '16'){ ?>
-	<a title="<?php echo $textshows_co; ?>" class="addicon" href="javascript:sendinvitation();"></a>
+	<a title="Add to Corporate Preferred Vendors" class="addpreferredvendoricon" style= "display:<?php echo $dis_pre;?>" href="javascript:sendpreferredvendor_invitation();"></a>
+	<a title="Add to My Vendors" class="addicon" href="javascript:sendinvitation();"></a>
 	<a title="Email Vendor(s)" class="vendor_mails" href="javascript:vendor_mails();"></a>
 	<a title="Create a new Basic Request" class="basicrequest" href="javascript:basicrequest('cow');"></a>
 	<a title="Invite Vendor(s) to existing Basic Request" class="basicrequest_invite" href="javascript:inviteto_basicrequest('cow','<?php echo $basics; ?>');"></a>
@@ -2062,6 +2263,21 @@ if( $am->subscribe_type == 'free' ) { ?>
 
 <div id="closev" name="closep" value="Cancel"><img src="templates/camassistant_left/images/cancel.gif" /></div>
 <div id="donev"  name="donev" value="Ok"><img src="templates/camassistant_left/images/ok.gif" /></div>
+</div>
+</form>
+
+</div>
+  <div id="maskvm"></div>
+</div>
+
+<div id="boxesvm" class="boxesvm">
+<div id="submitvm" class="windowvm" style="top:300px; left:582px; border:4px solid #8FD800; position:fixed;">
+<br/>
+<p align="center" style="color:gray;">Are you sure you want to REMOVE this Vendor from your Corporate Preferred Vendor list?</p>
+<div class="mainformbutton">
+<form name="edit" id="edit" method="post">
+<a class="cancel_delpre" href="javascript:void(0);"></a>
+<a class="continue_delpre" href="javascript:void(0);"></a>
 </div>
 </form>
 
@@ -2238,4 +2454,19 @@ H("#proposalDueDate").click(function () {
 </div>
 </div>
 <div id="maskvrecdone"></div>
+</div>
+
+<div id="boxesex" style="top:576px; left:582px;">
+<div id="submitex" class="windowex" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red; margin-top: 7px;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">ERROR</font></span>
+</div></div>
+<div style="text-align:justify"><p class="Corporate_status">This Vendor is already added as a My Vendor</p>
+</div>
+<div style="padding-top:22px;" align="center">
+<div id="cancelex" name="doneex" value="Ok" class="Corporate_statusbutton"></div>
+</div>
+</div>
+  <div id="maskex"></div>
 </div>

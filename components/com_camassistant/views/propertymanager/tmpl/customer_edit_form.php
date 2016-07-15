@@ -31,9 +31,39 @@ print_r($properties);exit;*/
 width:305px;
 }
 </style>
+<script type="text/javascript" src="<?php echo Juri::base(); ?>components/com_camassistant/skin/js/jquery-1.4.4.min.js"></script>
 <script language="javascript" type="text/javascript">
+G = jQuery.noConflict();
+
 function validate1(){
- var frm = document.adminForm;
+var frm = document.adminForm;
+email = frm.email.value;
+ if(email == '')
+ {
+ alert('Please enter your email');
+ frm.email.focus();
+ return false;
+ }
+ 
+ var mail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+ if(mail.test(frm.email.value)==false)
+ {
+ alert("Please enter the valid email");
+ frm.email.focus();
+ return false;
+ }
+ if( email )
+ {
+
+ G.post("index2.php?option=com_camassistant&controller=propertymanager&task=checktoallemails", {mailid: ""+email+""}, function(data){
+		if(data == 1){
+		alert("Already user exists with this email");
+		return false;
+		}
+		else
+		frm.submit();
+ });
+ }
 /* if(frm.comp_name.value == '')
  {
  alert('Please enter company name');
@@ -127,7 +157,7 @@ function validate1(){
 
 	 else {*/
 
-   frm.submit();
+   //frm.submit();
 /* }*/
 }
 //Fun. to send for showing a page of view/edit property form 
@@ -309,13 +339,8 @@ if ($user->user_type=='12') { ?>
 </table>
 </div>
 
-<div class="signup" style=" width:400px; padding-top:5px;">
-User Name/e-mail Address:
-  <input name="username" type="text" style="width:220px; background-color: rgb(102, 102, 102); color: rgb(255, 255, 255);" value="<?php echo $this->details->username; ?>" readonly=""/>
-
-  </div>  
-  <div class="signup" style=" width:400px; padding-top:5px;">
-Notification email address: &nbsp;&nbsp;<input name="email" type="text" style="width:220px;" value="<?php echo $this->details->email; ?>" />
+  <div class="signup" style=" width:400px; padding-top:5px; text-align:left">
+Primary Email Address (Username): &nbsp;&nbsp;<input name="email" type="text" style="width:220px;" value="<?php echo $this->details->username; ?>" />
 
   </div>
   <div class="signup">

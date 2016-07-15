@@ -326,6 +326,7 @@ function getmasterPending(){
 		
 		$db->setQuery($query);
         $pending=$db->loadObjectList();
+		
 		for( $q=0; $q<count($pending); $q++ ){
 				$query = "SELECT permission from #__cam_master_email_compliance_status where masterid=".$pending[$q]->userid." ";
 				$db->setQuery($query);
@@ -404,7 +405,7 @@ function getmasterPending(){
 		}
 		
 				
-		//echo "<pre>"; print_r($pending); echo "</pre>";	
+		
 		//Completed
 		return $pending;
 }
@@ -1451,7 +1452,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 	//Function to get the code data with master details
 	function getcodedatenew($code){
 		$db =& JFactory::getDBO();
-		$code_data = "SELECT id, masterid, renewtype, cost FROM #__cam_master_vendorcodes where code='".$code."' ";
+		$code_data =  "SELECT id, masterid, renewtype, cost FROM #__cam_master_vendorcodes where code='".$code."' and publish=1";
 		$db->setQuery( $code_data );
 		$code_info = $db->loadObject();
 		return $code_info;

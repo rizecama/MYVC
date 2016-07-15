@@ -174,11 +174,11 @@ class vendorscenterModelvendorscenter extends Jmodel
 		else
 		$whers_cond = 'U.userid='.$usercreator.'';
 		
-$query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax_id,V.tax_id,U.vendortype,U.vid,U.v_id,U.status,U.inhousevendors,U.userid,W.name, W.lastname, W.id, W.subscribe, W.ccemail, W.subscribe_type from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and W.block='0' AND U.exclude!='yes' and U.search!='yes'and W.search='' and ".$whers_cond." ".$where." ";
+$query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax_id,V.tax_id,U.vendortype,U.vid,U.v_id,U.status,U.inhousevendors,U.userid,W.name, W.lastname, W.id, W.subscribe, W.ccemail, W.subscribe_type from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and W.block='0' AND U.exclude!='yes' and U.search!='yes'and W.search='' and ".$whers_cond."";
 		//echo $query; exit;
 		$db->setQuery($query);
 		$result = $db->loadObjectList();
-     //print_r($result);exit;
+    // echo '<pre>';print_r($result);
 			//To get the vendors based on industry
 			if($industrytype){
 			$checkvendors = "SELECT distinct(user_id) FROM #__cam_vendor_industries where industry_id=".$industrytype." ";
@@ -286,23 +286,27 @@ $query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax
 		//echo $query;
 		$db->setQuery($query);
 		$result = $db->loadObjectList();
+		//echo '<pre>';print_r($result);exit;
 		for( $p=0; $p<count($result); $p++ ){
 			//if($result[$p]->id == '1767'){
 			$c_status =	$this->checkcompliancestatus($result[$p]->id);
+			
 			//}
 			
 			$result[$p]->cstatus = $c_status ;
 		}
 		
-	
+	//echo $result[$p]->cstatus;exit;
 		for( $s=0; $s<count($result); $s++ ){
 		$only_state = $result[$s]->cstatus ;
+		
 		//echo '<pre>'; print_r($only_state); echo "</pre>";
 					if($only_state){
 						foreach($only_state as $statues){
 							$final_state[] = $statues->status;
 							$med_fina_state = '';
 							$med_fina_state = array_unique($final_state);
+						
 								if( count($med_fina_state) == 2 ) {
 									$result[$s]->final_status = 'medium' ;
 								}
@@ -321,7 +325,7 @@ $query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax
 		// Adding block unverified vendor rule
 		$user =& JFactory::getUser();
 		$masterid = $this->getmasterfirmaccount($user->id);
-		$block_per = "SELECT block, block_complinace FROM #__cam_master_block_users where masterid ='".$masterid."' ";
+		 $block_per = "SELECT block, block_complinace FROM #__cam_master_block_users where masterid ='".$masterid."' ";
 		$db->setQuery($block_per);
 		$block = $db->loadObject();
 		if( $block->block == '1' )
@@ -335,8 +339,58 @@ $query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax
 			$result[$s]->block_nonc = 'show' ;
 		//Completed
 		
+		
 		}
 		//echo "<pre>"; print_r($result); exit;
+		for( $p=0; $p<count($result); $p++ ){
+		$per_vendor = "SELECT id FROM #__cam_vendor_purchasedcodes where masterid ='".$user->id."' and vendorid ='".$result[$p]->id."' and publish=1";
+		$db->setQuery($per_vendor);
+		$per_vendor = $db->loadResult();
+		if($per_vendor)
+		$result[$p]->per_vendor = 'show';
+		else
+		$result[$p]->per_vendor = 'hide';
+		}
+		for( $pr=0; $pr<count($result); $pr++ ){
+		 $star_vendor = "SELECT vid FROM #__vendor_inviteinfo where userid ='".$user->id."' and v_id ='".$result[$pr]->id."' AND invitation_type='pre'";
+		$db->setQuery($star_vendor);
+		$star_vendor = $db->loadResult();
+		if($star_vendor)
+		$result[$pr]->star_vendor = 'show';
+		else
+		$result[$pr]->star_vendor = 'hide';
+		}
+		for( $m=0; $m<count($result); $m++ ){
+		$my_vendor = "SELECT vid FROM #__vendor_inviteinfo where userid ='".$user->id."' and v_id ='".$result[$m]->id."' AND  myvendors='yes'";
+		$db->setQuery($my_vendor);
+		$my_vendor = $db->loadResult();
+		if($my_vendor)
+		$result[$m]->my_vendor = 'show';
+		else
+		$result[$m]->my_vendor = 'hide';
+		}
+		
+		// Adding dispaly only verified vendors
+		$user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		
+		
+		for( $v=0; $v<count($result); $v++ ){
+		$subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$result[$v]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		if( $act_type == '1' && ( $subscribe_type == 'free' || $subscribe_type == '' ) )
+			$result[$v]->acount_type = 'show' ;
+		else	
+			$result[$v]->acount_type = 'hide' ;
+		}
+		
+		
+		//Completed
+		//echo '<pre>';print_r($result);exit;
 		return $result;
 	}
 	
@@ -360,10 +414,10 @@ $query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax
 			$terms_exist = $db->loadResult();
 			
 			if($terms_exist == '1'){
-				$sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$vendorid." and masterid=".$masteraccount." "; 
+				 $sql = "SELECT accepted FROM #__cam_vendor_terms WHERE vendorid=".$vendorid." and masterid=".$masteraccount." "; 
 				$db->setQuery($sql);
 				$terms = $db->loadResult();
-			
+		       
 				if($terms == '1'){
 					$conditions = 'success' ;
 				}
@@ -725,7 +779,9 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 					else{
 						$occur_aip[] = 'no' ;
 					}
+				
 				}
+				
 
 				if($rfp_aip_data->applies_to_owned == 'owned'){
 					if($rfp_aip_data->applies_to_owned == $vendor_aip_data[$ai]->aip_applies_owned){
@@ -734,8 +790,10 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 					else{
 						$occur_aip[] = 'no' ;
 					}
+				
 				}
-
+				
+              
 				if($rfp_aip_data->applies_to_nonowned == 'nonowned'){
 					if($rfp_aip_data->applies_to_nonowned == $vendor_aip_data[$ai]->aip_applies_nonowned){
 						$occur_aip[] = 'yes' ;
@@ -744,7 +802,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 						$occur_aip[] = 'no' ;
 					}
 				}
-
+ 
 				if($rfp_aip_data->applies_to_hired == 'hired'){
 					if($rfp_aip_data->applies_to_hired == $vendor_aip_data[$ai]->aip_applies_hired){
 						$occur_aip[] = 'yes' ;
@@ -753,6 +811,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 						$occur_aip[] = 'no' ;
 					}
 				}
+				
 
 				if($rfp_aip_data->applies_to_scheduled == 'scheduled'){
 					if($vendor_aip_data[$ai]->aip_applies_scheduled == 'sch'){
@@ -763,6 +822,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 					}
 				}
 				
+				
 				if($rfp_aip_data->combined_single > '0'){	
 					if($rfp_aip_data->combined_single <= $vendor_aip_data[$ai]->aip_combined){
 						$occur_aip[] = 'yes' ;
@@ -771,6 +831,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 						$occur_aip[] = 'no' ;
 					}
 				}
+				
 				
 				if($rfp_aip_data->bodily_injusy_person > '0'){	
 					if($rfp_aip_data->bodily_injusy_person <= $vendor_aip_data[$ai]->aip_bodily){
@@ -790,6 +851,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 					}
 				}
 				
+				
 				if($rfp_aip_data->property_damage > '0'){	
 					if($rfp_aip_data->property_damage <= $vendor_aip_data[$ai]->aip_property){
 						$occur_aip[] = 'yes' ;
@@ -798,6 +860,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 						$occur_aip[] = 'no' ;
 					}
 				}
+			
 				
 				if($rfp_aip_data->waiver == 'yes'){
 					if($vendor_aip_data[$ai]->aip_waiver == 'waiver'){
@@ -807,6 +870,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 						$occur_aip[] = 'no' ;
 					}
 				}
+					
 				
 				if($rfp_aip_data->primary == 'yes'){
 					if($vendor_aip_data[$ai]->aip_primary == 'primary'){
@@ -816,6 +880,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 						$occur_aip[] = 'no' ;
 					}
 				}
+				
 				if($rfp_aip_data->additional_ins == 'yes'){
 					if($vendor_aip_data[$ai]->aip_addition == '' || $vendor_aip_data[$ai]->aip_addition == '0'){
 						$occur_aip[] = 'no' ;
@@ -824,6 +889,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 						$occur_aip[] = 'yes' ;
 					}
 				}
+				
 				
 				if($rfp_aip_data->cert_holder == 'yes'){
 					if($vendor_aip_data[$ai]->aip_cert == 'yes'){
@@ -834,8 +900,9 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 					}
 				}
 				
+				
 				if($rfp_aip_data){
-					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' || !$vendor_aip_data[$ai]->aip_combined ) 		{
+					if($vendor_aip_data[$ai]->aip_end_date < date('Y-m-d') || $vendor_aip_data[$ai]->aip_upld_cert=='' || $vendor_aip_data[$ai]->aip_status == '-1' ) 		{
 						$occur_aip[] = 'no' ;
 						}
 					else
@@ -843,6 +910,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 						$occur_aip[] = 'yes' ;
 						}
 				}
+				
 				if($occur_aip){
 					if( in_array("no", $occur_aip) ){
 						$cabins_aip[] = "no";
@@ -852,7 +920,8 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 					}
 				}
 				$occur_aip = '';
-			}	
+			}
+			//echo '<pre>';print_r($cabins_aip);exit;	
 			if($cabins_aip){
 				if( in_array("yes", $cabins_aip) ){
 					$special_aip = "success";
@@ -868,6 +937,7 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 				$special_aip = "success";
 			}
 			
+				//echo $special_aip ;exit;
 				$cabins_aip = '';
 		 
 		return $special_aip ;
@@ -1502,6 +1572,27 @@ function checknewspecialrequirements_aip($vendorid,$industryid,$managerid){
 	//Completed
 		
 		}
+		
+	// Adding dispaly only verified vendors
+		$user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		
+		
+		for( $v=0; $v<count($result); $v++ ){
+		$subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$result[$v]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		if( $act_type == '1' && ( $subscribe_type == 'free' || $subscribe_type == '' ) )
+			$result[$v]->acount_type = 'show' ;
+		else	
+			$result[$v]->acount_type = 'hide' ;
+		}
+		
+		
+		//Completed	
      //echo'<pre>'; print_r($result);exit;
 		return $result;
 	}
@@ -1809,6 +1900,24 @@ function store($data){
 
 		return true;
 	}
+	
+	function store_newadd($data){
+
+	$row =& $this->getTable('newinvitevendors');
+	//echo "<pre>"; print_r($row);print_r($post); exit;
+		jimport('joomla.user.helper');
+		// Bind the form fields to the  table
+		if (!$row->bind($data)) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+		if (!$row->store()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		return true;
+	}
 	//Function to get all industries
 	function getallindustries(){
 	$db = JFactory::getDBO();
@@ -1849,16 +1958,17 @@ function store($data){
 	if($user->user_type =='16')
 	{
 	$mangerids = $this->getallmanageracounts();
-	if($mangerids)
-	$manager_ids = implode(',',$mangerids);
-	
-	$whers_cond = 'U.userid IN ('.$manager_ids.')';
+	if($mangerids){
+			$manager_ids = implode(',',$mangerids);
+			$whers_cond = 'U.userid IN ('.$manager_ids.')';
+			}
 	}
 	else
-	$whers_cond = 'U.userid='.$usercreator.'';
-	$query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax_id,V.tax_id,U.vendortype,U.vid,U.v_id,U.status,U.inhousevendors, W.name, W.lastname,W.ccemail from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and W.search=''and ".$whers_cond."  ";
+	$whers_cond = 'U.userid='.$user->id.'';
+	 $query = "SELECT V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax_id,V.tax_id,U.vendortype,U.vid,U.v_id,U.status,U.inhousevendors, W.name, W.lastname,W.ccemail from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and W.search=''and ".$whers_cond."  ";
 	$db->setQuery($query);
 	$own = $db->loadObjectList();
+	
 	if($own){
 				foreach($own as $vid){
 				$owns[] = $vid->v_id;
@@ -2060,11 +2170,250 @@ function store($data){
 		//Completed
 		
 		}
+	// Adding Vendor to CORPORATE PREFERRED VENDORS
+	$masterid = $this->getmasterfirmaccount($user->id);
+	for( $p=0; $p<count($result); $p++ ){
+		$per_vendor = "SELECT id FROM #__cam_vendor_purchasedcodes where masterid ='".$masterid."' and vendorid ='".$result[$p]->id."' and publish=1";
+		$db->setQuery($per_vendor);
+		$per_vendor = $db->loadResult();
+		if($per_vendor)
+		$result[$p]->per_vendor = 'show';
+		else
+		$result[$p]->per_vendor = 'hide';
+		}
+		for( $pr=0; $pr<count($result); $pr++ ){
+		 $star_vendor = "SELECT vid FROM #__vendor_inviteinfo where userid ='".$masterid."' and v_id ='".$result[$pr]->id."' AND invitation_type='pre'";
+		$db->setQuery($star_vendor);
+		$star_vendor = $db->loadResult();
+		if($star_vendor)
+		$result[$pr]->star_vendor = 'show';
+		else
+		$result[$pr]->star_vendor = 'hide';
+		}
+		
+	    $user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		
+		
+		for( $v=0; $v<count($result); $v++ ){
+		$subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$result[$v]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		if( $act_type == '1' && ( $subscribe_type == 'free' || $subscribe_type == '' ) )
+			$result[$v]->acount_type = 'show' ;
+		else	
+			$result[$v]->acount_type = 'hide' ;
+		}	
+		
+		return $result;
+	}
+	
+	
+		function corporatevendors_star(){
+		$managertype = JRequest::getVar( 'managertype','');
+ 		$industrytype = JRequest::getVar( 'industrytype','');
+ 		$state = JRequest::getVar( 'state','');	
+ 		$county = JRequest::getVar( 'divcounty','');	
+		$compliance_filter = JRequest::getVar( 'compliance','');
+		$verification = JRequest::getVar( 'verification','');
+		
+		if(!$state){
+		$county = '';
+		}		
+		else{
+		$county = $county;
+		}		
+ 		//echo '<pre>'; print_r($_REQUEST); 
+		$post = JRequest::get('request');
+		$db = & JFactory::getDBO();
+		$user =& JFactory::getUser();
+		$usercreator = $this->getmasterfirmaccount($user->id);
+      
+		$whers_cond = 'U.userid='.$usercreator.'';
+		
+	 	
+		 $query = "SELECT  V.company_name,V.city,V.state,V.company_phone,V.phone_ext,V.fax_id,V.tax_id,U.vendortype,U.vid,U.v_id,U.status,U.inhousevendors, W.name, W.lastname, W.id, W.subscribe, W.ccemail, W.subscribe_type from #__vendor_inviteinfo as U, #__cam_vendor_purchasedcodes as P, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and W.block='0' and U.exclude!='yes' and W.search='' and ".$whers_cond." ".$where." and (U.invitation_type='pre' || P.vendorid=W.id )";
+		$db->setQuery($query);
+		$result = $db->loadObjectList();
+		
+			//To get the vendors based on industry
+			if($industrytype){
+			$checkvendors = "SELECT distinct(user_id) FROM #__cam_vendor_industries where industry_id=".$industrytype." ";
+			$db->setQuery($checkvendors);
+			$accpetvendor = $db->loadObjectList();
+			
+			if($result){
+				foreach($result as $vid){
+				$existing[] = $vid->v_id;
+				}
+			}	
+			if($accpetvendor){
+				foreach($accpetvendor as $inids){
+				$indusids[] = $inids->user_id;
+				}
+			}
+			if($indusids != '' && $existing!= ''){
+			$common = array_intersect($indusids, $existing) ;
+			}
+			if($common){
+			$indus_condition = implode(',',$common) ;
+			}
+			
+			if($indus_condition)
+			$query = $query . "AND V.user_id IN ("  . $indus_condition . ")" ;
+			else
+			$query = $query . "AND V.user_id IN ('  ')" ;
+			}	
+			
+			if($county){
+			$checkvendors1 = "SELECT distinct(user_id) FROM #__vendor_state_counties where county_id=".$county." ";
+			$db->setQuery($checkvendors1);
+			$accpetvendor1 = $db->loadObjectList();
+			
+			if($result){
+				foreach($result as $vid){
+				$existing[] = $vid->v_id;
+				}
+			}	
+			if($accpetvendor1){
+				foreach($accpetvendor1 as $county){
+				$countys[] = $county->user_id;
+				}
+			}
+			if($countys != '' && $existing!= ''){
+			$common = array_intersect($countys, $existing) ;
+			}
+			if($common){
+			$county_condition = implode(',',$common) ;
+			}
+			if($county_condition)
+			$query = $query . "AND V.user_id IN ("  . $county_condition . ")" ;
+			else
+			$query = $query . "AND V.user_id IN ('')" ;
+			}	
+			
+			//If selecting state and not selecting ny county
+			if($state && !$county){
+			 $checkvendorsstate = "SELECT distinct(user_id) FROM #__vendor_state_counties where state_id='".$state."' ";
+			$db->setQuery($checkvendorsstate);
+			$statevendors = $db->loadObjectList();
+			if($result){
+				foreach($result as $vid){
+				$existing[] = $vid->v_id;
+				}
+			}	
+			if($statevendors){
+				foreach($statevendors as $county){
+				$countys[] = $county->user_id;
+				}
+			}
+			if($countys != '' && $existing!= ''){
+			$common = array_intersect($countys, $existing) ;
+			}
+			if($common){
+			$county_condition = implode(',',$common) ;
+			}
+			if($county_condition)
+			$query = $query . "AND V.user_id IN ("  . $county_condition . ")" ;
+			else
+			$query = $query . "AND V.user_id IN (' ')" ;
+			}
+			//Completed
+			if( $verification == 'ver' )
+			$query = $query . " AND W.subscribe_type != 'free' " ;
+			if( $verification == 'unver' )
+			$query = $query . " AND W.subscribe_type = 'free' " ;
+		//echo $query;
+		/*$sort = JRequest::getVar('sort','');
+		if( $sort == '' ){
+			$sorting = " GROUP BY U.v_id order by W.subscribe_type='', W.subscribe_type='public', W.subscribe_type='all'  ";
+		}
+		if($sort == 'asc' || $sort == ''){
+			$sorting = ' GROUP BY U.v_id order by V.company_name ASC ';
+		}
+		else{
+			$sorting = 'GROUP BY U.v_id order by V.company_name DESC ';
+		}*/
+		
+		$sort = JRequest::getVar('sort','');
+		$type = JRequest::getVar('type','');
+		
+		if( $sort == 'asc' && $type == 'corporate' ){
+			$sorting = ' GROUP BY U.v_id order by V.company_name ASC ';
+		}
+		else if( $sort == 'desc' && $type == 'corporate' ){
+			$sorting = ' GROUP BY U.v_id order by V.company_name DESC ';
+		}
+		else{
+			$sorting = " GROUP BY U.v_id order by V.company_name ASC  ";
+		}
+		
+		
+		$query = $query . ' '.$sorting.'  ' ;
+		//echo $query; 
+		$db->setQuery($query);
+		$result = $db->loadObjectList();
+		for( $p=0; $p<count($result); $p++ ){
+			$c_status =	$this->checkcompliancestatus($result[$p]->id);
+			$result[$p]->cstatus = $c_status ;
+			
+		}
+				//echo "<pre>"; print_r($result); echo "</pre>";exit;		
+		for( $s=0; $s<count($result); $s++ ){
+		$only_state = $result[$s]->cstatus ;
+					if($only_state){
+						foreach($only_state as $statues){
+							$final_state[] = $statues->status;
+							$med_fina_state = '';
+							$med_fina_state = array_unique($final_state);
+							$result[$s]->final_status = '';
+								if( count($med_fina_state) == 2 ) {
+									$result[$s]->final_status = 'medium' ;
+								}
+								if( count($med_fina_state) == 1 &&  $med_fina_state[0] == 'fail') {
+									$result[$s]->final_status = 'fail' ;
+								}
+								if( count($med_fina_state) == 1 &&  $med_fina_state[0] == 'success' ){
+									$result[$s]->final_status = 'success' ;
+								}
+								$masteraccount = $this->getmasterfirmaccount($user->id);
+								$result[$s]->termsandc = $this->gettermsconditions($masteraccount,$result[$s]->id);
+										
+							
+						} 
+						$final_state = '';
+					}
+					
+		// Adding block unverified vendor rule
+		$user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$block_per = "SELECT block, block_complinace FROM #__cam_master_block_users where masterid ='".$masterid."' ";
+		$db->setQuery($block_per);
+		$block = $db->loadObject();
+		if( $block->block == '1' )
+			$result[$s]->unverified = 'hide' ;
+		else	
+			$result[$s]->unverified = 'show' ;
+		
+		if( $block->block_complinace == '1' )
+			$result[$s]->block_nonc = 'hide' ;
+		else	
+			$result[$s]->block_nonc = 'show' ;
+				
+		
+		//Completed
+		
+		}
 		
 		//$result = $db->loadObjectList();
        //echo '<pre>';print_r($result);exit;
 		return $result;
 	}
+	
+	
 	//Function to get master firm userid when manager, firm, district manager loggedin
 	function getmasterfirmaccount($manager){
 	
@@ -2436,6 +2785,24 @@ function store($data){
 						$final_state = '';
 					}
 			
+		}
+		
+		// Adding dispaly only verified vendors
+		$user =& JFactory::getUser();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		$act_type = "SELECT acount_type FROM #__cam_master_compliancereport where masterid ='".$masterid."' ";
+		$db->setQuery($act_type);
+		$act_type = $db->loadResult();
+		
+		
+		for( $v=0; $v<count($result); $v++ ){
+		$subscribe_type = "SELECT subscribe_type FROM #__users where id ='".$result[$v]->id."'";
+		$db->setQuery($subscribe_type);
+		$subscribe_type = $db->loadResult();
+		if( $act_type == '1' && ( $subscribe_type == 'free' || $subscribe_type == '' ) )
+			$result[$v]->acount_type = 'show' ;
+		else	
+			$result[$v]->acount_type = 'hide' ;
 		}
 		
 		
@@ -3102,7 +3469,7 @@ function store($data){
 		$user =& JFactory::getUser();		
 		$post = JRequest::get('request');
 		$usercreator = $this->getmasterfirmaccount($user->id);
-	 	$query = "SELECT W.id, V.company_name as companyName, V.company_address as address, V.company_phone as companyPhone, V.phone_ext, V.alt_phone as alternatePhone, V.alt_phone_ext, W.cellphone, V.city, V.state, V.fax_id, V.tax_id, U.vid, W.name, W.lastname, W.email, W.subscribe, W.subscribe_type, V.image as company_logo from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and W.block='0' AND U.exclude!='yes' and U.search!='yes'and W.search='' and U.userid=".$usercreator." ";
+	 	$query = "SELECT W.id, V.company_name as companyName, V.company_address as address, V.company_phone as companyPhone, V.phone_ext, V.alt_phone as alternatePhone, V.alt_phone_ext, W.cellphone, V.city, V.state, V.fax_id, V.tax_id, U.vid, W.name, W.lastname, W.email, W.subscribe, W.subscribe_type, V.image as company_logo from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and W.block='0' AND U.exclude!='yes' and U.search!='yes'and W.search='' and U.userid=".$usercreator." GROUP BY W.id ";
 		$db->setQuery($query);
 		$result = $db->loadObjectList();
 		
@@ -3228,7 +3595,7 @@ function store($data){
 			$cidarr = implode(',',$companyid);	
         }
 		
-		$query = "SELECT W.id, V.company_name as companyName, V.company_address as address, V.company_phone as companyPhone, V.phone_ext, V.alt_phone as alternatePhone, V.alt_phone_ext, W.cellphone, V.city, V.state,  V.fax_id, V.tax_id, W.name, W.lastname, W.email, W.subscribe, W.subscribe_type from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and U.taxid IN(".$cidarr.") and W.search='' and U.userid != ".$user->id." ";
+		$query = "SELECT W.id, V.company_name as companyName, V.company_address as address, V.company_phone as companyPhone, V.phone_ext, V.alt_phone as alternatePhone, V.alt_phone_ext, W.cellphone, V.city, V.state,  V.fax_id, V.tax_id, W.name, W.lastname, W.email, W.subscribe, W.subscribe_type from #__vendor_inviteinfo as U, #__cam_vendor_company as V, #__users as W where LOWER(U.inhousevendors) = (W.email) and V.user_id=W.id and U.taxid IN(".$cidarr.") and W.search='' and U.userid != ".$user->id." GROUP BY W.id ";
 		}	
 		$db->setQuery($query);
 		$result = $db->loadObjectList();
@@ -3614,32 +3981,35 @@ function store($data){
 		return $body;
 	}
 	
-	function getsavedetails($data){
-	$db= JFactory::getDBO();
-	$user=JFactory::getUser();
-	$date = date('Y-m-d H:i');
-	$query = "insert into #__cam_board_mem (`id`, `user_id`,`email`,property_name,`accept`,date,link_invite) VALUES ('','".$user->id."','".$data['vendoremailid']."','".$data['propertyid']."','".$data['accept']."','".$date."','2')";
-	$db->setQuery($query);
-	$savedata = $db->query();
-	$id = $db->insertid();
-	$propertyname = "SELECT property_name FROM #__cam_property where id=".$data['propertyid']."";
-	$db->setQuery( $propertyname );
-	$propertyname = $db->loadResult();
-	$saveinfo = "insert into #__cam_propertyowner_link (id,user_id,boardmem_id,property_id,email,propertyinvitation,property_name) VALUES ('','".$user->id."','".$id."','".$data['propertyid']."','".$data['vendoremailid']."','2','".$propertyname."')";
-	$db->setQuery($saveinfo);
-	$saveinfo = $db->query();
-	return $saveinfo ;
+	function getsavedetails($data)
+	{
+		$db = JFactory::getDBO();
+		$user = JFactory::getUser();
+		$date = date('Y-m-d H:i');
+		$clientid = "SELECT id FROM #__users where username='".$data['vendoremailid']."'";
+		$db->setQuery( $clientid );
+		$clientid = $db->loadResult();
+		$query = "insert into #__cam_board_mem (`id`, `user_id`,`email`,property_name,`accept`,date,link_invite) VALUES ('','".$user->id."','".$data['vendoremailid']."','".$data['propertyid']."','".$data['accept']."','".$date."','2')";
+		$db->setQuery($query);
+		$savedata = $db->query();
+		$id = $db->insertid();
+		$propertyname = "SELECT property_name FROM #__cam_property where id=".$data['propertyid']."";
+		$db->setQuery( $propertyname );
+		$propertyname = $db->loadResult();
+		 $saveinfo = "insert into #__cam_propertyowner_link (id,user_id,boardmem_id,property_id,email,propertyinvitation,property_name,propertyowner_id) VALUES ('','".$user->id."','".$id."','".$data['propertyid']."','".$data['vendoremailid']."','2','".$propertyname."','".$clientid."')";
+		$db->setQuery($saveinfo);
+		$saveinfo = $db->query();
+		return $saveinfo ;
 	}
-	function saveinvitationdetails($data){
-	
-	$db= JFactory::getDBO();
-	$user=JFactory::getUser();
-	$date = date('Y-m-d H:i');
-	 $saveinfo = "insert into #__cam_propertyowner_link (id,user_id,property_id,email,propertyinvitation,boardmem_id) VALUES ('','".$user->id."','".$data['propertyid']."','".$data['email']."','2','".$data['boardmemeberid']."')";
-	$db->setQuery($saveinfo);
-	
-	$saveinfo = $db->query();
-	return $saveinfo;
+	function saveinvitationdetails($data)
+	{
+		$db= JFactory::getDBO();
+		$user=JFactory::getUser();
+		$date = date('Y-m-d H:i');
+		$saveinfo = "insert into #__cam_propertyowner_link (id,user_id,property_id,email,propertyinvitation,boardmem_id) VALUES ('','".$user->id."','".$data['propertyid']."','".$data['email']."','2','".$data['boardmemeberid']."')";
+		$db->setQuery($saveinfo);
+		$saveinfo = $db->query();
+		return $saveinfo;
 	}
 	
 	function checkmanagermail($mail){
@@ -3679,11 +4049,10 @@ function store($data){
 		else
 			$sorting = 'order by date DESC';
 		
-	 $query  = "SELECT id, email, date FROM  #__cam_board_mem  where user_id = ". $user->id ." and  published='0' and accept='yes' GROUP BY email ".$sorting." " ; 
+	  $query  = "SELECT id, email, date FROM  #__cam_board_mem  where user_id = ". $user->id ." and  published='0' and accept='yes' GROUP BY email ".$sorting." " ; 
 	$db->setQuery($query);
 	$invitations = $db->loadObjectList();
-	//print_r($invitations);exit; 
-	
+
 		for( $i=0; $i<count($invitations); $i++ ){
 			$querys  = "SELECT id FROM  #__users  where email = '". $invitations[$i]->email ."' or ccemail LIKE '%".$invitations[$i]->email."%' " ;
 				$db->setQuery($querys);
@@ -3862,7 +4231,7 @@ function getexistingid($managerid){
 		
 	}
  
-function updatepropertyinfo($data)
+  function updatepropertyinfo($data)
 	{
 	//echo '<pre>';print_r($data);exit;
 	 	// give me JTable object	
@@ -3883,16 +4252,133 @@ function updatepropertyinfo($data)
 		return true;
 	}
 	
-function checkclientavailable($propertyid,$propertyownerid)
-{
-        $db = JFactory::getDBO();
-		$user = JFactory::getUser();
-		$checkclient ="SELECT id FROM #__cam_propertyowner_link where property_id='".$propertyid."' AND propertyowner_id='".$propertyownerid."' AND user_id='".$user->id."'";
-		$db->setQuery( $checkclient );
-		$checkclient = $db->loadResult();
-		return $checkclient;
-}	
+	function checkclientavailable($propertyid,$propertyownerid)
+	{
+			$db = JFactory::getDBO();
+			$user = JFactory::getUser();
+			$checkclient ="SELECT id FROM #__cam_propertyowner_link where property_id='".$propertyid."' AND propertyowner_id='".$propertyownerid."' AND user_id='".$user->id."'";
+			$db->setQuery( $checkclient );
+			$checkclient = $db->loadResult();
+			return $checkclient;
+	}	
 	
+	function getblockedvendors()
+	{
+		$db = JFactory::getDBO();
+		$user = JFactory::getUser();
+		$managerid =$this->getmasterfirmaccount($user->id);
+		$blok_vendor = "SELECT block, block_complinace FROM #__cam_master_block_users where masterid=".$managerid."";
+		$db->Setquery($blok_vendor);
+		$block = $db->loadObject();
+		return $block;
+	}
+function total_vendors(){
+		$user =& JFactory::getUser();
+		$db=&JFactory::getDBO();
+		$masterid = $this->getmasterfirmaccount($user->id);
+		
+        $total_mangrs = $this->getmastermanagers_invite($masterid);
+		$whereas[] = "`managerid` IN (".implode( ' , ' , $total_mangrs).") ";
+		$query  = "SELECT id, vendoremailid,managerid, date FROM  #__cam_newvendorinvitations  where publish='0'" ;
+	    $query .= " AND ".implode( ' AND ', $whereas )." ";
+		$db->setQuery($query);
+		$managers_mans = $db->loadObjectList();
+		for( $i=0; $i<count($managers_mans); $i++ ){
+			$querys  = "SELECT id FROM  #__users  where user_type='11' and ( username = '". $managers_mans[$i]->vendoremailid ."' or email ='".$managers_mans[$i]->vendoremailid."' )" ;
+			$db->setQuery($querys);
+			$exid = $db->loadResult(); 
+		if($exid){
+				$invitations[$i]->vendor_id = $exid;
+				}
+		}
+		if( $invitations ) {
+		foreach ($invitations as $res ) {
+		 $vendor_id[] = $res->vendor_id;
+		}
+		$vendor_id = array_unique($vendor_id);
+		$vendor_ids =count($vendor_id);
+		} 
+		else 
+		$vendor_ids = 0; 
+		return $vendor_ids;
+	}
 
+	function getmastermanagers_invite($masterid){
+			$user =& JFactory::getUser();
+			$db=&JFactory::getDBO();
+			$sql1 = "SELECT firmid from #__cam_masteraccounts where masterid=".$masterid." ";
+			$db->Setquery($sql1);
+			$subfirms = $db->loadObjectlist();
+			
+			
+	if($subfirms)
+		{
+			for( $a=0; $a<count($subfirms); $a++ )
+				{
+					$firmid1[] = $subfirms[$a]->firmid;
+					$sql = "SELECT id from #__cam_camfirminfo where cust_id=".$subfirms[$a]->firmid." ";
+					$db->Setquery($sql);
+					$companyid[] = $db->loadResult();
+											
+				}
+				
+        }
+		
+	if($companyid)
+		{
+         	for( $c=0; $c<count($companyid); $c++ )
+				{
+					$sql_cid = "SELECT cust_id from #__cam_customer_companyinfo where comp_id=".$companyid[$c]." ";
+					$db->Setquery($sql_cid);
+					$managerids = $db->loadObjectList();
+						if($managerids) {
+							foreach( $managerids as $last_mans){
+								$total_mangrs[] = $last_mans->cust_id ;
+							}
+						}
+               }
+        }
+	
+	if($firmid1 && $total_mangrs )
+		{
+            $total_mangrs = array_merge($total_mangrs,$firmid1); 
+        }
+        if($firmid1){
+            for( $d=0; $d<count($firmid1); $d++ ){
+        $query = "SELECT id FROM #__cam_camfirminfo WHERE cust_id=".$firmid1[$d];
+	$db->setQuery($query);
+	$comp_id = $db->loadResult();
+	$userid=array($user->id);
+	$query_mans = "SELECT cust_id from #__cam_customer_companyinfo where comp_id = ".$comp_id." ";
+	$db->setQuery($query_mans);
+        $Managers_list1 = $db->loadObjectList();
+                if($Managers_list1) {
+                        foreach( $Managers_list1 as $Managers_list2){
+                                $Managers_list[] = $Managers_list2->cust_id ;
+                        }
+                }
+            }
+            if($Managers_list){
+        $total_mangrs = array_merge($Managers_list,$firmid1);
+            } else {
+         $total_mangrs = $firmid1;        
+            }
+        }
+	/*if($firmid1){
+            $total_mangrs = $firmid1;
+        }
+         */
+        $userid=array($masterid);
+        if($total_mangrs){
+        $total_mangrs = array_merge($userid,$total_mangrs); 
+		}
+		else{
+		$total_mangrs[] = $masterid; 
+		}
+		
+		return $total_mangrs;
+	}
+//completed
+  
 }
 ?>

@@ -20,16 +20,15 @@ G = jQuery.noConflict();
 		alert("select your property");
 		return false;
 		}
-		
-    	G('#invitingclient').submit();
-		//window.parent.document.getElementById( 'sbox-window' ).close();
-		
+		G('#invitingclient').submit();
 		});
 				
 	});
 	
 </script>
-<div id="i_bar_terms" style="margin:20px 20px 0px 20px; font-size:15px;">
+
+<div class="linkwithclient">
+<div id="i_bar_terms" class="linkclientinfo">
 <div id="i_bar_txt_terms" style="padding-top:7px;">
 <span> <font style="font-weight:800; color:#FFF;">LINK WITH YOUR CLIENT</font></span>
 </div></div>
@@ -56,15 +55,18 @@ echo '<option value="'.$this->propertyList[$b]->value.'">'. str_replace('_',' ',
 
 </td></tr>
 <tr height="35"></tr>
+
 <tr>
 <td align="center">
-
+</div>
+<div class="invitationlinkbuttons">
 <a id="cancellinkaccept" href="javascript:void(0)"></a>
 <a id="assignlinkaccept" href="javascript:void(0)"></a>
-
+</div>
 </td>
 </tr>
 </table>
+<div id="rolloverimage" style="display:none;"></div>
 <input type="hidden" value="com_camassistant" name="option">
 <input type="hidden" value="boardmembers" name="controller">
 <input type="hidden" value="inviteproperty" name="task">

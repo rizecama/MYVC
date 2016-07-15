@@ -102,38 +102,3 @@ ul.dropdown li a:hover
 {
  color:#d7d7d7; 
 }
-
-
-#mydashboard_buttons {
-    background-image: url('./../../images/company/fsr/MyDashboard.png');
-}
-#myproperties_buttons {
-    background-image: url('./../../images/company/fsr/MyProperties.png');
-}
-#myclients_buttons {
-    background-image: url('./../../images/company/fsr/MyClients.png');
-}
-#vendorlistrecs_master {
-    background-image: url('./../../images/company/fsr/PreferredVendors.png');
-}
-#findavendor_buttons {
-    background-image: url('./../../images/company/fsr/FindAVendor.png');
-}
-#inviteavendor_buttons {
-    background-image: url('./../../images/company/fsr/InviteAVendor.png');
-}
-#createrequest_buttons {
-    background-image: url('./../../images/company/fsr/NewRequest.png');
-}
-#forum_buttons {
-    background-image: url('./../../images/company/fsr/PublicAndOfficeForum.png');
-}
-#compliancestandards_buttons {
-    background-image: url('./../../images/company/fsr/ComplianceStandards.png');
-}
-#compliancereport_buttons {
-    background-image: url('./../../images/company/fsr/ComplianceReport.png');
-}
-#documentcenter_buttons {
-    background-image: url('./../../images/company/fsr/DocumentCenter.png');
-}

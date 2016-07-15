@@ -93,6 +93,7 @@ class vendorsViewvendors extends Jview
 			$openjobs = $model->get_open_invitations();
 			$Invitations = $model->get_invitation_jobs();  
             $this->assignRef('openjobs', $openjobs);
+			
 			$this->assignRef('Invitations', $Invitations);
 			$pagination = $model->getPagination_Jobs();
 			$this->assignRef('pagination', $pagination);
@@ -705,6 +706,8 @@ class vendorsViewvendors extends Jview
 			}
 			$Jobs = $model->get_available_jobs();
 			$openjobs = $model->get_open_invitations();
+			$personal_requests = $model->personalrequests();  
+            $this->assignRef('personalrequests', $personal_requests);
 //			echo "<pre>"; print_r($Jobs); exit;
 			//To get the invitation jobs
 			$Invitations = $model->get_invitation_jobs();  
@@ -741,6 +744,7 @@ class vendorsViewvendors extends Jview
 			$this->setLayout('vendor_dashboard');
 			parent::display($tpl);
 		}
+		
 		else if($task == 'vendor_compliance_docs') //to display compliance form
 		{
 			$model = $this->getModel('vendors');
@@ -1174,6 +1178,21 @@ class vendorsViewvendors extends Jview
 			$this->setLayout('invitation_pdf');
 			parent::display($tpl);
 		}
+		else if($task == 'getallindustries') //to display compliance form
+		{
+			$model = $this->getModel('vendors');
+		    $allindustries = $model->getallindustries();
+			parent::display($tpl);
+			
+		}
+		else if($task == 'getallcounties') //to display compliance form
+		{
+			$model = $this->getModel('vendors');
+		    $allindustries = $model->getallcountie();
+			parent::display($tpl);
+			
+		}
+		
 		else //signup process 1
 		{
 			$model = $this->getModel('vendors');

@@ -275,6 +275,7 @@ window.onload = Custom.init;
 		N('.mail_pdf').click(function(e){
 			if(N(this).is(':checked')) {
 			vendor_type = G(this).val();
+			
 			permission = '1';
 			N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updatefiletype", {v_type: ""+vendor_type+"", permission: ""+permission+""}, function(data){
 				});
@@ -286,6 +287,24 @@ window.onload = Custom.init;
 				});
 			}
 		});
+		
+		
+		N('.industryasc').click(function(e){
+			if(N(this).is(':checked')) {
+			order_type = G(this).val();
+			order = '1';
+			N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=industryorder", {o_type: ""+order_type+"", order: ""+order+""}, function(data){
+				
+				});
+			}
+			else{
+			order_type = G(this).val();
+			order = '0';
+			N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=industryorder", {o_type: ""+order_type+"", order: ""+order+""}, function(data){
+				});
+			}
+		});
+		
 		
 		
 		N('.include_documents').click(function(){
@@ -333,7 +352,7 @@ window.onload = Custom.init;
 		});
 		
 		N('.inddocs').click(function(){
-			//alert("can");
+			
 			if(N(this).is(':checked')){
 				var selected_doc = N(this).attr('rel');
 				var permit = '1';
@@ -382,8 +401,10 @@ window.onload = Custom.init;
 			}
 		 });
 		 N('.onoffswitch-checkbox').click(function(){
-		 	 var check = N("#myonoffswitch").is(":checked");
+		 	
+			  var check = N("#myonoffswitch").is(":checked");
 			 if( check == true ){
+			 
 			 	if( N("#myonoffswitch").val() == 'on' ){
 					var swoff = 'on';
 					N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateswitchon", {off:""+swoff+""}, function(data){
@@ -401,7 +422,9 @@ window.onload = Custom.init;
 						N('.total_block_no').hide();
 					});
 			 }
-		 });
+					 });
+		
+		
 		
 		//N('.termsandconditions body').css('font-size','14px');
 		N(".termsandconditions").contents().find("body").css("font-size","14px");
@@ -463,6 +486,8 @@ G('.include_emails').click(function(){
 		G('.input_fields_wrap').show();
 		G('.add_field_button').show();
 		G('.specifyemailtext').show();
+		G('.hidenew').show();
+		G('.emailnew').show();
 		
 		}
 		else{
@@ -470,6 +495,8 @@ G('.include_emails').click(function(){
 	     G('.input_fields_wrap').hide();
 	     G('.add_field_button').hide();
 	     G('.specifyemailtext').hide();
+		 G('.hidenew').hide();
+		 G('.emailnew').hide();
 		}
 		
 		N.post("index2.php?option=com_camassistant&controller=rfpcenter&task=updateuncheck", {check: ""+uncheck+""}, function(data){
@@ -521,7 +548,6 @@ function deleteemails(x)
 
 function savemanageremail(x)
 {
-
      email = N('#val_'+x).val();
       if(email == '')
 		{
@@ -554,8 +580,6 @@ function savemanageremail(x)
 	   });
 		 
 }
-
-
 </script>
 
 <script type='text/javascript'>
@@ -612,13 +636,23 @@ window.parent.document.getElementById('newSelector'+num).style.display ='none';
 }
 
 function statusurl(vendors){
-    var pdfcsvval = N(".mail_pdf:checked").val();
-	if( vendors == 'yes' && pdfcsvval == 'csvval')
-	window.location = 'index.php?option=com_camassistant&controller=rfpcenter&task=compliance_status_report';
-	else if( vendors == 'yes' && pdfcsvval == 'pdfval')
-	window.open('index.php?option=com_camassistant&controller=rfpcenter&task=compliance_status_report_pdf', '_blank');
+    var type = N(".industryasc:checked").val();
+    if( vendors == 'yes' && type == 'indvaldesc' )
+	   window.open('index.php?option=com_camassistant&controller=rfpcenter&task=compliance_status_report_webpage', '_blank');
+	else if( vendors == 'yes' && type == 'indvalasc' )
+	   window.open('index.php?option=com_camassistant&controller=rfpcenter&task=compliance_status_report_companywebpage', '_blank');
 	else
-	getpopupbox();
+	  getpopupbox();
+}
+function generateexcelreport(vendors){
+    var type = N(".industryasc:checked").val();
+	
+    if( vendors == 'yes' && type == 'indvaldesc' )
+	   window.location ='index.php?option=com_camassistant&controller=rfpcenter&task=compliance_status_report';
+	else if( vendors == 'yes' && type == 'indvalasc' )
+	    window.location ='index.php?option=com_camassistant&controller=rfpcenter&task=compliance_status_companyreport';
+	else
+	  getpopupbox();
 }
 function getpopupbox(){
 		var maskHeight = G(document).height();
@@ -706,6 +740,7 @@ $checked2 = "checked='checked'";
 
 $per = $this->permissions ;
 //print_r($per);exit;
+if(( $user->user_type == '13' && $user->accounttype == 'master')){
 if( $per->report_switch == '1' && $permission != 'yes' && $pre_existing != 'no'){
 	$active = 'checked';
 	$disply = '';
@@ -714,28 +749,54 @@ else{
 	$active = '';
 	$disply = 'none';
 	}
-
+ }
+	else
+	{
+	$active = 'checked';
+	$disply = '';
+	}
 if( $permissions == 'yes' || $pre_existing == 'no' )
 	$value = 'off';
 else
 	$value = 'on';	
 
 ?>
+<?php $user=JFactory::getUser();
+		if(( $user->user_type == '13' && $user->accounttype == 'master')){
+			$display_hide = '';
+			$div_class= 'creatcode_div';
+			
+		}
+		else{
+			$display_hide = 'none';
+			$div_class= 'creatcode_div_manager';
+			
+		}	
+		
+ ?>
+ 
 
 <p style="height:20px;"></p>
 
 <div class="newcode_main_manager creports">
-<div class="creatcode_div"><p>Real-time Vendor compliance statuses sent directly to your inbox 
+<div class="<?php echo $div_class;?>"><p>Real-time Vendor compliance statuses sent directly to your inbox 
 <span class="moreinfo_newone"><img src="templates/camassistant_left/images/arrow_master.png">
-<a rel="{handler: 'iframe', size: {x: 670, y: 720}}" href="templates/camassistant_left/images/ComplianceStatusReport.png" class="modal" href="javascript:void(0);">View Example</a></span></p>
+<!--<a rel="{handler: 'iframe', size: {x: 520, y: 600}}" href="templates/camassistant_left/images/ComplianceStatusReport.png" class="modal" href="javascript:void(0);">View Example</a>-->
+
+<a target="_blank" href="index.php?option=com_camassistant&controller=rfpcenter&task=viewstatussample">View Example</a>
+
+</span></p>
 <div align="center" class="add_newcode_manager">
-	<div class="onoffswitch">
+	<div class="onoffswitch" style="display:<?php echo $display_hide;?>">
     <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" value="<?php echo $value; ?>" id="myonoffswitch" <?php echo $active; ?> />
     <label class="onoffswitch-label" for="myonoffswitch">
     <span class="onoffswitch-inner"></span>
     <span class="onoffswitch-switch"></span>
     </label>
+	
     </div>
+
+	
 </div>
 </div>
 <div class="manimage_div"><img src="templates/camassistant_left/images/compilancereport.jpg"></div>
@@ -751,23 +812,27 @@ else
 </div></div>
 
 <?php $user=JFactory::getUser();
-		if(( $user->user_type == '13' && $user->accounttype == 'master') || $user->user_type == '16'){
+		if(( $user->user_type == '13' && $user->accounttype == 'master')){
 			$display_content = '';
+			$type_vendor = 'Which types of Vendors would you like included in your auto-generated reports?';
+			
 		}
 		else{
 			$display_content = 'none';
+			$type_vendor = 'Which types of Vendors would you like included in your report?';
+			
 		}	
 		
  ?>
-<table cellpadding="0" cellspacing="0" style="display:<?php echo $display_content; ?>">
-<tr height="13"></tr>
+<table cellpadding="0" cellspacing="0" >
+<tr style="display:<?php echo $display_content; ?>" height="13"></tr>
 
 <tr><td></td><td> 
 <table cellpadding="0" cellspacing="0" style="padding-left:5px;">
-<tr class="secondoptionshow_1"  style="display:<?php //echo $disply; ?>"><td></td><td>Receive Vendor Compliance Status Reports every </td></tr> 
+<tr class="secondoptionshow_1"  style="display:<?php echo $display_content; ?>"><td></td><td>Receive Vendor Compliance Status Reports every </td></tr> 
 <tr><td></td><td>
 <table cellpadding="0" cellspacing="0"  class="secondoptionshow_2"  style="display:<?php //echo $disply; ?>">
-
+<tbody style="display:<?php echo $display_content; ?>">
 <tr><td width="15"><input id="weekdays" class="weekdays_new" type="radio" value="24" name="weeks" <?php if($weeks == '24'){ echo 'checked="checked"'; } ?> style="margin:0px;" /></td><td>Day</td></tr>
 
 <tr><td width="15"><input id="weekdays" class="weekdays_new" type="radio" value="1" name="weeks" <?php if($weeks == '1'){ echo 'checked="checked"'; } ?> style="margin:0px;" /></td><td>Week</td></tr>
@@ -793,15 +858,17 @@ else
 </div></td>
 <td><span>Other</span></td>
 </tr>
-<tr>
+</tbody>
+<tr class="hidenew">
 <td>&nbsp;</td>
 <td>
  <div class="specifyemailtext" style="display:<?php echo $dis;?>">Please specify the email addreess to receive this reoprt </div></td>
 </tr>
-<tr>
-<td>&nbsp;</td>
+<tr class="emailnew" style='display:'>
+<td >&nbsp;</td>
+
 <td>
-<div class="input_fields_wrap" style="display:<?php echo $dis;?>">
+<div class="input_fields_wrap" >
 <?php if(count($otheremails)>0) {
 $i = 0; 
 for( $e=0; $e<count($otheremails); $e++)
@@ -823,7 +890,7 @@ $i++;
 </tr>
 
 <tr height="10"></tr>
-<tr><td colspan="2">Which types of Vendors would you like included in your auto-generated reports?</td></tr>
+<tr><td colspan="2"><?php echo $type_vendor;?></td></tr>
 <?php 
 	if( $per->unverified == '0' && $per->verified == '0' && $per->nonc == '0' && $per->compliant == '0' ){
 		$per->unverified = '1';
@@ -833,7 +900,7 @@ $i++;
 		}
 ?>
 
-<tr><td><input type="radio" id="mail_vendors" class="mail_vendors" value="unverified" name="verification" style="margin:0px;" <?php if($per->unverified == '1'){ echo "checked='checked'" ;  } ?>  /></td><td>Unverified</td></tr>
+<tr><td  width="15"><input type="radio" id="mail_vendors" class="mail_vendors" value="unverified" name="verification" style="margin:0px;" <?php if($per->unverified == '1'){ echo "checked='checked'" ;  } ?>  /></td><td>Unverified</td></tr>
 <tr><td><input type="radio" id="mail_vendors" class="mail_vendors" value="verified" name="verification" style="margin:0px;" <?php if($per->verified == '1'){ echo "checked='checked'" ;  } ?>  /></td><td>Verified</td></tr>
 
 <tr><td><input type="radio" id="mail_vendors" class="mail_vendors" value="both_verified" name="verification" style="margin:0px;" <?php if( ($per->verified == '1' && $per->unverified == '1') || !$per ){ echo "checked='checked'" ;  } ?>  /></td><td>Both</td></tr>
@@ -843,7 +910,7 @@ $i++;
 <tr><td><input type="radio" id="mail_vendors" class="mail_vendors" value="both_comp" name="compliance" style="margin:0px;" <?php if(($per->nonc == '1' && $per->compliant == '1' ) || !$per){ echo "checked='checked'" ;  } ?>  /></td><td>Both</td></tr>
 
 <tr height="10"></tr>
-<tr><td><input type="checkbox" style="margin:0px;" value="include" class="include_documents" <?php if($per->include_docs == '1'){ echo "checked='checked'" ;  } ?>></td><td>Include the Expiration Date for each Vendor's compliance documents</td></tr>
+<tr><td><input type="checkbox" style="margin:0px;" value="include" class="include_documents" <?php if($per->include_docs == '1'){ echo "checked='checked'" ;  } ?>></td><td>Include details regarding each Vendor's compliance documents</td></tr>
 
 <?php
 if( $per->include_docs == '1' )
@@ -864,6 +931,7 @@ else
 	$display_s = '';	
 ?>
 <tr><td colspan="2"><table class="thirdtable">
+<tr class="documents_specified_ind" style="display:<?php echo $display_s; ?>"><td><input type="checkbox" style="margin:0px;" value="w9" rel="w9" class="inddocs" <?php if($per->w9 == '1'){ echo "checked='checked'" ;  } ?>></td><td>W9</td></tr>
 <tr class="documents_specified_ind" style="display:<?php echo $display_s; ?>"><td><input type="checkbox" style="margin:0px;" value="gl" rel="gli" class="inddocs" <?php if($per->gli == '1'){ echo "checked='checked'" ;  } ?>></td><td>General Liability</td></tr>
 <tr class="documents_specified_ind" style="display:<?php echo $display_s; ?>"><td><input type="checkbox" style="margin:0px;" value="api" rel="api" class="inddocs" <?php if($per->api == '1'){ echo "checked='checked'" ;  } ?>></td><td>Commercial Auto</td></tr>
 <tr class="documents_specified_ind" style="display:<?php echo $display_s; ?>"><td><input type="checkbox" style="margin:0px;" value="wc" rel="wc" class="inddocs" <?php if($per->wc == '1'){ echo "checked='checked'" ;  } ?>></td><td>Workers Compensation</td></tr>
@@ -874,14 +942,22 @@ else
 </table></td></tr>
 
 <tr height="10"></tr>
-<tr><td><input type="checkbox" style="margin:0px;" value="add_phone" class="add_phone" <?php if($per->phone_number == '1'){ echo "checked='checked'" ;  } ?>></td><td>Include the Phone Number for each Vendor</td></tr>
+<tr><td><input type="checkbox" style="margin:0px;" value="add_phone" class="add_phone" <?php if($per->phone_number == '1'){ echo "checked='checked'" ;  } ?>></td><td>Include Contact information for each Vendor</td></tr>
 <tr><td colspan="2"><p>Note: This unique identifier can be used to identify each Vendor for accounting purposes. You can also access each Vendor's profile page by simply adding the phone number after <u>www.myvendorcenter.com/vendor/</u>. <br />For example: if your Vendor's phone number is 555-555-1234, then you can access their profile page by going to <u>www.myvendorcenter.com/vendor/5555551234</u>.</p></td></tr>
 </table>
 <tr height="10"></tr>
-<tr><td></td><td>Please select the desired file type to be included with every emailed Compliance Report </td></tr>
+
+<tr style="display:<?php echo $display_content; ?>"><td></td><td>Please select the desired file type to be included with every emailed Compliance Report </td></tr>
+<tr style="display:<?php echo $display_content; ?>"><td colspan="2"><table style="margin-left:-7px;">
+<tr style="display:<?php echo $display_content; ?>"><td><input type="radio" value="pdfval"  id="mail_pdf" class="mail_pdf" name="pdfverification" <?php if($per->documenttype == '0'){ echo "checked='checked'" ;  } ?> ></td><td>PDF</td></tr>
+<tr style="display:<?php echo $display_content; ?>"><td><input type="radio"  value="csvval" id="mail_pdf1" class="mail_pdf" name="pdfverification" <?php if($per->documenttype == '1'){ echo "checked='checked'" ;  }  ?>></td><td>CSV</td></tr>
+
+</table></td></tr>
+<tr height="10"></tr>
+<tr><td></td><td>How would you like your Vendors organized? </td></tr>
 <tr><td colspan="2"><table style="margin-left:-7px;">
-<tr ><td><input type="radio" value="pdfval"  id="mail_pdf" class="mail_pdf" name="pdfverification" <?php if($per->documenttype == '0'){ echo "checked='checked'" ;  } ?> ></td><td>PDF</td></tr>
-<tr ><td><input type="radio"  value="csvval" id="mail_pdf1" class="mail_pdf" name="pdfverification" <?php if($per->documenttype == '1'){ echo "checked='checked'" ;  }  ?>></td><td>CSV</td></tr>
+<tr ><td><input type="radio" value="indvalasc"   class="industryasc" name="ind" <?php if($per->industryorder == '0'){ echo "checked='checked'" ;  } ?> ></td><td> By Name (A to Z)</td></tr>
+<tr ><td><input type="radio"  value="indvaldesc" class="industryasc" name="ind" <?php if($per->industryorder == '1'){ echo "checked='checked'" ;  }  ?>></td><td>By Industry</td></tr>
 
 </table></td></tr>
 
@@ -890,27 +966,25 @@ else
 </td></tr></table>
 <input type="hidden" id="test" class="test" value="test">
 <div style="margin-top:20px;" id="topborder_row"> </div>
-<div class="clickhere_creport"><a href="javascript:void(0);" onclick="statusurl('<?php echo $vendors_re; ?>');" class="generate_compliancereport"></a></div>
-
+<div class="clickhere_complincereport">
+<div>
+<a href="javascript:void(0);" onclick="generateexcelreport('<?php echo $vendors_re; ?>');" class="generate_compliancereport_csv"></a>
+<a href="javascript:void(0);" onclick="statusurl('<?php echo $vendors_re; ?>');" class="generate_profactsreport"></a>
+</div>
+</div>
 </div>
 
 <?php
 if(!$per){
 $db=&JFactory::getDBO();
 $user=JFactory::getUser();
-$query5 = "INSERT INTO #__cam_master_compliancereport ( id , masterid , master, admin, dm, m, unverified, verified, nonc, compliant, report_switch, include_docs, how_docs, gli, api, wc, umb, omi, pln, oln, phone_number,documenttype) VALUES ( '' , '".$user->id."', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0', '', '0', '0', '0', '0', '0', '0', '0', '0','0');";
+$query5 = "INSERT INTO #__cam_master_compliancereport ( id , masterid , master, admin, dm, m, unverified, verified, nonc, compliant, report_switch, include_docs, how_docs,gli, api, wc, umb, omi, pln, oln, phone_number,documenttype,industryorder,w9) VALUES ( '' , '".$user->id."', '1', '1', '1', '1', '1', '1', '1', '1', '0', '0', '', '0', '0', '0', '0', '0', '0', '0', '0','0','0','0');";
 $db->setQuery( $query5 );
 $res5=$db->query();
 }
 else{
 }
 ?>
-
-
-
-
-
-
 
 <div id="boxesexwr" style="top:576px; left:582px;">
 <div id="submitexwr" class="windowexwr" style="top:300px; left:582px; border:6px solid red; position:fixed">
@@ -926,3 +1000,72 @@ else{
 </div>
   <div id="maskexwr"></div>
 </div>
+<?php
+$items = $this->items;
+
+$comp = 0;
+$noncomp = 0;
+for( $pv=0; $pv<count($items); $pv++ )
+{
+if($items[$pv]->final_status == 'fail' || $items[$pv]->final_status == 'medium' )
+ $noncomp++;
+if($items[$pv]->final_status == 'success')
+ $comp++;
+}
+
+
+
+
+?>			
+<div style="position:fixed; left:-350px;"><canvas id="chart-area" width="300" height="300"/>
+<img src="" id="myimg"/></div>
+<script type="text/javascript" src="components/com_camassistant/skin/js/Chart.js"></script>
+<script>
+		var pieData = [
+				
+				{
+					value: '<?php echo $comp;?>',
+					color: "#6bbe29",
+					highlight: "#6bbe29",
+					label: "Green"
+				},
+				{
+					value: '<?php echo $noncomp;?>',
+					color:"#e60d17",
+					highlight: "#e60d17",
+					label: "Red"
+				},
+				
+
+			];
+			
+		
+			window.onload = function(){
+				var ctx = document.getElementById("chart-area").getContext("2d");
+			    var myPie = new Chart(ctx);
+				myPie.Pie(pieData,{onAnimationComplete:done});
+			};
+
+		
+
+function done()
+		{
+	    N = jQuery.noConflict();
+		document.getElementById('myimg').src =  document.getElementById('chart-area').toDataURL();
+		N.ajax({ 
+		type: "POST", 
+		url: 'components/com_camassistant/assets/piechart/convert.php',
+		dataType: 'text',
+		data: {
+		base64data : document.getElementById('chart-area').toDataURL(),
+	    masterid:  '<?php echo $user->id;?>'
+	    
+		}
+		});
+		 // $('#myimg').attr('src', "img.png");
+//		   $('#myimg').show();
+//          
+		}	
+		
+
+	</script>

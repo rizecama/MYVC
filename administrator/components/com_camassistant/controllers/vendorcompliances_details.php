@@ -2427,5 +2427,14 @@ $WC_files		= JRequest::getVar('wc_upld_cert','','files','array' );
 		exit;
 	}
 	
+	 function vendorinsstand_calc()
+	{
+	   $fieldvalue= JRequest::getVar('fieldvalue','');
+	   $fieldvalue = doubleval(str_replace(",","",$fieldvalue));
+	   $fieldvalue = number_format($fieldvalue,2);
+	   echo $fieldvalue;
+	   exit;
+	}
+	
 }
 ?>

@@ -940,13 +940,68 @@ if( $am->userid == $managerid ) {
 				  $display = '' ;
 				  }
 			}
+      
+	   $user =& JFactory::getUser();
+		$db=&JFactory::getDBO();
+		$query_user = "SELECT user_type,accounttype FROM #__users WHERE id=".$managerid." ";
+		$db->setQuery($query_user);
+		$user_data = $db->loadObject();
+		$user_type = $user_data->user_type ;
+		$accounttype = $user_data->accounttype;		
+		
+			if($user_type == '12'){
+				$query_c = "SELECT comp_id FROM #__cam_customer_companyinfo WHERE cust_id=".$managerid." ";
+				$db->setQuery($query_c);
+				$cid = $db->loadResult();	
+				$camfirmid = "SELECT cust_id FROM #__cam_camfirminfo WHERE id=".$cid." ";
+				$db->setQuery($camfirmid);
+				$camfirm = $db->loadResult();
+				$masterid = "SELECT masterid FROM #__cam_masteraccounts WHERE firmid=".$camfirm." ";
+				$db->setQuery($masterid);
+				$master = $db->loadResult();
+				
+					if($master)
+					$master = $master ;
+					else
+					$master = $managerid ;
+				}
+			else if($user_type == '13' && $accounttype!='master'){
+				$masterid = "SELECT masterid FROM #__cam_masteraccounts WHERE firmid=".$managerid." "; 
+				$db->setQuery($masterid);
+				$master = $db->loadResult();
+				
+					if($master)
+					$master = $master ;
+					else
+					$master = $managerid ;
+			}
+			else{
+			$master = $managerid;
+			}	
+		$block_per = "SELECT block, block_complinace FROM #__cam_master_block_users where masterid ='".$master."' ";
+		$db->setQuery($block_per);
+		$block = $db->loadObject();
+		if( $block->block == '1' )
+			$unverified = 'hide' ;
+		else	
+			$unverified = 'show' ;
+		
+		if( $block->block_complinace == '1' )
+			$block_nonc = 'hide' ;
+		else	
+			$block_nonc = 'show' ;
+		
+	
+
+
+
 ?> 
  	<div id="preferredvendorsinvitations" style="padding:6px; display:<?php echo $display; ?>">
    <div class="search-panel-middlepre checkbox_vendor">
 
 <?php
 	$checkbox = '';
-	if( $am->unverified == 'hide' && $am->block_nonc == 'hide' )
+	if( $unverified == 'hide' && $block_nonc == 'hide' )
 		{
 			if( $am->subscribe_type == 'free' && $am->special_requirements == 'fail' ){
 			$args = 'both';
@@ -963,7 +1018,7 @@ if( $am->userid == $managerid ) {
 			}
 			
 		}
-	else if( $am->unverified == 'hide' )
+	else if( $unverified == 'hide' )
 		{
 			if( $am->subscribe_type == 'free' ){
 			$args = 'un';
@@ -972,7 +1027,7 @@ if( $am->userid == $managerid ) {
 			$checkbox = 'show';
 			}
 		}
-	else if( $am->block_nonc == 'hide' )
+	else if( $block_nonc == 'hide' )
 		{
 			if( $am->special_requirements == 'fail' ){
 			$args = 'nonc';

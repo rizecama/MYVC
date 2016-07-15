@@ -11,7 +11,7 @@ $from = JRequest::getVar('from','');
 G = jQuery.noConflict();
 	G(document).ready(function(){
 		G('#current').val('');
-		G('#cancelpopup').click(function(){
+		G('#cancelpopup_vendor').click(function(){
 			window.parent.document.getElementById( 'sbox-window' ).close();
 		});
 		G('#savecode').click(function(){
@@ -103,6 +103,19 @@ G = jQuery.noConflict();
 	
 	}	
 </script>
+<script type="text/javascript">
+G = jQuery.noConflict();
+G(document).ready(function () {
+
+G('#code').keyup(function(){
+if( G(this).val() == '' )
+		G( this ).prev().addClass( 'active' );
+		else
+		G( this ).prev().removeClass( 'active' );
+		
+});
+});
+</script>
 
 <style>
 #maskex { position:absolute;  left:0;  top:0;  z-index:9000;  background-color:#000;  display:none;}
@@ -123,12 +136,11 @@ $codeinfo = $this->codeinfo;
 <form action="#" method="post" id="addcodeform">
 <div class="addingcodesform">
 <ul class="adduls">
-<li><label>
-<div class="red-arrow-addcodes"><img src="templates/camassistant_left/images/arrow_preferred.png" alt=""></div>
+<li><label class="green-arrow-addcodes">
 <strong>Code</strong> (this will be entered by Vendor to purchase)</label><input type="text" name="code" id="code" value="<?php echo $codeinfo->code; ?>" /></li>
 <li>
-<div class="red-arrow-addcodes"><img src="templates/camassistant_left/images/arrow_preferred.png" alt=""></div>
-<label><strong>Cost</strong> (how much the Vendor will pay)</label>
+
+<label class="green-arrow-addcodes"><strong>Cost</strong> (how much the Vendor will pay)</label>
 <select name="cost" id="cost" disabled="disabled">
 <option value="None" <?php if( $codeinfo->cost == 'None' ) { echo "selected"; } ?>>Select Cost</option>
 <option value="0.00" <?php if( $codeinfo->cost == '0.00' ) { echo "selected"; } ?>>$0</option>
@@ -140,8 +152,7 @@ $codeinfo = $this->codeinfo;
 
 </li>
 <li>
-<div class="red-arrow-addcodes"><img src="templates/camassistant_left/images/arrow_preferred.png" alt=""></div>
-<label><strong>Renewal Period</strong> (how often Vendor will charged)</label>
+<label class="green-arrow-addcodes"><strong>Renewal Period</strong> (how often Vendor will be charged)</label>
 <select name="renewtype" id="renewtype" disabled="disabled">
 <option value="0">Select Renewal Period</option>
 <option <?php if( $codeinfo->renewtype == 'none' ) { echo "selected"; } ?> value="none">None</option>
@@ -149,8 +160,8 @@ $codeinfo = $this->codeinfo;
 </li>
 
 <li class="vendorcompliance">
-<div class="red-arrow-addcodes"><img src="templates/camassistant_left/images/arrow_preferred.png" alt=""></div>
-<label><strong>Vendor Purchasing Requirements</strong></label>
+
+<label class="green-arrow-addcodes"><strong>Vendor Purchasing Requirements</strong></label>
 <select name="reqs" id="reqs" class="purchase_reqs" style="font-size:13px;">
 <option <?php if( $codeinfo->purchase_reqs == '0' ) { echo "selected"; } ?> value="0">None</option>
 <option <?php if( $codeinfo->purchase_reqs == '1' ) { echo "selected"; } ?> value="1" >Vendor must have Verified Compliance Documents</option>
@@ -158,7 +169,7 @@ $codeinfo = $this->codeinfo;
 </li>
 
 <li>
-<a id="cancelpopup" href="javascript:void(0);" class="cancel_pcode_edit"></a>
+<a id="cancelpopup_vendor" href="javascript:void(0);" class="cancel_pcode_edit"></a>
 <a id="savecode" href="javascript:void(0);" class="save_pcode_edit"></a></li>
 </ul>
 </div>

@@ -155,7 +155,7 @@ $sql_zipbiiddedvendorsors = "SELECT  VP.id,VP.proposedvendorid,VP.rfpno,VP.Alt_b
 
   /* Code for Folder Creation */
 
-  $key3 = '/var/www/vhosts/myvendorcenter.com/httpdocs/' .DS.'PropertyDocuments'.DS.$property_name.DS.'ProposalReports'.DS.$newrfp_id.DS;
+  $key3 = JPATH_BASE .DS.'PropertyDocuments'.DS.$property_name.DS.'ProposalReports'.DS.$newrfp_id.DS;
   //echo $key3.'<br />';
    //$vendorname = $Bid_zipvendors[$k]->name.' '.$Bid_zipvendors[$k]->lastname;
    
@@ -164,7 +164,7 @@ $sql_zipbiiddedvendorsors = "SELECT  VP.id,VP.proposedvendorid,VP.rfpno,VP.Alt_b
   $db->Setquery($property_details);
   $propertydata = $db->loadObject();
   
-  $dest_rfp = '/var/www/vhosts/myvendorcenter.com/httpdocs/'.DS.'PropertyDocuments'.DS.$property_name.DS.'ProposalReports'.DS.$newrfp_id.DS.'ProjectAttachments'.DS;
+  $dest_rfp = JPATH_SITE.DS.'PropertyDocuments'.DS.$property_name.DS.'ProposalReports'.DS.$newrfp_id.DS.'ProjectAttachments'.DS;
   
   if($propertydata->jobtype != 'yes') {
   $upload_doc_rfp ="SELECT taskuploads FROM #__cam_rfpsow_linetask where rfp_id =".$rfp_id;
@@ -254,10 +254,10 @@ $sql_zipbiiddedvendorsors = "SELECT  VP.id,VP.proposedvendorid,VP.rfpno,VP.Alt_b
 	 //echo 'before or after?';
 
  	$path = JPATH_SITE.DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rfp'.DS.'Tasks'.DS;
-	$source[] = "http://vps54914.vps.ovh.ca/".$attfilename[$k]->upload_doc;
+	$source[] = "http://myvendorcenter.com/live/".$attfilename[$k]->upload_doc;
 	//$source[] = "http://camassistant.com/live/components/com_camassistant/assets/images/rfp/Tasks/".$attfilename;
 
-	$dest = '/var/www/vhosts/myvendorcenter.com/httpdocs/'.DS.'PropertyDocuments'.DS.$property_name.DS.'ProposalReports'.DS.$newrfp_id.DS.$vendorname.DS.'ProposalAttachments'.DS;
+	$dest = JPATH_SITE.DS.'PropertyDocuments'.DS.$property_name.DS.'ProposalReports'.DS.$newrfp_id.DS.$vendorname.DS.'ProposalAttachments'.DS;
 
 	$dir= @dir($path);
 
@@ -276,8 +276,8 @@ $attfilename[$j]->upload_doc = str_replace(' ','_',$attfilename[$j]->upload_doc)
 	 $cnt = count($docname);
 
 	 
-	$attfilename[$j]->upload_doc1 = str_replace('http://vps54914.vps.ovh.ca/','',$attfilename[$j]->upload_doc);
-	$attfilename[$j]->upload_doc2 = str_replace('http://vps54914.vps.ovh.ca/','',$attfilename[$j]->upload_doc1);
+	$attfilename[$j]->upload_doc1 = str_replace('http://myvendorcenter.com/live/','',$attfilename[$j]->upload_doc);
+	$attfilename[$j]->upload_doc2 = str_replace('http://myvendorcenter.com/live/','',$attfilename[$j]->upload_doc1);
 	$docname = $docname[$cnt-1];
 	//print_r($docname);
 	

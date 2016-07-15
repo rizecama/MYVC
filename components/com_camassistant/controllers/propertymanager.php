@@ -276,7 +276,7 @@ class propertymanagerController extends JController
 		
 		if($password==''){
 		$db =& JFactory::getDBO();
-		 $update = "UPDATE #__users SET salutation='$salutation',name='$fname',lastname='$lname',phone='$phone',extension='$ext',cellphone='$cphone',email='$email',question='$question',answer='$answer',hear='$hear'  where id =".$id;
+		 $update = "UPDATE #__users SET salutation='$salutation',name='$fname',lastname='$lname',phone='$phone',extension='$ext',cellphone='$cphone',username='$email',email='$email',question='$question',answer='$answer',hear='$hear'  where id =".$id;
 		
 		$db->setQuery($update);
 		$res12=$db->query();
@@ -292,7 +292,7 @@ class propertymanagerController extends JController
 		$crypt		= JUserHelper::getCryptedPassword($password, $salt);
 		$password1	= $crypt.':'.$salt;
 	
-	     $update = "UPDATE #__users SET salutation='$salutation',name='$fname',lastname='$lname',phone='$phone',extension='$ext',cellphone='$cphone',password='$password1',email='$email'  ,question='$question',answer='$answer',hear='$hear' where id =".$id;
+	     $update = "UPDATE #__users SET salutation='$salutation',name='$fname',lastname='$lname',phone='$phone',extension='$ext',cellphone='$cphone',password='$password1',username='$email'  ,email='$email',question='$question',answer='$answer',hear='$hear' where id =".$id;
 		
 		$db->setQuery($update);
 		$res12=$db->query();
@@ -1441,6 +1441,27 @@ function changestatustom(){
 	    $data = $model->propertyowner_details($property_owner);
 		
 		
+		//save manager_code
+	  
+	 
+			$len = 1;
+			$min = 10000; // minimum
+			$max = 99999; // maximum
+			$range[] = '';
+			foreach (range(0, $len - 1) as $i) {
+			
+			while(in_array($num = mt_rand($min, $max), $range));
+			$range[] = $num;
+			}
+			$lastname = $lname;
+			$manager_invitecode = $post['lname'].$range[1];
+			
+	       $sql1 = "UPDATE #__users SET manager_invitecode='".$manager_invitecode."' where id='".$user->id."'";
+			$db->Setquery($sql1);
+			$db->query();
+	  //completed
+	  
+		
 		/*if($accept == 'yes')
 		{
 		$fname = $post['fname'];
@@ -1566,10 +1587,10 @@ function changestatustom(){
 				$fromname = 'MyVendorCenter Team';
 			    $to = 'rizecama@gmail.com';
 				$siteURL		= JURI::base();
-				$useractivation = $siteURL."index.php?option=com_camassistant&controller=vendors&Itemid=158&task=mail_redirect_form&useractivation=".$link."&view=vendors'";
+				$useractivation = $siteURL."index.php?option=com_camassistant&controller=vendors&Itemid=158&task=mail_redirect_form&useractivation=".$link."&view=vendors";
 				$link = "<a href=".$siteURL."=".$vendor['activation']."&view=vendors'>CLICK HERE</a>"; 
 				$mailsubject = 'Registration Verification';
-				$mail_sending= "SELECT introtext FROM #__content where id='148' ";
+				$mail_sending= "SELECT introtext FROM #__content where id='148'";
 				$db->Setquery($mail_sending);
 				$content = $db->loadResult();
 				$link = '<a href="'.$useractivation.'">CLICK HERE</a>';
@@ -1616,6 +1637,22 @@ function changestatustom(){
 			} 
 		exit; 
 		}
+		
+	function checktoallemails()
+	{
+		$db =& JFactory::getDBO();
+		$user =& JFactory::getUser();
+		$mail = JRequest::getVar('mailid','');
+		$query_email="SELECT username FROM #__users WHERE username='".$mail."' and id !='".$user->id."'";
+		$db->setQuery( $query_email );
+		$result_email = $db->loadResult();
+		if($result_email)
+		$msg=1;
+		else
+		$msg=0;
+		echo $msg; 
+		exit;
+	}	
 
 }
 ?>

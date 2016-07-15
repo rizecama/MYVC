@@ -211,6 +211,23 @@ function addEventa2(id2)
 		H('#maskvrecdonee').hide();
 		H('.windowvrecdonee').hide();
 	});
+}
+
+function firstindustry(indusid){
+	
+	// To get the special requirements for this industry
+	if(indusid) {
+		G.post("index2.php?option=com_camassistant&controller=rfp&task=getspecialrequirements", {industryid: ""+indusid+""}, function(data){
+			G('.newspecialrequirements').html(data);
+			G('.industry_not_selected').hide();
+			Custom.init();
+		});
+	}
+	else{
+	G('.newspecialrequirements').html('');
+	G('.industry_not_selected').show();
+	}
+		//Completed
 }	
 </script>
 
@@ -241,11 +258,11 @@ $properties = $this->properties ;
 <?php 
 $industries = $this->industries ;
  ?>
-	<select id="industry_id" name="industry_id" style="width:101%; height:32px; padding:5px;">
+	<select id="industry_id" name="industry_id" onchange="firstindustry(this.value);" style="width:101%; height:32px; padding:5px;">
 	<option value="0">Please select industry</option>
 	<?php
 		for( $in=0; $in<count($industries); $in++ ){ ?>
-		<option value="<?php echo $industries[$in]->id; ?>"><?php echo str_replace('_',' ',$industries[$in]->industry_name); ?></option>
+		<option value="<?php echo $industries[$in]->id; ?>" ><?php echo str_replace('_',' ',$industries[$in]->industry_name); ?></option>
 		<?php }
 	?>
 	</select>
@@ -297,6 +314,12 @@ H("#proposalDueDate").click(function () {
 <input name="hidden" type="hidden" id="idval" value="0">
 
 </li>
+<div class="newspecialrequirements" style="display:none;">
+<div class="lineitem_pan_row">
+<div class="lineitem_pan" style="border:none;">
+</div>
+<div class="clear"></div>
+</div></div>
 <div id="topborder_row"></div>
 <li> 
 <div id="closereq" name="closereq" value="Cancel"><a class="cancel_basicrequest" onclick="getcancelpopup()" href="javascript:void(0);"></a></div>
@@ -326,6 +349,7 @@ H("#proposalDueDate").click(function () {
 </div>
 <div id="maskvrecdoneee"></div>
 </div>
+
 <input type="hidden" name="option" value="com_camassistant" />
 <input type="hidden" name="controller" value="rfp" />
 <input type="hidden" name="task" value="submit_rfp" />

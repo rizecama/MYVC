@@ -206,6 +206,7 @@ echo "Reminder: ".$reminder.'<br />';
 	//Check the master have global standards or not
 			$log = new checkstatus();
 			$master	=	$log->getmasterfirmaccount($total_managers[$po]->cust_id);
+		
 			$checkglobal	=	$log->checkglobalstandards($vendor_industries[$in]->industry_id,$master);
 			
 			if( $checkglobal == 'success' )	{
@@ -616,7 +617,8 @@ echo "Reminder: ".$reminder.'<br />';
 			}
 			else{
 			$master = $man_data->id;
-			}	
+			}
+			
 			return $master ;
 			}
 	

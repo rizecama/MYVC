@@ -14,6 +14,7 @@ JHTML::_('behavior.modal');
 H = jQuery.noConflict();
 function validate()
 {
+
 var x= document.forms["folderform"]["property_image"].value;
 x = x.replace("C:\\fakepath\\", "");
 var filext = x.substring(x.lastIndexOf(".")+1);
@@ -34,7 +35,7 @@ if(fileName != '')
 					{
 						window.parent.document.getElementById( 'sbox-window' ).close();
 						window.parent.parent.getalert();
-						return false;
+						
 					}
 				else{
 					document.forms["folderform"].submit();
@@ -42,12 +43,12 @@ if(fileName != '')
 			}
 			else{
 				alert("This file type cannot be uploaded");
-			return false;
+			
 			}	
 		}
 else{
 alert("This file type cannot be uploaded");
-return false;
+
 }
 
 var node = document.getElementById('property_image');
@@ -55,9 +56,10 @@ var check = node.files[0].fileSize;
 if (x==null || x=="")
   {
   alert("Please upload the file");
-  return false;
+ 
   }
 } 
+
 function pclose(){
 window.parent.document.getElementById( 'sbox-window' ).close();
 }
@@ -72,7 +74,8 @@ document.getElementById('uploadfile').value = fileName;
 
 <script type="text/javascript">
 L = jQuery.noConflict();
-L(document).ready( function(){      
+L(document).ready( function(){ 
+    
 	L(function()
     {
         L('#fileUpload').on('change',function ()
@@ -110,7 +113,7 @@ echo '<div style="color:#4d4d4d; font-family: arial; font-size:13px; line-height
 echo"</br>";
 ?></td></tr><tr height="30"></tr></table>
 
-<form action="" method="post" name="folderform" enctype="multipart/form-data" onsubmit="return validate()">
+<form action="" method="post" name="folderform" enctype="multipart/form-data" >
 <table cellpadding="0" cellspacing="0" align="center">
 <tr style="text-align:right;">
 <td align="center"><!--<input type="file" name="image" value="" id="fileUpload" /><span id="file_val"> </span>-->
@@ -129,7 +132,8 @@ echo"</br>";
 <tr>
 <td align="right">
 <a href="javascript:pclose();" class="cancelpropertyimage_button"></a>
-<input type="image" src="components/com_camassistant/assets/images/Uplaod2.png" />
+<a href="javascript:validate();" class="newuploadbutton"></a>
+
 
 <input type="hidden" name="option" value="com_camassistant" />
 <input type="hidden" name="controller" value="addproperty" />

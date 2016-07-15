@@ -55,6 +55,7 @@ class announcementViewannouncement extends JView
 		//echo "<pre>"; print_r($items);
 		$total			= & $this->get( 'Total');
 		$pagination 	= & $this->get( 'Pagination' );
+		//echo "<pre>"; print_r($pagination);exit;
 		$orderby		= ' ORDER BY '. $filter_order .' '. $filter_order_Dir .',published';
         $search 		= JRequest::getWord('search');
 		

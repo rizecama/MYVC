@@ -224,6 +224,7 @@ if( document.getElementById('changes').value == 'yes' ){
 	
 });
 
+
 </script>
 <style>
 #mask5 {
@@ -492,16 +493,22 @@ endif; ?>
 	<?php echo $params->get('pretext'); ?>
 	
 	
-		  <input id="modlgn_username" type="text" name="username" style="width:370px;" alt="username"  tabindex="1" placeholder="E-Mail" onclick="if(this.placeholder == 'E-Mail') this.placeholder='';" onblur="if(this.placeholder == '') this.placeholder ='E-Mail';" />
-		  	<input id="modlgn_passwd" type="password" style="width:370px;" name="passwd" alt="password"  tabindex="2" placeholder="Password" onclick="if(this.placeholder == 'Password') this.placeholder='';" onblur="if(this.placeholder == '') this.placeholder ='Password';" onfocus="this.placeholder=''"/>
-       <?php if(JPluginHelper::isEnabled('system', 'remember')) : ?>
-	   <div><input id="modlgn_remember" type="checkbox" name="remember" class="inputbox" value="yes" alt="Remember Me" /><label>Remember Me</label>
+		  <input id="modlgn_username" type="text" name="username" style="width:370px;" alt="username"  tabindex="1" placeholder="Primary E-mail" onclick="if(this.placeholder == 'Primary E-mail') this.placeholder='';" value="<?php echo $_COOKIE['username'];?>" onblur="if(this.placeholder == '') this.placeholder ='Primary E-mail';" />
+		  	<input id="modlgn_passwd" type="password" style="width:370px;" name="passwd" alt="password"  value="<?php echo $_COOKIE['passwd'];?>" tabindex="2" placeholder="Password" onclick="if(this.placeholder == 'Password') this.placeholder='';" onblur="if(this.placeholder == '') this.placeholder ='Password';" onfocus="this.placeholder=''"/>
+       <?php 
+	   if( $_COOKIE['username'] )
+	   $check = 'checked';
+	   else
+	   $check = '';
+	   ?>
+	   <?php if(JPluginHelper::isEnabled('system', 'remember')) : ?>
+	   <div><input id="modlgn_remember" type="checkbox" name="remember" class="inputbox" value="yes"  <?php echo $check;?> alt="Remember Me" /><label>Remember Me</label>
 	   <?php endif; ?>
 	    &nbsp;&nbsp;&nbsp;  <a id="forgot" href="index.php?option=com_user&view=reset&Itemid=137">Forgot your password?</a></div>
 		
  <div class="clear"></div>
-<div class="login"> <button type="submit" id="logibtn" name="submit" tabindex="4"><img src="templates/camassistant/images/login-button.png" /></button></div>
-<div class="or-bg"></div>
+<div class="login" style="margin-left:0px;"> <button type="submit" id="logibtn" name="submit" tabindex="4"> LOG IN</button></div>
+
     <?php
 	if($_GET['return']){
 	$_SESSION['return'] = $_GET['return'];

@@ -17,7 +17,7 @@ $db =& JFactory::getDBO();
 $all_vendors = "SELECT id FROM #__users where user_type='11' ";
 $db->Setquery($all_vendors);
 $vendors = $db->loadObjectList();
-	for( $v=0; $v<count($vendors); $v++ ){
+	for( $v=0; $v<count($vendors); $v++ ){ 
 	$query_expired = "SELECT nextdate FROM #__cam_vendor_subscriptions where vendorid='".$vendors[$v]->id."' and paid!='admin' and ctype!='free' order by nextdate DESC ";
 		$db->Setquery($query_expired);
 		$date_exp = $db->loadResult();

@@ -21,10 +21,10 @@ $usertype = JRequest::getVar('usertype','');
 <style>
 #maskcb {position:absolute;left:0;top:0;z-index:9000;background-color:#000;display:none;}
 #boxescb .windowcb {position:absolute;left:0;top:0;width:350px;height:150px;display:none;z-index:9999;padding:20px;}
-#boxescb #submitcb {width:556px;height:275px;padding:10px;background-color:#ffffff;}
+#boxescb #submitcb {width:556px;height:297px;padding:10px;background-color:#ffffff;}
 #boxescb #submitcb a{text-decoration:none;color:#000000;font-weight:bold;font-size:20px;}
-#donecb {border:0 none;cursor:pointer;height:30px;margin-right:150px;padding:0; color:#000000; font-weight:bold; font-size:20px;}
-#closecb {border:0 none;cursor:pointer;height:30px;margin-left:150px;padding:0;float:left;}
+#donecb { border: 0 none;color: #000000;cursor: pointer;font-size: 20px;font-weight: bold;height: 30px;padding: 0;}
+#closecb {border: 0 none;cursor: pointer;float: left;height: 30px;}
 
 #maskeb {position:absolute;left:0;top:0;z-index:9000;background-color:#000;display:none;}
 #boxeseb .windoweb {position:absolute;left:0;top:0;width:350px;height:150px;display:none;z-index:9999;padding:20px;}
@@ -83,6 +83,15 @@ G('.closeicons_popup').click(function (e) {
 			G('#maskcb').hide();
 			G('.windowcb').hide();
 		});
+		
+		G('.hidevendor').click(function(){
+        vendorid = G(this).attr('rel');
+	    G.post("index2.php?option=com_camassistant&controller=vendorscenter&task=hideinvitation", {hideid: ""+vendorid+""}, function(data){
+		if(data){		
+		window.location.reload();
+		}
+	});
+	});
 		});
 </script>
 <script language="javascript" type="text/javascript">
@@ -106,7 +115,7 @@ G('body,html').animate({
 		G("#submitcb").fadeIn(2000);
 		G('.windowcb #donecb').click(function (e) {
          var accept='yes';
-	window.location="index.php?option=com_camassistant&controller=vendorscenter&task=promanagerinvitation&Itemid=151&accept="+accept+"";
+	     window.location="index.php?option=com_camassistant&controller=vendorscenter&task=promanagerinvitation&Itemid=151&accept="+accept+"";
 		G('#cancelbiddingform').submit();
 		e.preventDefault();
 		G('#maskcb').hide();
@@ -115,7 +124,6 @@ G('body,html').animate({
 		G('.windowcb #closecb').click(function (e) {
 		var accept='no';
 		window.location="index.php?option=com_camassistant&controller=boardmembers&task=addboardmember&Itemid=151&accept="+accept+"";
-		
 		e.preventDefault();
 		G('#maskcb').hide();
 		G('.windowcb').hide();
@@ -123,12 +131,7 @@ G('body,html').animate({
 }
 
 
-function hidevendor()
-{
-vendorid = H(this).attr('rel');		
-alert('can');
-		
-}
+
 
 function property_unlink(pid,bid)
 {
@@ -381,6 +384,17 @@ G('.table_blue_rowdots_submitted').removeClass('active');
 function sortusers(){
 	document.forms["newsortform"].submit();
 }
+
+function resendinvitation(emailid,id){
+	G('.resending_'+id).html('<img src="templates/camassistant_left/images/loading_icon.gif" />');
+	G.post("index2.php?option=com_camassistant&controller=vendorscenter&task=resendinvitation", {email: ""+emailid+""}, function(data){
+		if(data){	
+		alert("Your invitation has been sent successfully.");			
+		window.location.reload();
+		}
+	});
+}	
+
 </script>
 <?PHP $user = JFactory::getUser();
    $managername = $user->name.'&nbsp;'.$user->lastname;
@@ -440,17 +454,17 @@ if($user->user_type == 11)
   </tr>
 <?php 
 
-//echo "<pre>"; print_r($this->boardmembers);exit;?>
+//echo "<pre>"; print_r($this->boardmembers); echo "</pre>";?>
 
    <?PHP
   for( $i=0; $i < count($this->boardmembers); $i++ )
   { 
    $row = $this->boardmembers[$i]; 
-   if( $row->linkvalue == 'Yes'  )
+   if( $row->propertyowner_id )
    {
 	   $db=&JFactory::getDBO();
 	   $user = JFactory::getUser();
-	   $sql1 = "SELECT name,lastname from #__users where id='".$row->propertyowner_id."' ";
+	   $sql1 = "SELECT name,lastname from #__users where id='".$row->propertyowner_id."'";
 	   $db->Setquery($sql1);
 	   $propertyownerinfo = $db->loadObject();
 	   $pownername = $propertyownerinfo->name.'&nbsp;'.$propertyownerinfo->lastname;
@@ -576,7 +590,7 @@ Unregistered<br /><a class="resending_<?php echo $vendors[$i]->id; ?>" href="jav
 <?php }
 ?></td>
 <td width="57" valign="middle" align="right" style="padding-top:3px;">
-<a title="Hide from list" class="hidevendor" href="javascript:void(0);" onclick="hidevendor()" rel="<?php echo $vendors[$i]->id; ?>-<?php echo $vendors[$i]->email; ?>"><img src="templates/camassistant_left/images/Hide.png" alt="delete" style="margin-right:6px;"></a>
+<a title="Hide from list" class="hidevendor" href="javascript:void(0);" rel="<?php echo $vendors[$i]->id; ?>-<?php echo $vendors[$i]->email; ?>"><img src="templates/camassistant_left/images/Hide.png" alt="delete" style="margin-right:6px;"></a>
 </td>
 </tr>
 <?php } ?>
@@ -599,14 +613,12 @@ Unregistered<br /><a class="resending_<?php echo $vendors[$i]->id; ?>" href="jav
 <div style="padding: 19px 15px 2px 18px; text-align:center; font-size:15px; font-weight:normal;" >Do you want this client to register with a free MyVendorCenter account to improve collaboration?
 </div>
 <div id="topborder_row_endbidding"></div>
-<div style="padding: 10px 26px 14px 25px; text-align:center; font-size:15px; font-weight:normal;">IMPORTANT: If YES, you will be able to allow this client to view your "My Vendors" list (Corporate Preferred for Master Account holders), approve requests, approve the awarding of projects, and more once they register.
+<div style="padding: 10px 26px 14px 25px; text-align:center; font-size:15px; font-weight:normal;">IMPORTANT: Even if your Client has already registered, please click YES to send an invite to LINK with one of your managed properties.  Once your Client ACCEPTS your request to LINK, you'll be able to give your Client permission to view your "My Vendors" list (Corporate Preferred for Master Account holders), approve requests, approve the awarding of projects, and more.
 </div>
 
-<div style="padding-top:20px; text-align:center; padding-right:17px;">
-
+<div class="newuserlink">
 <div id="closecb" name="closecb" value="Cancel"><a href="javascript:void(0);" class="noaddclientnew"></a></div>
 <div id="donecb" name="donecb" value="Ok"><a href="javascript:void(0);" class="addclientnew"></a></div>
-
 </div>
 </div>
   <div id="maskcb"></div>

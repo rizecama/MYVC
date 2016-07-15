@@ -17,6 +17,14 @@ defined('_JEXEC') or die('Restricted access');
 JHTML::_('behavior.modal');
 $county = JRequest::getVar('county','');
 ?>
+<style>
+#maskeb {position:absolute;left:0;top:0;z-index:9000;background-color:#000;display:none;}
+#boxeseb .windoweb {position:absolute;left:0;top:0;width:350px;height:150px;display:none;z-index:9999;padding:20px;}
+#submiteb > p {padding-top: 7px;text-align: center;font-size:14px;}
+#boxeseb #submiteb {width:467px;height:186px;padding:15px 13px 13px;background-color:#ffffff;}
+#boxeseb #submiteb a{text-decoration:none;color:#000000;font-weight:bold;font-size:20px;}
+
+</style>
 <script type="text/javascript">
 O = jQuery.noConflict();
 function view()
@@ -59,15 +67,21 @@ function reasign()
 }
 function deleteproperty(id)
 {
+		O.post("index2.php?option=com_camassistant&controller=addproperty&task=checkopenrfps", {pid: ""+id+""}, function(data){
+			if(data == 1)
+			rfperrorpopup();
+			else
+			deleteuserproperty(id);
+		});
+
+}
+function deleteuserproperty(id)
+{
 	
-	
-		//alert('hi');
 		var maskHeight = O(document).height();
 		var maskWidth = O(window).width();
 		O('#maska').css({'width':maskWidth,'height':maskHeight});
-
-		//transition effect
-		O('#maska').fadeIn(100);
+	    O('#maska').fadeIn(100);
 		O('#maska').fadeTo("slow",0.8);
 
 		//Get the window height and width
@@ -108,6 +122,30 @@ function deleteproperty(id)
 	//window.location.href = 'index.php?option=com_camassistant&controller=addproperty&task=remove&Itemid=<?php echo $_REQUEST['Itemid']; ?>&pid='+id;
 	
 }
+
+function rfperrorpopup(){
+G('body,html').animate({
+scrollTop: 250
+},800);
+		
+		var maskHeight = K(document).height();
+		var maskWidth = K(window).width();
+		G('#maskeb').css({'width':maskWidth,'height':maskHeight});
+		G('#maskeb').fadeIn(100);
+		G('#maskeb').fadeTo("slow",0.8);
+		var winH = G(window).height();
+		var winW = G(window).width();
+		G("#submiteb").css('top',  winH/2-G("#submiteb").height()/2);
+		G("#submiteb").css('left', winW/2-G("#submiteb").width()/2);
+		G("#submiteb").fadeIn(2000);
+		G('.windoweb #doneeb').click(function (e) {
+		e.preventDefault();
+		G('#maskeb').hide();
+		G('.windoweb').hide();
+		});
+	
+}
+
 function specific()
 {	
 	val = O('#customer').val();
@@ -388,5 +426,20 @@ $properties = $this->properties[$i];
 </form>
 </div>
   <div id="maska"></div>
+</div>
+
+<div id="boxeseb" style="top:576px; left:582px;">
+<div id="submiteb" class="windoweb" style="top:300px; left:582px; border:6px solid red; position:fixed">
+<div id="i_bar_terms" style="background:none repeat scroll 0 0 red;">
+<div id="i_bar_txt_terms" style="padding-top:8px; font-size:14px;">
+<span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">ERROR</font></span>
+</div></div>
+<div class="endbidding_text"><font color="gray">This Property can not be deleted because there are currently one or more Open Requests for this Property.  Please end bidding (close) for any Open Requests in order to delete this Property.</font>
+</div>
+<div style="text-align:center; width:116px; margin:0 auto; padding-top:24px;">
+<div id="doneeb" name="doneeb" value="Ok" class="delete_rfpusers"></div>
+</div>
+</div>
+  <div id="maskeb"></div>
 </div>
 <?php } }?>

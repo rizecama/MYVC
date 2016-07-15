@@ -752,10 +752,10 @@ $db=JFactory::getDBO();
 <img src="components/com_camassistant/assets/images/property_pictures/<?php echo $managerpropertyinfo->property_image; ?>" /></div>
 <?php } else if( $plink == 'No' && $propertyinfo->property_image !='' ) { ?>
 <div class="property_logo-img">
-<img src="components/com_camassistant/assets/images/property_pictures/<?php echo $propertyinfo->property_image; ?>" /></div>
+<a href="javascript:void(0);" id = "uploadedimage" onclick="getpopuppics(<?php echo $pid;?>)"><img src="components/com_camassistant/assets/images/property_pictures/<?php echo $propertyinfo->property_image; ?>" /></a></div>
 <?php } else if( $plink == 'No' && $propertyinfo->property_image =='' ) { ?>
 <div id="property_logo-img">
-<a href="javascript:void(0);" onclick="getpopuppics(<?php echo $pid;?>)"><img src="components/com_camassistant/assets/images/properymanager/load-img.png" /></a></div>
+<a href="javascript:void(0);" id = "uploadedimage" onclick="getpopuppics(<?php echo $pid;?>)"><img src="components/com_camassistant/assets/images/properymanager/load-img.png" /></a></div>
 <?php } else { ?>
 <div class="property_logo-img">
 <img src="components/com_camassistant/assets/images/properymanager/no-property-image.jpg" /></div>
@@ -947,6 +947,10 @@ echo $detail->County;
 	   $db = Jfactory::getDBO();
 	   $user = Jfactory::getUser();
 	   $pid = JRequest::getVar("propertyid1",'');
+	   $property_name = "SELECT property_name FROM #__cam_property where id='".$pid."'";
+	   $db->Setquery($property_name);
+	   $property_name = $db->loadResult();
+	   $property_name = str_replace('_',' ',$property_name);
 	   $model = $this->getModel('addproperty');
 	   $managerid = "SELECT user_id FROM #__cam_propertyowner_link where property_id='".$pid."' AND propertyowner_id='".$user->id."'";
 	   $db->Setquery($managerid);
@@ -958,30 +962,33 @@ echo $detail->County;
 	   $mailfrom = $user->username;
 	   $propertyownername = $user->name.' '.$user->lastname;
 	   $mangeremail = $manager->username;
-	   $userinfo ="SELECT steetaddress,city,zipcode FROM #__cam_propertyowner_info where user_id='".$user->id."'";
+	   $userinfo ="SELECT steetaddress,city,state,zipcode FROM #__cam_propertyowner_info where user_id='".$user->id."'";
 	   $db->setQuery( $userinfo );
 	   $userinfo = $db->loadObject();
-      $address1 = $userinfo->steetaddress;
+	  $address1 = $userinfo->steetaddress;
       $address2 =$userinfo->city;
       $address3 =$userinfo->zipcode;
-      $address = $address1.'<br>'.$address2.'<br>'.$address3;
-	   $assignuseremail='support@myvendorcenter.com';
-	   $mailsubject='Property Unlink request from client';
+	  $address4 =$userinfo->state;
+      $address = $address1.'<br>'.$address2.',' .'&nbsp;'.$address4 .'&nbsp;' .$address3;
+	  $phone = 'Ph:' .'&nbsp;'.$user->phone;
+	  $assignuseremail='support@myvendorcenter.com';
+	   $mailsubject='Property Unlink Request From Client';
 	   $notification = "SELECT introtext  FROM #__content where id='318'";
 	   $db->setQuery($notification);
 	   $body = $db->loadResult();
 	   $body = str_replace("[Manager's Full Name]", $managename, $body);
 	   $body = str_replace("[Property Owner's Full Name]", $propertyownername, $body);
 	   $body = str_replace('[Full Address]', $address, $body);
-	   $body = str_replace('[Phone Number]', $user->phone, $body);
-	   
-	  JUtility::sendMail($mailfrom, $propertyownername, $mangeremail, $mailsubject, $body, $mode = 1);
+	   $body = str_replace('[Phone Number]',  $phone, $body);
+	   $body = str_replace('[Property Name]', $property_name, $body);
+	   JUtility::sendMail($mailfrom, $propertyownername, $mangeremail, $mailsubject, $body, $mode = 1);
 		$assignuseremail = 'rize.cama@gmail.com';
 		JUtility::sendMail($mailfrom, $propertyownername, $assignuseremail, $mailsubject, $body, $mode = 1);
-	    $mesg = "<b>Property Unlink invitation send successfully<b>";	
+	    $mesg = "<b>UNLINK REQUEST SENT TO YOUR MANAGER<b>";	
 		$link = 'index.php?option=com_camassistant&controller=addproperty&Itemid=75';
 		$this->setRedirect( $link,$mesg );	
 	}
+	
 	
 	
 		function saveeditpropertfile()
@@ -1031,10 +1038,10 @@ echo $detail->County;
 					
 				echo "<script language='javascript' type='text/javascript'>
 				var filename = '".$filename."';
-				window.parent.document.getElementById('uplaod_pimage').innerHTML = '<img width=".$thumb_width." height=".$thumb_height." src=\'components/com_camassistant/assets/images/property_pictures/".$filename."\' />';
+				window.parent.document.getElementById('uploadimagetextes').innerHTML = '<img src=\'components/com_camassistant/assets/images/property_pictures/".$filename."\' />';
 				window.parent.document.getElementById('image_name').value = filename;
 				window.parent.document.getElementById( 'sbox-window' ).close();
-				window.reload();
+				 window.parent.location.reload();
 				</script>";
 				exit;	
 		}	
@@ -1086,9 +1093,10 @@ echo $detail->County;
 			$db->query();
 			echo "<script language='javascript' type='text/javascript'>
 			var filename = '".$filename."';
-			window.parent.document.getElementById('property_logo-img').innerHTML = '<img width=".$thumb_width."  src=\'components/com_camassistant/assets/images/property_pictures/".$filename."\' />';
+			window.parent.document.getElementById('uploadedimage').innerHTML = '<img width=".$thumb_width."  src=\'components/com_camassistant/assets/images/property_pictures/".$filename."\' />';
 			
 			 window.parent.document.getElementById( 'sbox-window' ).close();
+			 window.parent.location.reload();
 			 </script>";
 			exit;	
 		}
@@ -1261,7 +1269,20 @@ window.parent.document.getElementById('image_name').value = filename;
 				echo $msg; 
 				exit;
 		}
-	
-	
+	function checkopenrfps()
+		{
+			$db= JFactory::getDBO();
+			$user=JFactory::getUser();	
+			$property_id = JRequest::getVar('pid','');
+			$p_id = "SELECT count(id) FROM #__cam_rfpinfo WHERE property_id='".$property_id."' AND rfp_type='rfp'";
+			$db->setQuery( $p_id );
+			$count = $db->loadResult();
+			if($count>=1)
+			$msg=1;
+			else
+			$msg=0;
+			echo $msg; 
+			exit;
+		}
 	}
 ?>

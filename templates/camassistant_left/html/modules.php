@@ -168,7 +168,7 @@ function modChrome_left_frim_green($module, &$params, &$attribs)
 <?php echo $module->title; ?></div><?php echo $headerLevel; ?>
 			<?php endif; ?>
 			<?php if($module->id == '130'){ ?><div class="likns_pan" style="background:none"><?php } else {?>
-			<?php if($module->id == '141' || $module->id == '139' || $module->id == '154' ){ ?>
+			<?php if($module->id == '141' || $module->id == '139' || $module->id == '154' || $module->id == '158' || $module->id == '159' || $module->id == '160' ){ ?>
 			<div class="">
 			<?php } else {?>
 			<div class="likns_pan">
@@ -176,7 +176,7 @@ function modChrome_left_frim_green($module, &$params, &$attribs)
 			<?php } ?>
 			
 <?php if($module->id == '130'){ ?><div class="likns_pan_top green" style="background:none"><?php } 
-else if($module->id == '141' || $module->id == '139' || $module->id == '154' ){ ?>
+else if($module->id == '141' || $module->id == '139' || $module->id == '154' || $module->id == '158' || $module->id == '159' || $module->id == '160' ){ ?>
 <div class="">
 <?php }
 else { ?>
@@ -221,6 +221,7 @@ $finalcontent =  $module->content;
 	}
 	else { 
 		$finalcontent = str_replace('preferredcodes_master','preferredcodes_master_hidden',$finalcontent);
+		$finalcontent = str_replace('myvendors_master','myvendors_master_hidden',$finalcontent);
 	}
 	
 
@@ -234,6 +235,7 @@ $finalcontent =  $module->content;
 		} 
 		else{
 		echo str_replace('compliancereport_buttons','compliancereport_buttons_hidden',$finalcontent);
+		
 		}
 	}
 	
@@ -242,10 +244,10 @@ $finalcontent =  $module->content;
  ?>
 
 </div>
-<?php if($module->id != '130'  && $module->id != '141' && $module->id != '139' && $module->id != '154'){ ?><div class="likns_pan_bot"></div> <?php } ?>
+<?php if($module->id != '130'  && $module->id != '141' && $module->id != '139' && $module->id != '154' && $module->id != '158' && $module->id != '159' && $module->id != '160'){ ?><div class="likns_pan_bot"></div> <?php } ?>
 </div></div>
 
-<?php if($module->id == '154'){ ?><div class="left_menudevider" style="background:none; height:15px;"></div><?php }
+<?php if($module->id == '154' || $module->id == '160'){ ?><div class="left_menudevider" style="background:none; height:15px;"></div><?php }
 else if($module->id == '141'){ ?> <div class="left_menudevider" style="background:none; height:0px;"></div> <?php } 
 else { ?><div class="left_menudevider" style="background:none; height:0px;"></div><?php } ?>
 

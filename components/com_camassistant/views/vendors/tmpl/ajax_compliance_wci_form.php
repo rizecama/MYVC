@@ -31,7 +31,7 @@ $delid = $compliance;
       <div class="comm">
 	   <div class="in-pan">
         <label>Exp. Date:</label>
-        <input type="text" size="20" name="WCI_end_date[]" id="WCI_end_date<?PHP echo $WCI_title; ?>" value="" /><script type="text/javascript">G('#WCI_end_date<?PHP echo $WCI_title; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "-1y",maxDate: "+5y",changeMonth:true});</script>
+        <input type="text" size="20" name="WCI_end_date[]" id="WCI_end_date<?PHP echo $WCI_title; ?>" placeholder = "mm-dd-yyyy" value="" /><script type="text/javascript">G('#WCI_end_date<?PHP echo $WCI_title; ?>').datepicker({dateFormat: 'mm-dd-yy', changeYear: true,minDate: "0y",maxDate: "+5y",changeMonth:true});</script>
 <script type="text/javascript">
 	G('#WCI_end_date<?PHP echo $WCI_title; ?>').click(function(){
 	var check = "<span class='othercheck'><input type='checkbox' value='does not expire' onclick='WCI_end_date<?PHP echo $WCI_title; ?>();'>This document does not expire</span>";

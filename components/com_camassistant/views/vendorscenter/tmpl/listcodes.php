@@ -181,18 +181,20 @@ function getcodedata(codeid,codetype){
     <td width="270" valign="middle" align="center">COST</td>
     <td width="160"  valign="middle" align="center">#SOLD</td>
   </tr>
-	<?php for ( $c = 0; $c < count( $codes ); $c++ ) { ?>
+	<?php for ( $c = 0; $c < count( $codes ); $c++ ) {
+	if($codes[$c]->code) {
+	 ?>
 	<tr class="table_blue_rowdots_submitted" id="table_blue_rowdots<?php echo $codes[$c]->id; ?>" >
 	<td valign="middle" align="center" valign="middle" width="15">
 	<a id="getcodeinfo_<?php echo $codes[$c]->id; ?>" class="codeinfo_open" data="<?php echo $codes[$c]->id; ?>" rel="open" href="javascript:void(0);"></a>
 	</td>		
 	<td valign="middle" align="center" width="153"><strong><?php echo $codes[$c]->code ; ?></strong></td>
 	<td valign="middle" align="center" width="200"><strong><?php echo ucfirst($codes[$c]->renewtype) ; ?></strong></td>
-	<td valign="middle" align="center" width="270"><span class="price_newcodes"><strong><?php echo "$".number_format($codes[$c]->cost,2) ; ?></strong></span></td>
+	<td valign="middle" align="center" width="270"><span class="price_newcodes"><strong><?php if($codes[$c]->cost) echo "$".number_format($codes[$c]->cost,2) ; ?></strong></span></td>
 	<td valign="middle" align="center" width="160"><?php echo $codes[$c]->sold ; ?></td>
 	</tr>
 	<tr><td colspan="5"><div id="codedetails_<?php echo $codes[$c]->id; ?>" class="prop_details" ></div></td></tr>
-	<?php } ?>
+	<?php } }?>
 </table>
 
 <?php 

@@ -1829,8 +1829,8 @@ function get_TASKSinfo_preview_basic($act,$Alt_Prp)
 		 if($generaldata->personal_inj && $generaldata->personal_inj != '0.00'){ 
 	$g_data .= '<li>Personal & Adv injury: <span id="greenbolddolor">$ '.number_format($generaldata->personal_inj,2) .'</span></li>';
 		 }
-		if( $generaldata->general_aggr  ){
-	$g_data .= '<li>General Aggregate:&nbsp;<span id="greenbolddolor">$ '.number_format($aggregate_price,2) .'</span>';
+		if( $generaldata->general_aggr && $generaldata->general_aggr != '0.00' ){
+	$g_data .= '<li>General Aggregate:&nbsp;<span id="greenbolddolor">$ '.number_format($generaldata->general_aggr,2) .'</span>';
 		}
 		if($generaldata->applies_to){ 
 		$g_data .= '&nbsp;&nbsp;| &nbsp;&nbsp;Applies To:&nbsp;&nbsp;';

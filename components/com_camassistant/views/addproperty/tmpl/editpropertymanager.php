@@ -237,8 +237,7 @@ L('#phone_1').keyup(function(){
 <div class="signUp-left">
 <div class="signup">
 <span id="prop_list">
-<input type="file" class="file_class" name ="property_image"/>
-<div id = "uplaod_pimage"><a class="uploadimagetextes" href="javascript:void(0);" onclick="getpopuppics(<?php echo $pid;?>)" ><img src="components/com_camassistant/assets/images/property_pictures/<?php echo $filename?>"></a></div>
+<div id = "uplaod_pimage1"><a id="uploadimagetextes" href="javascript:void(0);" onclick="getpopuppics(<?php echo $pid;?>)" ><img src="components/com_camassistant/assets/images/property_pictures/<?php echo $filename?>" style="padding-bottom:0px;"></a></div>
 </span>
 </div>
 </div>
@@ -287,7 +286,7 @@ L('#phone_1').keyup(function(){
 <div class="state">
 <label class="editpropertyownerredicons">State: </label>
 <select name="state"  id="stateid" onchange="javascript:county();" >
-<option value="">Select State</option>
+<option value="0">Select State</option>
   <?php 
 
 for ($i=0; $i<count($this->states); $i++){
@@ -309,7 +308,7 @@ $states = $this->states[$i];
 <select  name="divcounty" id="divcounty" >
 <?php 
 
-for ($i=0; $i<count($this->details); $i++){
+for ( $i=0; $i<count($this->details ); $i++){
 $detail = $this->details[$i];
 ?>
 <option value="<?php echo $detail->cid?>" <?php if($detail->divcounty==$detail->cid) echo "selected";?>><?php echo $detail->County?></option>

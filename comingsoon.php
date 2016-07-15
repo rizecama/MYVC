@@ -1,5 +1,3 @@
-test
-
 <!doctype html>
 <html>
 <head>

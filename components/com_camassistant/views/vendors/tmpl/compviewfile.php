@@ -42,16 +42,15 @@ $doc = JRequest::getVar('doc','');
   <div id="vender_rightmarket">
 
 <?php 
-
 if($ext == 'jpg' || $ext == 'png' || $ext == 'jpeg' || $ext == 'PNG' || $ext == 'JPEG' || $ext == 'JPG' || $ext == 'bmp' || $ext == 'BMP' || $ext == 'gif' || $ext == 'GIF'){   ?>
 <img style="text-align:center; width:800px;" src="<?php echo $path; ?>" />
 <?php } 
- else if($ext == 'pdf' || $ext == 'PDF') {
- 
+ else if($ext == 'pdf') {
+ echo "can";
   ?>
 <iframe src="<?php echo $path; ?>?docId=456#toolbar=0" style="width:800px; height:1000px;" frameborder="0"></iframe>
 <?php } 
- else if($ext == 'doc' || $ext == 'docx' || $ext == 'xls' || $ext == 'DOC' || $ext == 'DOCX' || $ext == 'XLS') {
+ else if($ext == 'doc' || $ext == 'docx' || $ext == 'xls') {
 ?>
 <iframe src="http://docs.google.com/viewer?url=<?php echo $path; ?>&embedded=true" width="800" height="1000" style="border: none;"></iframe>
 <?php } 

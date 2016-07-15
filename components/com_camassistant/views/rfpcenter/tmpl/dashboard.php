@@ -25,6 +25,7 @@ $db =& JFactory::getDbo();
 $user =& JFactory::getUser(); 
 $pinvitations = $this->porpertyinvitations;
 $rfprequest = $this->getrfprequest;
+//echo '<pre>';print_r($rfprequest);exit;
 $rfpapproval = $this->getrfpapproval;
 if( $pinvitations && $rfprequest && !$rfpapproval )
 $totalinv = array_merge( $pinvitations,$rfprequest );
@@ -300,6 +301,7 @@ function rebid(rfp_id,type)
 }
 function popup_proposal_summary34(rfp_id,bid)
 {
+	
 	var chk = document.getElementsByName('cid[]');
 	var rfp_id=rfp_id;
 	var bid=bid;
@@ -598,6 +600,7 @@ el='<?php  echo Juri::base(); ?>index.php?option=com_camassistant&controller=rfp
 var options = $merge(options || {}, Json.evaluate("{handler: 'iframe', size: {x: 650, y:210}}"))
 SqueezeBox.fromElement(el,options);
 }
+
 
 
 function unverified(vendorid,type){
@@ -1047,7 +1050,7 @@ if ( $user->user_type=='16' && $this->getrfprequest ) { ?>
 <div class="table_pannel">
 <div id="i_bar" style="margin-bottom:0px; background:#ffa500;">
 <div id="i_bar_txt">
-<span><font style="font-weight:bold;">&nbsp;&nbsp; REQUEST APPROVAL FOR SUBMISSION </font></span>
+<span><font style="font-weight:bold;">&nbsp;&nbsp; STEP 1 of 5: AWAITING CLIENT APPROVAL </font></span>
 </div></div>
 <div class="table_pannel">
 <div class="table_panneldiv">
@@ -1279,16 +1282,9 @@ if( $user->user_type !=16 && $this->getrejectedrfp) { ?>
 <div class="table_pannel">
 
  <div id="i_bar" style="margin-bottom:0px;">
-<div id="i_icon"><?php
- $user = JFactory::getUser();
-if ($user->user_type=='12') { ?>
 
-<a style="text-decoration: none;" title="Click here" class="modal" rel="{handler: 'iframe', size: {x: 680, y: 530}}" href="index2.php?option=com_content&amp;view=article&amp;id=137&amp;Itemid=113"><img src="templates/camassistant_left/images/info_icon2.png" /> </a>
-<?php } else { ?>
-<a style="text-decoration: none;" title="Click here" class="modal" rel="{handler: 'iframe', size: {x: 680, y: 530}}" href="index2.php?option=com_content&amp;view=article&amp;id=136&amp;Itemid=113"><img src="templates/camassistant_left/images/info_icon2.png" /> </a>
-<?php } ?></div>
     <div id="i_bar_txt">
-<span><font style="font-weight:bold;">&nbsp;&nbsp;STEP 1 of 5: REJECTED REQUESTS </font></span>
+<span><font style="font-weight:bold;">&nbsp;&nbsp;REJECTED REQUESTS </font></span>
 </div></div>
 <div class="table_pannel">
 <div class="table_panneldiv">
@@ -1385,6 +1381,153 @@ if ($user->user_type=='12') { ?>
 <?php } ?>
 <div class="table_bottomlinks"></div>
 
+<script type="text/javascript">
+G = jQuery.noConflict();
+G(document).ready( function(){
+G(".rfp_<?php echo $_REQUEST['type']; ?>").addClass('active');
+
+G('.awating_rfpapproval').click(function(){
+//G('#proposaldetails_'+rfpid).addClass('loader');
+rfpdata=G(this).attr('data').split('|');
+if(!G(this).hasClass("active")){
+getawatingapproval(rfpdata[0],rfpdata[1]);
+G('.awating_rfpapproval').removeClass('active');
+G(this).addClass('active');
+}else{
+G('#getawatingrfpapproval_'+rfpdata[0]).slideUp('slow').html('');
+G('.table_blue_rowdots_submitted').removeClass('active');
+G(this).removeClass('active');
+
+}
+G('#getawatingrfpapproval_'+rfpid).removeClass('loader');
+
+});
+});
+function getawatingapproval(rfpid,rfpname){
+G = jQuery.noConflict();
+G('#getawatingrfpapproval_'+rfpid).addClass('loader');
+G.post("index2.php?option=com_camassistant&controller=rfpcenter&task=getawatingapproval", {rfpid: ""+rfpid+"", rfpname: ""+rfpname+""}, function(data){
+if(data) {
+G('#getawatingrfpapproval_'+rfpid).removeClass('loader');
+G('.awating_details').slideUp();
+G('.table_blue_rowdots_submitted').removeClass('active');
+G('#table_blue_rowdots'+rfpid).addClass('active');
+G('#getawatingrfpapproval_'+rfpid).html(data).slideDown('slow');
+//G('#getproposals_'+rfpid).hide();
+//G('#getproposalshide_'+rfpid).show();
+G('#getawatingrfpapproval_'+rfpid).show();
+}
+else{
+G('#getawatingrfpapproval_'+rfpid).removeClass('loader');
+G('#getawatingrfpapproval_'+rfpid).html("No proposals for this RFP");
+//G('#getproposals_'+rfpid).hide();
+//G('#getproposalshide_'+rfpid).show();
+}
+		});
+}
+</script>
+<?php if($this->awaitingclientapproval){ ?>
+<div class="table_pannel">
+
+ <div id="i_bar" style="margin-bottom:0px;">
+
+    <div id="i_bar_txt">
+<span><font style="font-weight:bold;">&nbsp;&nbsp;STEP 1 of 5: AWAITING CLIENT APPROVAL  </font></span>
+</div></div>
+<div class="table_pannel">
+<div class="table_panneldiv">
+<table width="100%" cellpadding="0" cellspacing="4" class="titleheadings">
+  <tr class="table_green_row">
+    <td width="80"  valign="middle" align="center" colspan="1" class="firsttd">RFP#</td>
+    <td width="190" valign="middle" align="center">PROPERTY NAME</td>
+    <td width="270" valign="middle" align="center">PROJECT NAME</td>
+    <td width="160"  valign="middle" align="center">REQUESTED DUE DATE</td>
+  </tr>
+</table>
+    <?php if($this->awaitingclientapproval){ ?>
+<table width="99%" cellspacing="0" cellpadding="0" style="margin:0px 4px">
+  	<?php
+	$k = 0;
+	
+	foreach ($this->awaitingclientapproval as $row) : ?>
+	<?php
+	if( $row->jobtype == 'yes' )
+		$job = 'basic';
+	else
+		$job = '';	
+	?>
+	  <tr class="table_blue_rowdots_submitted" id="table_blue_rowdots<?php echo $row->id; ?>" >
+
+			<td valign="middle" align="center" valign="middle" width="15">
+			<a id="getproposals_<?php echo $row->id; ?>" class="awating_rfpapproval" data="<?php echo $row->id; ?>|<?php echo $row->projectName; ?>" href="javascript:void(0);"></a>
+
+			<td valign="middle" align="center" width="37"><?php echo sprintf('%06d', $row->id); //echo $row->id; ?></td>
+	 		<td align="center" valign="middle" width="222"><?php echo str_replace('_',' ',$row->property_name); ?></td>
+			<td align="center" valign="middle" width="270"><span style="margin-left:-12px;">
+			<a class="joblinkhomepage" href="index.php?option=com_camassistant&controller=rfp&task=reviewrfp&rfpid=<?php echo sprintf('%06d', $row->id); ?>&var=view&job=<?php echo $job; ?>&Itemid=87"><?php echo $row->projectName; ?></a></span></td>
+	   		<td align="center" valign="middle" width="160"><span><?php echo $row->proposalDueDate; ?><br /><?php echo date("h:i A", strtotime($row->proposalDueTime));?>&nbsp;
+			<?php 
+			if( $row->timezone == '' || $row->timezone == 'est' ) echo 'EST';
+			else if( $row->timezone == 'cen' ) echo 'CEN';
+			else if( $row->timezone == 'mou' ) echo 'MOU';
+			else if( $row->timezone == 'pac' ) echo 'PAC';
+			else if( $row->timezone == 'ala' ) echo 'ALA';
+			else if( $row->timezone == 'haw' ) echo 'HAW';
+			else if( $row->timezone == 'eni' ) echo 'ENI';
+			else if( $row->timezone == 'midw' ) echo 'MIDW';
+			else if( $row->timezone == 'car' ) echo 'CAR';
+			else if( $row->timezone == 'atl' ) echo 'ATL';
+			else if( $row->timezone == 'new' ) echo 'NEW';
+			else if( $row->timezone == 'bra' ) echo 'BRA';
+			else if( $row->timezone == 'mid' ) echo 'MID';
+			else if( $row->timezone == 'azo' ) echo 'AZO';
+			else if( $row->timezone == 'wes' ) echo 'WES';
+			else if( $row->timezone == 'bru' ) echo 'BRU';
+			else if( $row->timezone == 'kal' ) echo 'KAL';
+			else if( $row->timezone == 'bag' ) echo 'BAG';
+			else if( $row->timezone == 'teh' ) echo 'TEH';
+			else if( $row->timezone == 'abu' ) echo 'ABU';
+			else if( $row->timezone == 'kab' ) echo 'KAB';
+			else if( $row->timezone == 'eka' ) echo 'EKA';
+			else if( $row->timezone == 'mum' ) echo 'MUM';
+			else if( $row->timezone == 'kath' ) echo 'KATH';
+			else if( $row->timezone == 'alm' ) echo 'ALM';
+			else if( $row->timezone == 'yan' ) echo 'YAN';
+			else if( $row->timezone == 'ban' ) echo 'BAN';
+			else if( $row->timezone == 'bei' ) echo 'BEI';
+			else if( $row->timezone == 'tok' ) echo 'TOK';
+			else if( $row->timezone == 'ade' ) echo 'ADE';
+			else if( $row->timezone == 'eas' ) echo 'EAS';
+			else if( $row->timezone == 'mag' ) echo 'MAG';
+			else if( $row->timezone == 'auk' ) echo 'AUK';
+			?>
+			</span></td>
+</tr>
+  </tr>
+  <tr><td colspan="5"><div id="getawatingrfpapproval_<?php echo $row->id; ?>" class="awating_details" ></div></td></tr>
+		<?php
+		$k = 1 - $k;
+		endforeach;
+	//}
+	?>
+ <tr class="">
+   <td align="center" valign="top"></td>
+   <td align="left" valign="middle"></td>
+   <td align="left" valign="top"></td>
+   <td align="left" valign="top"></td>
+   <td align="right" valign="middle"><?php /*?><a href="index.php?option=com_camassistant&controller=rfpcenter&task=submitedrfp&Itemid=87"><img src="templates/camassistant_left/images/view_all.gif" alt="view all" width="95" height="25" vspace="10"></a><?php */?></td>
+ </tr>
+
+
+</table>
+<div class="clear"></div>
+<?php } ?>
+</div>
+</div>
+<div class="clear"></div>
+</div>
+<?php } ?>
+<div class="table_bottomlinks"></div>
 <div class="table_pannel">
 
  <div id="i_bar" style="margin-bottom:0px;">
@@ -1487,12 +1630,13 @@ if ($user->user_type=='12') { ?>
 </table>
 <div class="clear"></div>
 <?php } else { ?>
-<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any submited RFPs</div>
+<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any submited requests</div>
 <?php } ?>
 </div>
 </div>
 <div class="clear"></div>
 </div>
+
 <script type="text/javascript">
 G = jQuery.noConflict();
 G(document).ready( function(){
@@ -1677,7 +1821,7 @@ if ($user->user_type=='12') { ?>
   </tr>
 </table></div>
 <table cellpadding="0" cellspacing="0" width="99%" style="margin:0px 4px">
-<tr><td align="center" style="margin-top: 10px;" colspan="5"><div align="center" style="margin-top:10px; font-weight:bold;">You don't have any closed RFPs </div></td></tr></table>
+<tr><td align="center" style="margin-top: 10px;" colspan="5"><div align="center" style="margin-top:10px; font-weight:bold;">You don't have any closed requests </div></td></tr></table>
 
 		<?php }  ?>
 
@@ -1963,7 +2107,7 @@ echo "<font style='font-weight:bold;'>&nbsp;&nbsp;STEP 4 of 5: AWARDED </font>(A
 <div class="clear"></div>
 
 <?php } else { ?>
-<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any awarded rfp's</div>
+<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any awarded requests</div>
 <?php } ?></div>
 </div>
 <?php if(count($this->details4) >= $this->pagination4->limit) { ?>
@@ -2311,10 +2455,15 @@ $j++;
 $manager = $totalinv[$i]->cust_id;
 $jobtype = $totalinv[$i]->jobtype;
 if($jobtype == 'yes')
+{
 $type = 1;
+$job_type = 'basic' ;
+}		
 else
+{
 $type = 0;
-
+$job_type = '';
+}
 $propertyname = str_replace('_',' ',$totalinv[$i]->property_name);
 $db =& JFactory::getDBO();
 $user = JFactory::getUser();
@@ -2330,7 +2479,7 @@ $manager_name =  $name->name.' '.$name->lastname;
 <span style="font-size:14px;"> <font style="font-weight:bold; color:#FFF;">REQUEST APPROVAL FOR SUBMISSIONS</font></span>
 </div></div>
 
-<p class="request_notifications" align="center" > <strong> <?php echo $manager_name?></strong> needs your approval to submit the following request for <strong><?php echo $propertyname;?></strong>: <strong><?php echo $totalinv[$i]->projectName;?></strong>  </p>
+<p class="request_notifications" align="center" > <strong> <?php echo $manager_name?></strong> needs your approval to submit the following request for <?php echo $propertyname;?>: <span class="rfprequestview"><a href="index.php?option=com_camassistant&controller=rfp&task=reviewrfp&rfpid=<?php echo $totalinv[$i]->id;?>&var=view&job=<?php echo $job_type;?>&Itemid=87" target="_blank"><?php echo $totalinv[$i]->projectName;?></a></span>  </p>
 <p></p>
 <p></p>
 <p></p>

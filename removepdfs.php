@@ -20,7 +20,7 @@ while (false !== ($filename = readdir($dh))) {
 	$extension = end(explode('.', $filename));
 	$first = substr($filename,0,3);
 	if($extension == 'pdf' && $first == 'RFP'){
- 	unlink($filename);
+    unlink($filename);
 	}
 }
 

@@ -3499,7 +3499,7 @@ MyVendorCenter.com';
 		$invitations = "SELECT managerid FROM #__cam_newvendorinvitations where vendoremailid ='".$user_details1[0]->email."'";
 		$db->setQuery( $invitations );
 		$invites = $db->loadObjectlist();
-		//echo "<pre>"; print_r($invites); 
+		
 		$model = $this->getModel('vendors');
 		for( $n=0; $n<count($invites); $n++ ){
 		$taxid = $model->getcompanyid($invites[$n]->managerid);
@@ -3518,6 +3518,7 @@ MyVendorCenter.com';
 		$post['invitedate'] = date('Y-m-d h:i:m');;
 		$post['exclude'] = '';
 		//echo "<pre>"; print_r($post);
+		$sendmail = $model->sendmailtovendor($invites[$n]->managerid,$post['v_id']);
 		$save = $model->store_add($post);
 		}
 		//exit;
@@ -5377,7 +5378,10 @@ function viewcrefdocs(){
 		$count = $model->gettotalbids($rfpid);
 		//Get total bids for create alternate proposal link
 		$count_numbers = $model->gettotalbids_newlink($rfpid);
-		//echo "<pre>"; print_r($mgr_info); echo "</pre>";
+		$getblock_status = $model->getunverfied_status($rfpid);
+		$block = $model->getblockedvendors($rfpid);
+		
+		
 		?>
 		<table width="100%" border="0" style="margin:0px 0px; border:1px solid #A3A3A3; background:#F7F7F7">
 		<tbody>
@@ -5451,10 +5455,16 @@ function viewcrefdocs(){
 		<td align="center">
 		<ul class="addednum">
 		<li>
-		<?php if( $uninvited != 'uninvited' && $p_data->create_rfptype=='open') { ?>
+		<?php  
+		if( $uninvited != 'uninvited' && $getblock_status == 'blockvendor' ){ ?>
+		<a class="" href="javascript:void(0);" onClick="getblockmessage(<?php echo $block->block; ?>,<?php echo $block->block_complinace;?>);">View Request</a>
+		<?php }
+		else if( $uninvited != 'uninvited' && $p_data->create_rfptype=='open'  ) { ?>
+	
 		<a href="index.php?option=com_camassistant&controller=proposals&task=vendor_proposal_form&view=proposals&Prp_id=<?PHP echo $propertyid;  ?>&rfp_id=<?PHP echo $rfpid; ?>&mot_interested=0&type=invitation&id=<?PHP echo $p_data->id; ?>&jobtype=<?php echo $p_data->jobtype; ?>&reqtype=<?php echo $p_data->create_rfptype; ?>&Itemid=112">View Request</a>
-		<?php } 
-		else if($uninvited != 'uninvited' ){ ?>
+		<?php }
+ 
+		else if($uninvited != 'uninvited' &&  $getblock_status != 'blockvendor'){ ?>
 		<a href="index.php?option=com_camassistant&controller=proposals&task=vendor_proposal_form&view=proposals&Prp_id=<?PHP echo $propertyid;  ?>&rfp_id=<?PHP echo $rfpid; ?>&mot_interested=0&type=invitation&id=<?PHP echo $p_data->id; ?>&jobtype=<?php echo $p_data->jobtype; ?>&Itemid=112">Respond to Invite</a>
 		<?php } 
 		else {
@@ -5489,9 +5499,9 @@ function viewcrefdocs(){
 		<?php if( $mgr_info->showemail == '0' || $p_data->jobtype == 'yes' ) { echo $mgr_info->email; } ?></a></td></tr>
 		<?php } ?>
 		<tr><td colspan="2" align="center">
-                        <?php if(! $type == 'drafts' ) { ?>
-		<a rel="<?php  echo $rfpid; ?>" href="javascript:void(0);" class="decline_rfpjob_home" id="declineinvitation"></a>
-                        <a onClick="javascript: return ITB_save(<?php  echo $rfpid; ?>);" class="accept_rfpjob_home" href="javascript:void(0);"></a><?php }?></td></tr>
+                        <?php if(! $type == 'drafts' && $getblock_status != 'blockvendor' ) { ?>
+					<a rel="<?php  echo $rfpid; ?>" href="javascript:void(0);" class="decline_rfpjob_home" id="declineinvitation"></a>
+				        <a onClick="javascript: return ITB_save(<?php  echo $rfpid; ?>);" class="accept_rfpjob_home" href="javascript:void(0);"></a><?php }?></td></tr>
 <tr><td>
 <form method="post" id="proposal_form_<?PHP echo $rfpid; ?>" name="vendor_proposal_form_<?PHP echo $rfpid; ?>"  action="index.php?option=com_camassistant&controller=proposals&rfp_id=1">
 <input type="hidden" name="rfp_id" value="<?PHP echo $rfpid; ?>" />
@@ -5512,6 +5522,7 @@ function viewcrefdocs(){
 		<?php
 		exit;
 	}
+	
 	
 }
 

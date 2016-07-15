@@ -444,7 +444,7 @@ if ($user->user_type=='12') { ?>
 <?php } else if($_REQUEST['rated']=='yes'){ ?>
 <div align="center" style="margin-top:10px; font-weight:bold;">You have NOT rated any of your Awarded Vendors</div>
 <?php } else { ?>
-<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any awarded rfp's</div>
+<div align="center" style="margin-top:10px; font-weight:bold;">You don't have any awarded requests</div>
 <?php } ?></div>
 </div>
 <?php if(count($this->details4) >= $this->pagination4->limit) { ?>

@@ -130,7 +130,15 @@ setcookie("nonc_cookie", "nonc");
 
 $invitations = $this->Invitations ;
 
-//echo "<pre>"; print_r($invitations); echo "</pre>";
+//echo "<pre>"; print_r($invitations); echo "</pre>";exit;
+$sum =0;
+for($s=0; $s<count($invitations); $s++)
+{
+	if($invitations[$s]['not_interested'] != '2' && $invitations[$s]['uninvited'] != 'uninvited' && $invitations[$s]['create_rfptype'] != 'open' ) {
+		$sum++;
+		}
+ }
+
 ?>	
 
 <input type='hidden' id='current_page' />  
@@ -200,7 +208,7 @@ for($i=0; $i<count($invitations); $i++)
 <p align="center" class="reminder_notifications" >IMPORTANT: Please click VIEW INVITE to accept or decline this invitation so the Manager-user knows your intensions for providing a response to their request; otherwise, you will continue receiving this message upon log-in. </p>
 <div class="reminder_notifications" align="center"><a class="accept_invite" onclick="javascript:closepopup('<?PHP echo $propertyid;  ?>','<?PHP echo $proposalid; ?>','<?php echo $jobtype; ?>','<?PHP echo $rfpid; ?>');" href="javascript:void(0);"></a></div>
 
-<div align="center" class="reminder_notifications_number" ><?php echo $j ;?> of <?php echo count($invitations)?></div>
+<div align="center" class="reminder_notifications_number" ><?php echo $j ;?> of <?php echo $sum?></div>
 
 <?php  } 
 }?>

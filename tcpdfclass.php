@@ -185,14 +185,14 @@ $db = JFactory::getDBO();
 if($RFP_info->bidding == 'open' || $RFP_info->bidding == ''){
 		$htmlcontent9 = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr><td>';
-  $pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/templates/camassistant_left/images/top_border.jpg', 0, 7, 1000, 2, "", "", "", true, 550,'', false, false, 0, false, false, false);
+  $pdf->Image(''.JURI::root().'templates/camassistant_left/images/top_border.jpg', 0, 7, 1000, 2, "", "", "", true, 550,'', false, false, 0, false, false, false);
   $htmlcontent9 .= '</td></tr>
     </table>
   <tr>
     <td><table width="100%" height="106" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td width="20%" align="left" valign="top">';
-		$pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 18, 20, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
+		$pdf->Image(''.JURI::root().'components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 18, 20, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
 
 		$htmlcontent9 .= '</td><td width="10%" align="center" valign="top"><img src="templates/camassistant_left/images/line.png" height="110" /></td>
         <td width="70%" align="left" valign="top">
@@ -208,7 +208,7 @@ if($RFP_info->bidding == 'open' || $RFP_info->bidding == ''){
     </table></td>
   </tr>
   <tr><td>';
-  $pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/templates/camassistant_left/images/line_hori.jpg', 0, 57, 1000, 10, "", "", "", true, 550,'', false, false, 0, false, false, false);
+  $pdf->Image(''.JURI::root().'templates/camassistant_left/images/line_hori.jpg', 0, 57, 1000, 10, "", "", "", true, 550,'', false, false, 0, false, false, false);
   $htmlcontent9 .= '</td></tr>
   <tr style="border-top:2px solid green;">
     <td><p style="font-size:31px; color:#85c440; font-weight:bold; padding:95px 0px 15px 0px; margin:0px;"><br /><br />ABOUT THIS REPORT</p></td>
@@ -247,14 +247,14 @@ if($RFP_info->bidding == 'open' || $RFP_info->bidding == ''){
 else{
 		$htmlcontent9 = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr><td>';
-  $pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/templates/camassistant_left/images/top_border.jpg', 0, 7, 1000, 2, "", "", "", true, 550,'', false, false, 0, false, false, false);
+  $pdf->Image(''.JURI::root().'templates/camassistant_left/images/top_border.jpg', 0, 7, 1000, 2, "", "", "", true, 550,'', false, false, 0, false, false, false);
   $htmlcontent9 .= '</td></tr>
     </table>
   <tr>
     <td><table width="100%" height="106" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td width="20%" align="left" valign="top">';
-		$pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 18, 20, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
+		$pdf->Image(''.JURI::root().'components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 18, 20, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
 
 		$htmlcontent9 .= '</td><td width="10%" align="center" valign="top"><img src="templates/camassistant_left/images/line.png" height="110" /></td>
         <td width="70%" align="left" valign="top">
@@ -270,7 +270,7 @@ else{
     </table></td>
   </tr>
   <tr><td>';
-  $pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/templates/camassistant_left/images/line_hori.jpg', 0, 57, 1000, 10, "", "", "", true, 550,'', false, false, 0, false, false, false);
+  $pdf->Image(''.JURI::root().'templates/camassistant_left/images/line_hori.jpg', 0, 57, 1000, 10, "", "", "", true, 550,'', false, false, 0, false, false, false);
   $htmlcontent9 .= '</td></tr>
   <tr style="border-top:2px solid green;">
     <td><p style="font-size:31px; color:#85c440; font-weight:bold; padding:95px 0px 15px 0px; margin:0px;"><br /><br />ABOUT THIS REPORT</p></td>
@@ -345,7 +345,7 @@ if (!file_exists($imagefilename)) {
 //$width = 75;
 //$height = 15;
               //  echo '<pre>'; print_r($RFP_info);
-						$pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
+						$pdf->Image(''.JURI::root().'components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
 		$htmlcontent .= '<tr><td width="245px" height="50" align="left" ></td>
 							<td width="315px" align="right" style="text-align: right; font-size:23px;"><img width="50" height="14" src="templates/camassistant_left/images/mc_headicons.jpg" /><br/><strong><br/>'.$RFP_info->comp_name.'</strong><br />
 		'.$RFP_info->mailaddress.'<br />'.$RFP_info->comp_city.',  '.$state_name.' '.$RFP_info->comp_zip.'<br /><strong>P</strong>: ('.$com_phone[0].')&nbsp;'.$com_phone[1].'-'.$com_phone[2].'</td></tr>
@@ -471,7 +471,7 @@ if (!file_exists($imagefilename)) {
 	//echo '<pre>'; print_r($BID_Vendors_info[$v]);
 	//echo "<pre>"; print_r($BID_Vendors_info[$v]->company_phone); exit;
 	//echo $image; exit;
-		$rateimage= '/var/www/vhosts/myvendorcenter.com/httpdocs/'.DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rating'.DS;
+		$rateimage= JURI::root().DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rating'.DS;
 			$db = JFactory::getDBO();
 			$rating = "SELECT rating_sum FROM #__content_rating where content_id =".$BID_Vendors_info[$v]->proposedvendorid;
 			$db->Setquery($rating);
@@ -785,7 +785,7 @@ $lineitemprice='
 
 
       <tr>
-        <td width="36%">'; $pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
+        <td width="36%">'; $pdf->Image(''.JURI::root().'components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
       $lineitemprice.='  </td>
 
 	<td width="315px" style="text-align: right; font-size:24px;"><img width="50" height="14" src="templates/camassistant_left/images/mc_headicons.jpg" /><br/><strong>'.$RFP_info->comp_name.'</strong><br />
@@ -1579,6 +1579,9 @@ $html_notes = str_replace('h6','h3', $html_notes);
 			$special_r .= $l_data;
 			if($l_data)
 			$special_r .= '<br />' ;
+			$special_r .= $omi_data;
+			if($omi_data)
+			$special_r .= '<br />' ;
 			}
 							$special_r .= '<br/><br/>';
 							
@@ -1673,7 +1676,7 @@ $html_notes = str_replace('h6','h3', $html_notes);
 //$width = 75;
 //$height = 15;
               //  echo '<pre>'; print_r($RFP_info);
-						$pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
+						$pdf->Image(''.JURI::root().'components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
 		$htmlcontent .= '<tr><td width="245px" height="50" align="left" ></td>
 							<td width="315px" align="right" style="text-align: right; font-size:23px;"><img width="50" height="14" src="templates/camassistant_left/images/mc_headicons.jpg" /><br/><strong><br/>'.$RFP_info->comp_name.'</strong><br />
 		'.$RFP_info->mailaddress.'<br />'.$RFP_info->comp_city.',  '.$state_name.' '.$RFP_info->comp_zip.'<br /><strong>P</strong>: ('.$com_phone[0].')&nbsp;'.$com_phone[1].'-'.$com_phone[2].'</td></tr>
@@ -1799,7 +1802,7 @@ Number:</p></td></tr><tr><td align="center" valign="middle" style="border:0.5px 
 	//echo '<pre>'; print_r($BID_Vendors_info[$v]);
 	//echo "<pre>"; print_r($BID_Vendors_info[$v]->company_phone); exit;
 	//echo $image; exit;
-		$rateimage= '/var/www/vhosts/myvendorcenter.com/httpdocs/'.DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rating'.DS;
+		$rateimage= JURI::root().DS.'components'.DS.'com_camassistant'.DS.'assets'.DS.'images'.DS.'rating'.DS;
 			$db = JFactory::getDBO();
 			$rating = "SELECT rating_sum FROM #__content_rating where content_id =".$BID_Vendors_info[$v]->proposedvendorid;
 			$db->Setquery($rating);
@@ -2117,7 +2120,7 @@ $lineitemprice='
 
 
       <tr>
-        <td width="36%">'; $pdf->Image('/var/www/vhosts/myvendorcenter.com/httpdocs/components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
+        <td width="36%">'; $pdf->Image(''.JURI::root().'components/com_camassistant/assets/images/properymanager/'.$RFP_info->comp_logopath, 10, 10, $width, $height, "", "", "", true, 550,'', false, false, 0, false, false, false);
       $lineitemprice.='  </td>
 
 	<td width="315px" style="text-align: right; font-size:24px;"><img width="50" height="14" src="templates/camassistant_left/images/mc_headicons.jpg" /><br/><strong>'.$RFP_info->comp_name.'</strong><br />

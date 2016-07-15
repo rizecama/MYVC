@@ -36,7 +36,7 @@ $liscense_sub_categories = $this->liscense_sub_categories;
     <div class="lic-pan-right">
       <div class="comm">
         <label>Expiration Date:</label>
-       <input name="PLN_expdate[]" id="PLN_expdate<?PHP echo $PLN_title; ?>" type="text" class="t_field" value="" /><span style="color:red; font-size: 20px;">*</span><script type="text/javascript">G('#PLN_expdate<?PHP echo $PLN_title; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,maxDate: "+5y"});</script>
+       <input name="PLN_expdate[]" id="PLN_expdate<?PHP echo $PLN_title; ?>" type="text" class="t_field" placeholder = "mm-dd-yyyy" value="" /><span style="color:red; font-size: 20px;">*</span><script type="text/javascript">G('#PLN_expdate<?PHP echo $PLN_title; ?>').datepicker({dateFormat: 'mm-dd-yy',changeYear: true,changeMonth:true,minDate: "0y",maxDate: "+5y"});</script>
       </div>
       <div class="comm">
         <div class="in-pan">

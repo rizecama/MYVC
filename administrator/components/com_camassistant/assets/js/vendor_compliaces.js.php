@@ -1336,11 +1336,23 @@ frm.submit_type.value = 'Submit';
 frm.document_type.value = doctype;
 frm.task.value = 'save_compliance';
 
-if(doctype == 'W9'){
+ if(doctype == 'W9'){
+	
+ for(var w9=1; w9<=W9_title; w9++)
+ {
+  if(document.getElementById('W9_upld_cert'+w9).value == '')
+		{
+		  alert('Please Upload W9 Policy Document');
+		 document.getElementById('W9_upld_cert'+w9).focus();
+		 return ;
+		}
+	else{
 	G(document).ready(function (){
 	G("#loading-div-background").show();
 	});
 	frm.submit();
+	}
+ }
 }
   for(var gli=1; gli<=GLI_title; gli++)
  {
@@ -1372,6 +1384,11 @@ if(doctype == 'W9'){
 	 document.getElementById('GLI_end_date'+gli).focus();
 	 return ;
 	 }
+	 else if( ( glis[2].length !=4 || glis[0] > 12 ))
+	{
+	 alert('Please enter the date inthe format of mm-dd-yyyy');
+	 return ;
+	}
  	 else if(document.getElementById('GLI_policy_occurence'+gli).value == '' || document.getElementById('GLI_policy_occurence'+gli).value == '0.00')
 	 {
 	 alert('Please Enter General Liability Each Occurrence');
@@ -1474,6 +1491,11 @@ if(doctype == 'W9'){
 	 document.getElementById('aip_end_date'+aip).focus();
 	 return ;
 	 }
+	 else if( ( aips[2].length !=4 || aips[0] > 12 ))
+	{
+	 alert('Please enter the date inthe format of mm-dd-yyyy');
+	 return ;
+	}
 	 /*else if(document.getElementById('aip_combined'+aip).value == '' || document.getElementById('aip_combined'+aip).value == '0.00')
 	 {
 	 alert('Please Enter Commercial Vehicle Policy Combined Single Limit');
@@ -1556,7 +1578,8 @@ if(doctype == 'W9'){
 	 {
 	 alert("Please click on the Date and select an Expiration Date or the 'Does Not Expire' option");
 	 return ;
-	 }	
+	 }
+		
 	 else if(wcidate < currentDate && inputdate != 'Does Not Expire' ){
 		G = jQuery.noConflict();
 		G('body,html').animate({
@@ -1633,6 +1656,11 @@ if(doctype == 'W9'){
 	 document.getElementById('UMB_expdate'+umb).focus();
 	 return ;
 	 }
+	else if( ( umbs[2].length !=4 || umbs[0] > 12 ))
+	{
+	 alert('Please enter the date int he format of mm-dd-yyyy');
+	 return ;
+	}
  	 else if(document.getElementById('UMB_aggregate'+umb).value == '' || document.getElementById('UMB_aggregate'+umb).value == '0.00')
 	 {
 	 alert('Please Enter UMBRELLA LIABILITY POLICY Aggregate.');
@@ -1705,13 +1733,11 @@ if(doctype == 'W9'){
 	var year = currentDate.getFullYear()
 	var endDate = year + "-" + month + "-" + day ;
 	var today_date = new Date(endDate);
-
- 
    if(G('#OMI_idedit'+omi).val() == 'yes')
    {
 	     if(document.getElementById('OMI_upld_cert'+omi).value == '')
 		{
-		  alert('Please Upload Umbrella Liability Policy Document');
+		  alert('Please Upload ERRORS OMISSIONS INSURANCE Policy Document');
 		 document.getElementById('OMI_upld_cert'+omi).focus();
 		 return ;
 		}
@@ -1736,6 +1762,7 @@ if(doctype == 'W9'){
 	 }
 	
 	 else if(omidate < currentDate){
+	
 		G = jQuery.noConflict();
 		G('body,html').animate({
 		scrollTop: 250
@@ -1770,6 +1797,7 @@ if(doctype == 'W9'){
 		
 	}
 	else{
+
 	G(document).ready(function (){
 		G("#loading-div-background").show();
 		});
@@ -1808,6 +1836,7 @@ if(doctype == 'W9'){
 	 alert("Please click on the Date and select an Expiration Date or the 'Does Not Expire' option");
 	 return ;
 	 }
+	
 	else if(olndate < currentDate && inputdate != 'Does Not Expire' ){
 		G = jQuery.noConflict();
 		G('body,html').animate({
@@ -1884,6 +1913,11 @@ if(doctype == 'W9'){
 	 document.getElementById('PLN_expdate'+pln).focus();
 	 return ;
 	 }
+	 else if( ( plns[2].length !=4 || plns[0] > 12 ))
+	{
+	 alert('Please enter the date in the format of mm-dd-yyyy');
+	 return ;
+	}
 	 
 	 else if(plndate < currentDate){
 		G = jQuery.noConflict();
@@ -1962,7 +1996,11 @@ if(doctype == 'W9'){
 	 document.getElementById('wc_end_date'+wc).focus();
 	 return ;
 	 }
-	  
+	 else if( ( wcs[2].length !=4 || wcs[0] > 12 ))
+	{
+	 alert('Please enter the date in the format of mm-dd-yyyy');
+	 return ;
+	}
 	  else if(wcdate < currentDate){
 		G = jQuery.noConflict();
 		G('body,html').animate({
