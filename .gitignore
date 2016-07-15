@@ -10,26 +10,22 @@ configuration.php
 #======================================
 # Property Folders with Proposal Reports (copies of RFPs and the collected vendor attachments and compliance doc snapshot):
 # var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/PropertyDocuments
-PropertyDocuments
+/PropertyDocuments/*
 
-# Manager “Cloud Storage” that we call “Document Center” (company files):
+# Manager "Cloud Storage" that we call "Document Center" (company files):
 # var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/components/com_camassistant/doc
-components/com_camassistant/doc
+/components/com_camassistant/doc/*
 
 # assets :
-# Includes a “resized” subfolder and a “pdf_resized” subfolder.
+# Includes a "resized" subfolder and a "pdf_resized" subfolder.
 # var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/components/com_camassistant/assets
-components/com_camassistant/assets
+/components/com_camassistant/assets/*
 
-# components:
-# Includes a “resized” subfolder and a “pdf_resized” subfolder.
-# var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/components
-components
+
 
 # includes
-# Includes a “resized” subfolder and a “pdf_resized” subfolder.
+# Includes a "resized" subfolder and a "pdf_resized" subfolder.
 # var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/includes
 includes
 
-
-
+/__MACOSX/
