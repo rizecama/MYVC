@@ -12861,6 +12861,28 @@ width: 95%;
 .smallimage_new.active {
   background: rgba(0, 0, 0, 0) url("../images/venorinvite1.png") no-repeat scroll left -23px;
  }
+.proposal_continue{
+width: 155px;
+height:47px;
+background: url("../images/continue_new.png") no-repeat;
+display: inline-block;
+margin-top:3px;
+}
+.proposal_continue:hover{
+background-position: 0 -47px ;
+}
+.proposal_goback {
+background: url("../images/GoBack.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+float: left;
+height: 45px;
+text-align: center;
+width: 152px;
+margin-top:3px;
+}
+.proposal_goback:hover {
+background-position:0 -44px;
+cursor:pointer;
+}
 
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
 	.signup input[type='checkbox'] { width:auto !important;}
