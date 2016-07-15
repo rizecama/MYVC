@@ -21,10 +21,7 @@ configuration.php
 # var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/components/com_camassistant/assets
 /components/com_camassistant/assets/*
 
-# components:
-# Includes a "resized" subfolder and a "pdf_resized" subfolder.
-# var/www/vhosts/vps61048.vps.ovh.ca/httpdocs/components
-components
+
 
 # includes
 # Includes a "resized" subfolder and a "pdf_resized" subfolder.
