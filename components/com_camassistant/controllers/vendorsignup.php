@@ -617,7 +617,7 @@ class vendorsignupController extends JController
 						if($img)
 						{
 							$apath=getimagesize($img);
-							if(!$apath){
+							/*if(!$apath){
 							 	$db =& JFactory::getDBO();
 							 	$sql_del='DELETE FROM `#__users` WHERE `id` = '.$clone_user->id.'';
 								$db->setquery($sql_del);
@@ -626,7 +626,7 @@ class vendorsignupController extends JController
 								$app = &JFactory::getApplication();
 								$link = 'index.php?option=com_camassistant&controller=vendorsignup&task=vendorsignup_p1&fail=logo&Itemid=66';	
 								$app->redirect($link);
-							 }
+							 }*/
 							$height_orig=$apath[1];
 							$width_orig=$apath[0];
 							$aspect_ratio = (float) $height_orig / $width_orig;
@@ -695,45 +695,69 @@ class vendorsignupController extends JController
 		 $extenssion= str_replace('.jpeg.jpeg','.jpeg',$extenssion);
 		 $extenssion= str_replace('.gif.gif','.gif',$extenssion);
 		 $extenssion= str_replace('.png.png','.png',$extenssion);
-			if($extenssion=='.jpg'){	
-            	$src = imagecreatefromjpeg($prod_img)
-                or die('Problem In opening Source JPG Image');
+			if($extenssion=='.jpg'){
+			echo '1';	
+            	$src = imagecreatefromjpeg($prod_img);
+           
 			}
 			elseif($extenssion=='.JPG'){
-				 $src = imagecreatefromjpeg($prod_img)
-                 or die('Problem In opening Source JPEG Image');
+				 $src = imagecreatefromjpeg($prod_img);
+                echo '2'; 
 			}
 			elseif($extenssion=='.jpeg'){
-				 $src = imagecreatefromjpeg($prod_img)
-                 or die('Problem In opening Source JPEG Image');
+				 $src = imagecreatefromjpeg($prod_img);
+                 echo '3';
 			}
 						elseif($extenssion=='.JPEG'){
-				 $src = imagecreatefromjpeg($prod_img)
-                 or die('Problem In opening Source JPEG Image');
+				 $src = imagecreatefromjpeg($prod_img);
+                echo '4';
 			}
 			elseif($extenssion=='.gif'){
-				 $src = imagecreatefromgif($prod_img)
-                 or die('Problem In opening Source GIF Image');
+				 $src = imagecreatefromgif($prod_img);
+          echo '5';
 			}
 			elseif($extenssion=='.png'){
-			   $src = imagecreatefrompng($prod_img)
-                or die('Problem In opening Source PNG Image');
+			   $src = imagecreatefrompng($prod_img);
+echo '6';
 			}
 				
             if(function_exists('imagecopyresampled'))
             {
 				$firstx = imagesx($src)	;
 				$secondy = imagesy($src) ;
-                imagecopyresampled($dest,$src,$offsetw,$offseth,0,0,$new_w,$new_h,$firstx,$secondy)
+                $val =  imagecopyresampled($dest,$src,$offsetw,$offseth,0,0,$new_w,$new_h,$firstx,$secondy);
 				
-                or die('Problem In resizing');
+			echo $dest.'<br/>'.$src.'<br/>'.$offsetw.'<br/>'.$offseth.'<br/>'.$new_w.'<br/>'.$new_h.'<br/>'.$firstx.'<br/>'.$secondy;
+	           echo 'test';			
+				echo $val;
+				echo $src ;
+				echo 'can';exit;
+				
+				if( $src ) {
+				echo '7';	
+					$vendor['image'] = $filename;
+				} else {
+					echo '8';
+					$vendor['image'] = '';
+					
+				}
+				
             }else{
-                Imagecopyresized($dest,$src,$offsetw,$offseth,0,0,$new_w,$new_h,imagesx($src),imagesy($src))
-                or die('Problem In resizing');
-            }
 			
-            imagejpeg($dest,$prod_img_thumb,72)
-                or die('Problem In saving');
+			    Imagecopyresized($dest,$src,$offsetw,$offseth,0,0,$new_w,$new_h,imagesx($src),imagesy($src));
+
+            	if($src ) {
+					echo '9';
+					$vendor['image'] = $filename;
+				} else {
+					$vendor['image'] = '';
+					echo '10';
+				}
+			}
+			
+            imagejpeg($dest,$prod_img_thumb,72);
+			
+
             imagedestroy($dest);
             @ob_flush();
             $new_filesize = (filesize($prod_img)/1024);
@@ -778,6 +802,9 @@ class vendorsignupController extends JController
 						//$thumb = $model->image_resize_to_max($img,$width,$height_user,$img1,$filename);
 						//$pdf_thumb = $model->image_resize_to_max($img,$width,$height,$img2,$filename);
 				}
+				
+				
+						echo $vendor['image'];exit; 
 						$model = $this->getModel('vendorsignup');
 						if($model->store($vendor)) {
 						$msg = JText::_( 'Vendor Saved' );

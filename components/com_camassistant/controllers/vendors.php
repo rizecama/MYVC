@@ -1862,6 +1862,9 @@ function ajax_compliance_omi_form()
     //echo '<pre>'; print_r($_REQUEST); exit;
 		$Itemid	= JRequest::getVar('Itemid','');
 		$saveddoc	= JRequest::getVar('document_type',''); 
+		$vendor_status	= JRequest::getVar('vendor_status',''); 
+		$vendor_type	= JRequest::getVar('vendor_type',''); 
+		
 		$user	= JFactory::getUser();
 
 		$db = JFactory::getDBO();
@@ -3363,8 +3366,15 @@ MyVendorCenter.com';
 		$res = JUtility::sendMail($mailfrom, $from, $to_support, $subject, $msg, $mode=1);*/
 		//Completed		
 		//	}
+		
+		if ( $vendor_status == '1'){
+		$link = 'index.php?option=com_camassistant&controller=vendors&task=subscriptions&Itemid=213';
+		$msg = "";
+		}
+		else {
 		$link = 'index.php?option=com_camassistant&controller=vendors&task=vendor_compliance_docs&Itemid='.$Itemid;
-		$msg="Documents Saved Successfully";
+		$msg = "Documents Saved Successfully";
+		}
 		$this->setRedirect( $link,$msg );
 	}
 
@@ -5379,7 +5389,7 @@ function viewcrefdocs(){
 		//Get total bids for create alternate proposal link
 		$count_numbers = $model->gettotalbids_newlink($rfpid);
 		$getblock_status = $model->getunverfied_status($rfpid);
-		$block = $model->getblockedvendors($rfpid);
+		$block = $model->getunverfied($rfpid);
 		
 		
 		?>
@@ -5457,7 +5467,7 @@ function viewcrefdocs(){
 		<li>
 		<?php  
 		if( $uninvited != 'uninvited' && $getblock_status == 'blockvendor' ){ ?>
-		<a class="" href="javascript:void(0);" onClick="getblockmessage(<?php echo $block->block; ?>,<?php echo $block->block_complinace;?>);">View Request</a>
+		<a class="" href="javascript:void(0);" onClick="getblockmessage('<?php echo $block;?>');">View Request</a>
 		<?php }
 		else if( $uninvited != 'uninvited' && $p_data->create_rfptype=='open'  ) { ?>
 	
@@ -5499,7 +5509,7 @@ function viewcrefdocs(){
 		<?php if( $mgr_info->showemail == '0' || $p_data->jobtype == 'yes' ) { echo $mgr_info->email; } ?></a></td></tr>
 		<?php } ?>
 		<tr><td colspan="2" align="center">
-                        <?php if(! $type == 'drafts' && $getblock_status != 'blockvendor' ) { ?>
+                        <?php if(! $type == 'drafts' && $getblock_status != 'blockvendor' && $uninvited != 'uninvited' ) { ?>
 					<a rel="<?php  echo $rfpid; ?>" href="javascript:void(0);" class="decline_rfpjob_home" id="declineinvitation"></a>
 				        <a onClick="javascript: return ITB_save(<?php  echo $rfpid; ?>);" class="accept_rfpjob_home" href="javascript:void(0);"></a><?php }?></td></tr>
 <tr><td>

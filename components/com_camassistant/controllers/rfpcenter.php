@@ -1,4 +1,6 @@
-﻿<?php
+﻿
+
+<?php
 /**
  * @version		1.0.0 camassistant $
  * @package		camassistant
@@ -1932,7 +1934,6 @@ LEFT JOIN jos_cam_vendor_proposals as P on U.id=P.proposedvendorid where P.rfpno
 	$getpublish = "SELECT publish,createdDate, proposalDueDate, create_rfptype, rfp_adminstatus, bidding,rfp_type, maxProposals, cust_id, jobtype, property_id FROM #__cam_rfpinfo WHERE id=".$rfpid." ";
 	$db->setQuery( $getpublish);
 	$publish = $db->loadObject();
-	
 	$date1 = $publish->proposalDueDate;
 	$date = explode("-", $date1);
 	$pdate = $date[2].'-'.$date[0].'-'.$date[1];
@@ -1985,12 +1986,19 @@ if( $publish->jobtype != 'yes' && ( $invitationper == 1 || $publish->cust_id == 
 <?php
 $model = $this->getModel('rfpcenter');
 $draftprops = $model->alldraftproposals_count($rfpid);
-
+//echo '<pre>';print_r($draftprops);exit;
 $exp_count = explode('---',$draftprops);
 if( $exp_count[0] == $exp_count[1] )
 	$count_drafts = 'no';
 else
 	$count_drafts = 'yes';
+	
+if(  $exp_count[2] == 0 &&  $exp_count[3] == 0  && $previous_date > ('2016-05-25')  )
+	$count_draftsopen = 'no';
+else
+	$count_draftsopen = 'yes';
+	
+
 
 ?>
 <ul class="addednum" style="padding-top:0px;">
@@ -1999,10 +2007,10 @@ else
 if( $publish->cust_id == $user->id )
 {
 ?>
-<li><a style="color:red;" href="javascript:void(0);" onclick="uninvitevendor(<?php echo $rfpid; ?>,'<?php echo $count_drafts; ?>');" title="Un-Invite Vendor">UN-INVITE VENDOR</a></li>
+<li><a style="color:red;" href="javascript:void(0);" onclick="uninvitevendor(<?php echo $rfpid; ?>,'<?php echo $count_drafts; ?>','<?php echo $count_draftsopen; ?>');" title="Un-Invite Vendor">UN-INVITE VENDOR</a></li>
 <li><a style="color:red;" class="" href="javascript:cancelrequest('<?php echo $rfpid; ?>');">CANCEL</a></li>
 <?php } }  else { ?>
-<li><a style="color:red;" href="javascript:void(0);" onclick="uninvitevendor(<?php echo $rfpid; ?>,'<?php echo $count_drafts; ?>');" title="Un-Invite Vendor">UN-INVITE VENDOR</a></li>
+<li><a style="color:red;" href="javascript:void(0);" onclick="uninvitevendor(<?php echo $rfpid; ?>,'<?php echo $count_drafts; ?>','<?php echo $count_draftsopen; ?>');" title="Un-Invite Vendor">UN-INVITE VENDOR</a></li>
 <li><a style="color:red;" class="" href="javascript:cancelrequest('<?php echo $rfpid; ?>');">CANCEL</a></li>
 <?php } ?>
  </ul>
@@ -2024,7 +2032,9 @@ if( $publish->cust_id == $user->id )
   </tr>
 
   </tr>
-  <?php if(count($listprps) > 0){ ?>
+  <?php if(count($listprps) > 0){
+  $total_list = 0;
+   ?>
   <?php for($i=0; $i<count($listprps); $i++){ 
   if(in_array($listprps[$i]->id,$total_vendors)  || $previous_date < ('2016-05-25') || $listprps[$i]->proposaltype == 'Submit' || $listprps[$i]->bidfrom == '' )
   { ?>
@@ -2309,7 +2319,12 @@ $alt = '';
 
   </tr>
  
-  <?php }}  } else {?>
+  <?php 
+ $total_list++; 
+  }}  } 
+  
+   if(count($listprps)<= 0 || $total_list == 0 ){
+  ?>
   <tr class="table_blue_rowdotsextend"><td colspan="4"><p style="font-size: 13px; margin-bottom: 10px; text-align: center;">You have NOT invited any Vendors to participate in this project, please click on "INVITE A VENDOR" above</p></td></tr>
   <?php } 
   

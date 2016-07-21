@@ -1370,45 +1370,38 @@ function save_uploadfile()
 	$db->Setquery($blok_vendor);
 	$block = $db->loadObject();
 	
-	
+		
 		if( $block->block_complinace == '1' && $block->block == '1'  )
 		   {
 				
-				$getblock_status =	$model->getblock_vendorstatus($selectdvendors );
+				 $type = 'both';
+				$getblock_status =	$model->getblock_vendorstatus($_REQUEST['selectdvendors']);
 				if($getblock_status)
 				$getblock_status = $getblock_status;
 				else
 				 $getblock_status [] = '';
-				$getblock =	$model->getblock_vendors($selectdvendors );
+				$getblock =	$model->getblock_vendors($_REQUEST['selectdvendors']);
 				if($getblock)
 				$getblock = $getblock;
 				else
 				 $getblock [] = '';
-				$finalblocks = array_unique(array_merge($selectdvendors,$getblock));
-			     $finalblock = array_values($finalblocks);
-				$blocked_vendors[] = array_values(array_diff($selectdvendors , $finalblock  ) );
+				$finalblocks = array_unique(array_merge($getblock_status,$getblock));
+			     $blocked_vendors = array_values($finalblocks);
+				
 		   }
 		else if( $block->block == '1' && $block->block_complinace != '1' )
 			{
-				$getblock =	$model->getblock_vendors($selectdvendors );
-				
-				if($getblock)
-				$getblock = $getblock;
-				else
-				 $getblock [] = '';
-				$blocked_vendors[] = array_values(array_diff($selectdvendors , $getblock ) );
+				 $type = 'unver';
+				$blocked_vendors =	$model->getblock_vendors($_REQUEST['selectdvendors']);
 			}
-		else if( $block->block_complinace == '1'&& $block->block != '1'  )
+		else if( $block->block_complinace == '1' && $block->block != '1'  )
 			{
-				$getblock_status =	$model->getblock_vendorstatus($selectdvendors );
-				if($getblock_status)
-				$getblock_status = $getblock_status;
-				else
-				 $getblock_status [] = '';
-				$blocked_vendors[] = array_values(array_diff($selectdvendors , $getblock_status ) );
+				$type =  'noncomp';
+				$blocked_vendors =	$model->getblock_vendorstatus($_REQUEST['selectdvendors']);
+				
 			}         
 		else
-		   $blocked_vendors[] = $selectdvendors;
+		   $blocked_vendors[] = '';
 		 
 	//permssions for rfp	
 	 $rfpapprovalper = "SELECT approval_p FROM #__cam_propertyowner_link where property_id=".$property_id."";
@@ -1506,6 +1499,8 @@ function save_uploadfile()
 		$db->Setquery($decline_not);
 		$decline_field = $db->loadResult();
 	if($decline_field != '2' && $vemail != '' && $rfpapprovalper != 1) {
+	if(!in_array($totalinvites[$v]->proposedvendorid,$blocked_vendors)) {
+	
 	JUtility::sendMail($mailfrom, $fromname, $vemail, $mailsubject, $body,$mode = 1);
 	$rize_support='rize.cama@gmail.com';
 	JUtility::sendMail($mailfrom, $fromname, $rize_support, $mailsubject, $body,$mode = 1);
@@ -1579,6 +1574,7 @@ function save_uploadfile()
 		if( $vendor_companyname->faxid && ( $vendor_companyname->fax_acc == 'yes' || $vendor_companyname->fax_acc  == '' ) ) {
 		$faxResult = $client->SendCharFax($params);
 		}*/
+	}
 	}	
 	//Update the mail field as empty
 	$update_mail = "UPDATE #__rfp_invitations SET mail='' WHERE vendorid='".$totalinvites[$v]->proposedvendorid."'";
@@ -2307,11 +2303,8 @@ $db=JFactory::getDBO();
 	$post['rfpid']	= JRequest::getVar('rfpid','');
 	$closeinvite	= JRequest::getVar('var','');
 	$model = $this->getModel('rfp');
-	
 	$form_selcted_vendors = $_REQUEST['selectdvendors'] ;
-
-	
-	$personal_job = JRequest::getVar('personal','');
+    $personal_job = JRequest::getVar('personal','');
 	$open_job = JRequest::getVar('open','');
 	if( $open_job == 'open' && $personal_job == 'personal' )
 		$rfp_type = 'both';
@@ -2348,6 +2341,8 @@ $db=JFactory::getDBO();
 	
 	
 	$_REQUEST['selectdvendors'] = array_keys(array_count_values($total_vendors)); 
+	
+
 		
 	$model = $this->getModel('rfp');
 	$update_rfptype = $model->updaterfptype($post['rfpid'],$post['create_rfptype']);
@@ -2362,6 +2357,7 @@ $db=JFactory::getDBO();
 		if( $block->block_complinace == '1' && $block->block == '1'  )
 		   {
 				
+				 $type = 'both';
 				$getblock_status =	$model->getblock_vendorstatus($_REQUEST['selectdvendors']);
 				if($getblock_status)
 				$getblock_status = $getblock_status;
@@ -2373,30 +2369,24 @@ $db=JFactory::getDBO();
 				else
 				 $getblock [] = '';
 				$finalblocks = array_unique(array_merge($getblock_status,$getblock));
-			     $finalblock = array_values($finalblocks);
-				$blocked_vendors[] = array_values(array_diff($_REQUEST['selectdvendors'], $finalblock  ) );
+			     $blocked_vendors = array_values($finalblocks);
+				
 		   }
 		else if( $block->block == '1' && $block->block_complinace != '1' )
 			{
-				$getblock =	$model->getblock_vendors($_REQUEST['selectdvendors']);
-				
-				if($getblock)
-				$getblock = $getblock;
-				else
-				 $getblock [] = '';
-				$blocked_vendors[] = array_values(array_diff($_REQUEST['selectdvendors'], $getblock ) );
+				 $type = 'unver';
+				$blocked_vendors =	$model->getblock_vendors($_REQUEST['selectdvendors']);
 			}
-		else if( $block->block_complinace == '1'&& $block->block != '1'  )
+		else if( $block->block_complinace == '1' && $block->block != '1'  )
 			{
-				$getblock_status =	$model->getblock_vendorstatus($_REQUEST['selectdvendors']);
-				if($getblock_status)
-				$getblock_status = $getblock_status;
-				else
-				 $getblock_status [] = '';
-				$blocked_vendors[] = array_values(array_diff($_REQUEST['selectdvendors'], $getblock_status ) );
+				$type =  'noncomp';
+				$blocked_vendors =	$model->getblock_vendorstatus($_REQUEST['selectdvendors']);
+				
 			}         
 		else
-		   $blocked_vendors[] = $_REQUEST['selectdvendors'];
+		   $blocked_vendors[] = '';
+		   
+		//echo '<pre>';print_r($blocked_vendors);exit;   
    	
    $count = count($_REQUEST['selectdvendors']);
 	
@@ -2425,6 +2415,14 @@ $db=JFactory::getDBO();
 		       $db->query();
 			   
 			}
+			
+			if(in_array($post['vendorid'],$blocked_vendors))
+			 {
+			   
+			 $insert_sql12 = "insert into #__invitations_blockvendors values ('','".$post['rfpid']."','".$post['vendorid']."','".$post['date']."','".$type."')";
+		       $db->SetQuery($insert_sql12);
+		       $db->query();
+			}	
 			
 			
 		 $insert_sql = "insert into #__rfp_invitations values ('','".$post['rfpid']."','".$post['vendorid']."','".$post['publish']."','".$post['status']."','".$post['date']."','".$no."','')";
@@ -2535,7 +2533,7 @@ $db=JFactory::getDBO();
 	
     $support='rize.cama@gmail.com';
   
-	if( in_array($post['vendorid'],$blocked_vendors ))
+	if(!in_array($post['vendorid'],$blocked_vendors ))
 	 {
 	JUtility::sendMail($mailfrom, $fromname, $vemail, $mailsubject, $body,$mode = 1);
     JUtility::sendMail($mailfrom, $fromname, $support, $mailsubject, $body,$mode = 1);
