@@ -1,5 +1,3 @@
-<?php
-
-echo realpath('test.php');
-
+<?php
+echo realpath('test.php');
 ?>
