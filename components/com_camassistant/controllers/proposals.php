@@ -1180,7 +1180,7 @@ function not_interested(){
 		$rebid= $post['rebid'];
 		$Proposal_id= $post['Proposal_id'];
 		echo "<script language='javascript' type='text/javascript'>
-		window.parent.document.getElementById( 'sbox-window' ).close();
+		
 		var taskid = 'upload_file".$taskid."';
 		var filename = '".$filename."';
 		var rfpid = '".rfp_id."';
@@ -1228,6 +1228,7 @@ function not_interested(){
 
                 window.parent.document.getElementById('warranty_file_rem').innerHTML =del_path1;
 		}
+		window.parent.document.getElementById( 'sbox-window' ).close();
 		//window.parent.document.getElementById(taskid).innerHTML = path+del_path+old;
 		 </script>";
 		 exit;
